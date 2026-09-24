@@ -8,7 +8,7 @@
 
 
 
-## 👥 Integrantes
+##  Integrantes
 
 *  **Franco Villarroel** — fra.villarroelg@duocuc.cl
 
@@ -40,9 +40,44 @@
 
 ##  Estructura del Proyecto (`src/`)
 
+```text
+
+src/
+
+├── assets/      # Archivos estáticos, recursos globales e imágenes de instrumentos.
+
+├── components/
+
+│  ├── atoms/     # Componentes mínimos e indivisibles.
+
+│  │  ├── Boton.jsx   # Botón genérico estilizado con React Bootstrap.
+
+│  │  └── Input.jsx   # Control de entrada de datos para formularios.
+
+│  ├── molecules/   # Combinación de dos o más átomos.
+
+│  │  └── CampoFormulario.jsx # Unión de etiqueta, Input y mensaje de error.
+
+│  ├── organisms/   # Estructuras complejas que forman secciones de la app.
+
+│  │  └── Formulario.jsx # Formulario completo con validación y estados.
+
+│  └── templates/   # Esquemas de diseño de página (layouts limpios).
+
+├── pages/       # Vistas finales asociadas a las rutas del sitio.
+
+│  └── Inicio.jsx   # Página principal que orquesta y renderiza los componentes.
+
+├── App.css      # Estilos CSS específicos de la aplicación base.
+
+├── App.jsx      # Componente raíz donde se maneja el enrutamiento y estado global.
+
+├── index.css     # Estilos CSS globales y variables de diseño.
+
+└── main.jsx      # Punto de entrada de React para renderizar en el DOM de Vite.
+
 ```
 
-src/ ├── assets/ # Archivos estáticos, recursos globales e imágenes de instrumentos. ├── components/ │ ├── atoms/ # Componentes mínimos e indivisibles. │ │ ├── Boton.jsx # Botón genérico estilizado con React Bootstrap. │ │ └── Input.jsx # Control de entrada de datos para formularios. │ ├── molecules/ # Combinación de dos o más átomos. │ │ └── CampoFormulario.jsx # Unión de etiqueta, Input y mensaje de error. │ ├── organisms/ # Estructuras complejas que forman secciones de la app. │ │ └── Formulario.jsx # Formulario completo con validación y estados. │ └── templates/ # Esquemas de diseño de página (layouts limpios). ├── pages/ # Vistas finales asociadas a las rutas del sitio. │ └── Inicio.jsx # Página principal que orquesta y renderiza los componentes. ├── App.css # Estilos CSS específicos de la aplicación base. ├── App.jsx # Componente raíz donde se maneja el enrutamiento y estado global. ├── index.css # Estilos CSS globales y variables de diseño. └── main.jsx # Punto de entrada de React para renderizar en el DOM de Vite. ```
 
 
 
@@ -50,9 +85,7 @@ src/ ├── assets/ # Archivos estáticos, recursos globales e imágenes de i
 
 
 
-
-
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 *  **React:** Biblioteca principal para la construcción de la interfaz de usuario interactiva.
 
