@@ -1,10 +1,7 @@
-function Boton(props) {
-  const variante = props.variante || "primary";
+export default function Boton({ alHacerClic, textoBoton }) {
   return (
-    <button className={`btn btn-${variante}`} onClick={props.onClick}>
-      {props.texto}
+    <button className="btn btn-primary w-100" onClick={alHacerClic}>
+      {textoBoton}
     </button>
   );
 }
-
-export default Boton;

@@ -1,12 +1,9 @@
-// src/App.jsx
 import { useState } from "react";
 import Login from "./pages/Inicio";
 
 function App() {
-  // Estado para saber si el usuario ya inició sesión
   const [usuario, setUsuario] = useState(null);
 
-  // Función que se ejecuta cuando el login es correcto
   function manejarLoginExitoso(correo) {
     setUsuario(correo);
     alert("¡Bienvenido a Sonido Vivo! Has iniciado sesión como: " + correo);
@@ -18,7 +15,6 @@ function App() {
       {!usuario ? (
         <Login onLoginSuccess={manejarLoginExitoso} />
       ) : (
-        // Si ya hay usuario, mostramos la pantalla de bienvenida del sistema
         <div className="container mt-5 text-center">
           <h1 className="display-4 mb-3">Plataforma Sonido Vivo</h1>
           <p className="lead">
