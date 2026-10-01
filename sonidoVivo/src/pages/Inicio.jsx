@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
+import Footer from '../components/organisms/Footer';
 
 export default function Inicio({ onLoginSuccess }) {
   const [correo, setCorreo] = useState('');
@@ -15,44 +16,52 @@ export default function Inicio({ onLoginSuccess }) {
   };
 
   return (
-    <div className="login-pantalla-completa">
-      <div className="login-tarjeta">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      
+      {/* Área del formulario centrada */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 0' }}>
+        <div className="login-tarjeta">
 
-        <div className="login-encabezado">
-          <h2 className="login-titulo-principal">Bienvenid@ a</h2>
-          <h2 className="login-titulo-marca">Sonido Vivo</h2>
-          <small className="login-subtitulo">Por favor ingresa tus datos para ingresar</small>
+          <div className="login-encabezado">
+            <h2 className="login-titulo-principal">Bienvenid@ a</h2>
+            <h2 className="login-titulo-marca">Sonido Vivo</h2>
+            <small className="login-subtitulo">Por favor ingresa tus datos para ingresar</small>
+          </div>
+
+          <div className="login-formulario-campos">
+            <CampoFormulario 
+              icono="✉" 
+              valor={correo} 
+              alCambiar={setCorreo} 
+              tipo="email" 
+              placeholder="correo@electronico.cl" 
+            />
+
+            <CampoFormulario 
+              icono="🔑" 
+              valor={contrasena} 
+              alCambiar={setContrasena} 
+              tipo="password" 
+              placeholder="Contraseña" 
+            />
+          </div>
+
+          <div className="login-contenedor-enlace">
+            <a href="#" className="login-enlace-olvido">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <div className="w-100 mt-2">
+            <Boton alHacerClic={manejarEnvio} textoBoton="INICIAR SESIÓN" />
+          </div>
+
         </div>
-
-        <div className="login-formulario-campos">
-          <CampoFormulario 
-            icono="✉" 
-            valor={correo} 
-            alCambiar={setCorreo} 
-            tipo="email" 
-            placeholder="correo@electronico.cl" 
-          />
-
-          <CampoFormulario 
-            icono="🔑" 
-            valor={contrasena} 
-            alCambiar={setContrasena} 
-            tipo="password" 
-            placeholder="Contraseña" 
-          />
-        </div>
-
-        <div className="login-contenedor-enlace">
-          <a href="#" className="login-enlace-olvido">
-            ¿Olvidaste tu contraseña?
-          </a>
-        </div>
-
-        <div className="w-100 mt-2">
-          <Boton alHacerClic={manejarEnvio} textoBoton="INICIAR SESIÓN" />
-        </div>
-
       </div>
+
+      {/* Pie de página */}
+      <Footer />
+
     </div>
   );
 }
