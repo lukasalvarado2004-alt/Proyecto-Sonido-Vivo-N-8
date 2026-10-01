@@ -1,7 +1,13 @@
-export default function Boton({ alHacerClic, textoBoton }) {
+export default function Boton({ alHacerClic, textoBoton, variante = "warning" }) {
   return (
-    <button className="btn btn-primary w-100" onClick={alHacerClic}>
-      {textoBoton}
-    </button>
+    <div className="d-grid">
+      <button 
+        type="button" 
+        className={`btn btn-${variante} fw-bold text-white p-2`} 
+        onClick={alHacerClic}
+      >
+        {textoBoton}
+      </button>
+    </div>
   );
 }
