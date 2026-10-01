@@ -11,7 +11,6 @@ function App() {
 
   return (
     <>
-      {/* Si no hay un usuario guardado en el estado, mostramos el Login */}
       {!usuario ? (
         <Login onLoginSuccess={manejarLoginExitoso} />
       ) : (
