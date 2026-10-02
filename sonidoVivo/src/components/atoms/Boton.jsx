@@ -1,4 +1,4 @@
-export default function Boton({ alHacerClic, textoBoton, variante = "warning" }) {
+export default function Boton({ alHacerClic, textoBoton, variante }) {
   return (
     <div className="d-grid">
       <button 
