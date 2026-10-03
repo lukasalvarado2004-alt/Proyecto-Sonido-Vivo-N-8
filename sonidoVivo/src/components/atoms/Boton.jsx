@@ -1,10 +1,13 @@
-function Boton(props) {
-  const variante = props.variante || "primary";
+export default function Boton({ alHacerClic, textoBoton, variante, tipo = "button" }) {
   return (
-    <button className={`btn btn-${variante}`} onClick={props.onClick}>
-      {props.texto}
-    </button>
+    <div className="d-grid">
+      <button 
+        type={tipo} 
+        className={`btn btn-${variante} fw-bold text-white p-2`} 
+        onClick={alHacerClic}
+      >
+        {textoBoton}
+      </button>
+    </div>
   );
 }
-
-export default Boton;
