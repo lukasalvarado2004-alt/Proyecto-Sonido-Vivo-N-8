@@ -9,12 +9,16 @@ function Catalogo(props) {
   return (
     <Container>
       <Row>
-        {props.mascotas.map((m) => (
-          <Col key={m.id} xs={12} md={6} lg={4} className="mb-3">
+        {props.productos.map((p) => (
+          <Col key={p.id} xs={12} md={6} lg={4} className="mb-3">
             <TarjetaProducto
-              nombre={m.nombre}
-              precio={m.precio}
-              onComprar={() => alComprar(m.nombre)}
+              imagen={p.imagen}
+              nombre={p.nombre}
+              marca={p.marca}
+              modelo={p.modelo}
+              stock={p.stock}
+              precio={p.precio}
+              onComprar={() => alComprar(p.nombre)}
             />
           </Col>
         ))}

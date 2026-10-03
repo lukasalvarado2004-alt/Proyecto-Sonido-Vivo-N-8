@@ -1,8 +1,8 @@
-export default function Boton({ alHacerClic, textoBoton, variante }) {
+export default function Boton({ alHacerClic, textoBoton, variante, tipo = "button" }) {
   return (
     <div className="d-grid">
       <button 
-        type="button" 
+        type={tipo} 
         className={`btn btn-${variante} fw-bold text-white p-2`} 
         onClick={alHacerClic}
       >
