@@ -1,13 +1,20 @@
-export default function Boton({ alHacerClic, textoBoton, variante, tipo = "button" }) {
+// src/components/atoms/Boton.jsx
+import React from 'react';
+
+export default function Boton({ 
+  alHacerClic, 
+  textoBoton, 
+  variante = "primary", 
+  tipo = "button",
+  esBloque = false // Si es true, ocupa todo el ancho
+}) {
   return (
-    <div className="d-grid">
-      <button 
-        type={tipo} 
-        className={`btn btn-${variante} fw-bold text-white p-2`} 
-        onClick={alHacerClic}
-      >
-        {textoBoton}
-      </button>
-    </div>
+    <button 
+      type={tipo} 
+      className={`btn btn-${variante} fw-bold px-3 py-2 ${esBloque ? 'w-100' : ''}`} 
+      onClick={alHacerClic}
+    >
+      {textoBoton}
+    </button>
   );
 }

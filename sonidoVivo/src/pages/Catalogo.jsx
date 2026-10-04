@@ -1,5 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import TarjetaProducto from "../components/molecules/TarjetaProducto";
+import { productos } from "../data/Productos"; 
+
 
 function Catalogo(props) {
   function alComprar(nombre) {
@@ -8,9 +10,10 @@ function Catalogo(props) {
 
   return (
     <Container>
+      <h1 className="my-4">Catálogo de Productos</h1>
       <Row>
         {props.productos.map((p) => (
-          <Col key={p.id} xs={12} md={6} lg={4} className="mb-3">
+          <Col key={p.codigo} xs={12} md={6} lg={4} className="mb-3">
             <TarjetaProducto
               imagen={p.imagen}
               nombre={p.nombre}
