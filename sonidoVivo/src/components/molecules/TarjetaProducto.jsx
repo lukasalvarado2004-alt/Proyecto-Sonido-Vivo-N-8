@@ -2,9 +2,24 @@ import Boton from "../atoms/Boton";
 import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
+import { useContenidoCarrito } from "../../data/ContenidoCarrito";
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
+  const { agregarProducto } = useContenidoCarrito();
+
+  const manejarClickComprar = () => {
+    if (props.onComprar) props.onComprar();
+
+    agregarProducto({
+      id: props.id || props.nombre,
+      nombre: props.nombre,
+      precio: props.precio,
+      imagen: props.imagen,
+      marca: props.marca,
+      modelo: props.modelo
+    });
+  };
 
   return (
     <div className="card h-100 p-3 shadow-sm">
@@ -28,7 +43,7 @@ function TarjetaProducto(props) {
 
         <Boton 
           textoBoton={tieneStock ? "Comprar" : "Sin Stock"} 
-          alHacerClic={props.onComprar} 
+          alHacerClic={manejarClickComprar} 
           variante={tieneStock ? "warning" : "secondary"} 
         />
       </div>

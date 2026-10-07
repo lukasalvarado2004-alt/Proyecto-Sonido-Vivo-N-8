@@ -1,13 +1,14 @@
-import React from 'react';
-import Navbar from '../organisms/Navbar';
-import Footer from '../organisms/Footer';
+import React from "react";
+import Navbar from "../organisms/Navbar";
+import Footer from "../organisms/Footer";
 
-const PlantillaPublica = (props) => {
+function PlantillaPublica(props) {
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="d-flex flex-column min-vh-100 bg-dark text-white">
       <Navbar 
         onIrAInicio={props.onIrAInicio} 
         onIrACatalogo={props.onIrACatalogo} 
+        onIrAlCarrito={props.onIrAlCarrito} 
       />
       
       <main className="flex-grow-1">
@@ -17,6 +18,6 @@ const PlantillaPublica = (props) => {
       <Footer />
     </div>
   );
-};
+}
 
 export default PlantillaPublica;
