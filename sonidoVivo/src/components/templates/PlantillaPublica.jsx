@@ -2,15 +2,16 @@ import React from 'react';
 import Navbar from '../organisms/Navbar';
 import Footer from '../organisms/Footer';
 
-const PlantillaPublica = ({ children }) => {
+const PlantillaPublica = (props) => {
   return (
-    // Agregamos clases de Bootstrap para que el footer siempre quede pegado abajo
     <div className="d-flex flex-column min-vh-100">
-      <Navbar />
+      <Navbar 
+        onIrAInicio={props.onIrAInicio} 
+        onIrACatalogo={props.onIrACatalogo} 
+      />
       
-      {/* Contenido principal que crecerá para empujar el footer */}
       <main className="flex-grow-1">
-        {children}
+        {props.children}
       </main>
 
       <Footer />
