@@ -1,6 +1,8 @@
+// src/App.jsx
 import { useState } from "react";
 import PlantillaPublica from "./components/templates/PlantillaPublica";
 import Login from "./pages/Login";
+import Registro from "./pages/Registro";
 import Catalogo from "./pages/Catalogo";
 import { productos } from "./data/Productos";
 
@@ -8,37 +10,32 @@ function App() {
   const [vista, setVista] = useState("catalogo");
   const [usuario, setUsuario] = useState(null);
 
-  function manejarLoginExitoso(correo) {
+  function manejarIngresoExitoso(correo) {
     setUsuario(correo);
-    alert("¡Bienvenido a Sonido Vivo! Has iniciado sesión como: " + correo);
+    setVista("catalogo");
   }
 
   return (
     <PlantillaPublica 
-      onIrAInicio={() => setVista("login")} 
+      onIrALogin={() => setVista("login")} 
       onIrACatalogo={() => setVista("catalogo")}
+      onIrARegistro={() => setVista("registro")}
     >
-      {vista === "catalogo" ? (
+      {vista === "catalogo" && (
         <Catalogo productos={productos} />
-      ) : (
-        <>
-          {!usuario ? (
-            <Login onLoginSuccess={manejarLoginExitoso} />
-          ) : (
-            <div className="container mt-5 text-center">
-              <h1 className="display-4 mb-3">Plataforma Sonido Vivo</h1>
-              <p className="lead">
-                Sesión activa: <strong>{usuario}</strong>
-              </p>
-              <button 
-                className="btn btn-danger mt-4" 
-                onClick={() => setUsuario(null)}
-              >
-                Cerrar Sesión
-              </button>
-            </div>
-          )}
-        </>
+      )}
+
+      {vista === "login" && (
+        <Login 
+          onLoginSuccess={manejarIngresoExitoso} 
+        />
+      )}
+
+      {vista === "registro" && (
+        <Registro 
+          onRegistroExitoso={manejarIngresoExitoso} 
+          onIrALogin={() => setVista("login")}
+        />
       )}
     </PlantillaPublica>
   );

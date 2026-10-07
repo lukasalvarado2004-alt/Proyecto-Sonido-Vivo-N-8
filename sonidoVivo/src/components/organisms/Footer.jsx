@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container text-center text-md-start">
         <div className="row text-center text-md-start">
           
-          {/* Columna 1: Branding y Descripción */}
+          {}
           <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold text-purple">
                SONIDO <div className="d-inline text-purple-brand">VIVO</div>
@@ -16,7 +16,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Columna 2: Enlaces Rápidos */}
+          {}
           <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
             <h6 className="text-uppercase mb-4 fw-bold text-light">Navegación</h6>
             <p className="mb-2">
@@ -30,7 +30,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Columna 3: Servicios / Ayuda */}
+          {}
           <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
             <h6 className="text-uppercase mb-4 fw-bold text-light">Ayuda</h6>
             <p className="mb-2">
@@ -41,7 +41,7 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Columna 4: Contacto e Información */}
+          {}
           <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
             <h6 className="text-uppercase mb-4 fw-bold text-light">Contacto</h6>
             <p className="text-secondary mb-2 small">Viña del Mar, Región de Valparaíso</p>
@@ -53,7 +53,7 @@ const Footer = () => {
 
         <hr className="mb-4 mt-4 border-secondary" />
 
-        {/* Sección inferior: Solo Redes Sociales centradas */}
+        {}
         <div className="row justify-content-center pt-2">
           <div className="col-auto text-center">
             <a href="#!" className="text-secondary hover-purple text-decoration-none me-4 small fw-semibold">

@@ -1,4 +1,4 @@
-// src/components/atoms/Boton.jsx
+
 import React from 'react';
 
 export default function Boton({ 
@@ -6,7 +6,7 @@ export default function Boton({
   textoBoton, 
   variante = "primary", 
   tipo = "button",
-  esBloque = false // Si es true, ocupa todo el ancho
+  esBloque = false 
 }) {
   return (
     <button 

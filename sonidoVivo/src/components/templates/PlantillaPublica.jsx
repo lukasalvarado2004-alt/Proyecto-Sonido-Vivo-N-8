@@ -1,20 +1,21 @@
+// src/components/templates/PlantillaPublica.jsx
 import React from 'react';
 import Navbar from '../organisms/Navbar';
 import Footer from '../organisms/Footer';
 
-const PlantillaPublica = ({ children, onIrAInicio, onIrACatalogo }) => {
+const PlantillaPublica = ({ children, onIrALogin, onIrACatalogo, onIrARegistro }) => {
   return (
-    // Estructura flex para que el Footer siempre quede abajo del todo
     <div className="d-flex flex-column min-vh-100">
-      {/* Cabecera común */}
-      <Navbar onIrAInicio={onIrAInicio} onIrACatalogo={onIrACatalogo} />
+      <Navbar 
+        onIrALogin={onIrALogin} 
+        onIrACatalogo={onIrACatalogo} 
+        onIrARegistro={onIrARegistro} 
+      />
       
-      {/* Contenido dinámico (Páginas o vistas) */}
       <main className="flex-grow-1">
         {children}
       </main>
 
-      {/* Pie de página común */}
       <Footer />
     </div>
   );
