@@ -1,26 +1,23 @@
-// src/components/organisms/Navbar.jsx
 import React from "react";
 import Boton from "../atoms/Boton";
 
-function Navbar({ onIrAInicio, onIrACatalogo }) {
+function Navbar(props) {
   return (
     <nav className="navbar-custom d-flex justify-content-between align-items-center p-3">
-      {/* Brand / Logo */}
-      <span className="navbar-logo" style={{ cursor: 'pointer' }} onClick={onIrACatalogo}>
+      <span className="navbar-logo" style={{ cursor: 'pointer' }} onClick={props.onIrACatalogo}>
         🎵 Sonido Vivo
       </span>
 
-      {/* Botones de acción usando el átomo Boton */}
       <div className="navbar-actions d-flex gap-2">
         <Boton 
           textoBoton="Catálogo" 
-          alHacerClic={onIrACatalogo} 
+          alHacerClic={props.onIrACatalogo} 
           variante="outline-light" 
         />
         
         <Boton 
           textoBoton="Iniciar Sesión" 
-          alHacerClic={onIrAInicio} 
+          alHacerClic={props.onIrAInicio} 
           variante="warning" 
         />
       </div>

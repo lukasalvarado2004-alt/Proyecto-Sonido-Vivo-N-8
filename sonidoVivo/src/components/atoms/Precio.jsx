@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default function Precio({ monto }) {
-  // Formateo automático de moneda chilena
+export default function Precio(props) {
+  const monto = props.monto;
   const precioFormateado = typeof monto === 'number'
     ? `$${monto.toLocaleString('es-CL')}`
     : '$0';

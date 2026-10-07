@@ -1,7 +1,5 @@
 import { Container, Row, Col } from "react-bootstrap";
 import TarjetaProducto from "../components/molecules/TarjetaProducto";
-import { productos } from "../data/Productos"; 
-
 
 function Catalogo(props) {
   function alComprar(nombre) {
