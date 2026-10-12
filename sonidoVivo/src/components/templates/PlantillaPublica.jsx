@@ -2,19 +2,13 @@ import React from "react";
 import Navbar from "../organisms/Navbar";
 import Footer from "../organisms/Footer";
 
-function PlantillaPublica(props) {
+function PlantillaPublica({ children }) {
   return (
     <div className="d-flex flex-column min-vh-100 bg-dark text-white">
-      <Navbar 
-        onIrAInicio={props.onIrAInicio} 
-        onIrACatalogo={props.onIrACatalogo} 
-        onIrAlCarrito={props.onIrAlCarrito} 
-      />
-      
+      <Navbar />
       <main className="flex-grow-1">
-        {props.children}
+        {children}
       </main>
-
       <Footer />
     </div>
   );

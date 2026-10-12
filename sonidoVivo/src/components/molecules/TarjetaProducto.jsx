@@ -4,6 +4,7 @@ import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
 import { useContenidoCarrito } from "../../data/ContenidoCarrito";
 
+
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
   const { agregarProducto } = useContenidoCarrito();

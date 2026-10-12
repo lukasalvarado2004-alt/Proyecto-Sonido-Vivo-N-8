@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
+import PlantillaPublica from "../components/templates/PlantillaPublica";
 
 export default function Login({ onLoginSuccess }) {
   const [correo, setCorreo] = useState('');
@@ -16,7 +17,9 @@ export default function Login({ onLoginSuccess }) {
   };
 
   return (
+     <PlantillaPublica>
     <div className="d-flex justify-content-center align-items-center py-5">
+     
       <div className="login-tarjeta">
         <div className="login-encabezado">
           <h2 className="login-titulo-principal">Bienvenid@ a</h2>
@@ -58,6 +61,8 @@ export default function Login({ onLoginSuccess }) {
           </div>
         </form>
       </div>
+      
     </div>
+    </PlantillaPublica>
   );
 }
