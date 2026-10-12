@@ -1,51 +1,30 @@
-// src/pages/Login.jsx
 import { useState } from 'react';
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
-import Error from '../components/atoms/Error';
+import PlantillaPublica from "../components/templates/PlantillaPublica";
+import { useTituloPagina } from '../hooks/useTituloPagina'
 
-export default function Login({ onLoginSuccess, onIrARegistro }) {
+export default function Login({ onLoginSuccess }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
 
-  const [errorGeneral, setErrorGeneral] = useState('');
-  const [erroresCampos, setErroresCampos] = useState({});
-
   const manejarEnvio = (e) => {
     e.preventDefault();
-
-    setErrorGeneral('');
-    const nuevosErrores = {};
-
-   
-    if (!correo.trim()) {
-      nuevosErrores.correo = 'El correo electrónico es obligatorio';
-    } else if (!/\S+@\S+\.\S+/.test(correo)) {
-      nuevosErrores.correo = 'Ingresa un correo electrónico válido (ejemplo@dominio.cl)';
-    }
-
-    if (!contrasena) {
-      nuevosErrores.contrasena = 'La contraseña es obligatoria';
-    } else if (contrasena.length < 6) {
-      nuevosErrores.contrasena = 'La contraseña debe tener al menos 6 caracteres';
-    }
-
-    if (Object.keys(nuevosErrores).length > 0) {
-      setErroresCampos(nuevosErrores);
-      setErrorGeneral('Por favor, corrige los campos destacados.');
+    if (correo.trim() === '' || contrasena.trim() === '') {
+      alert('Por favor, ingresa tus datos para ingresar.');
       return;
     }
-
-    setErroresCampos({});
-    if (onLoginSuccess) {
-      onLoginSuccess(correo);
-    }
+    onLoginSuccess(correo);
   };
 
+  useTituloPagina('Inicio Sesion')
+
   return (
+     <PlantillaPublica>
     <div className="d-flex justify-content-center align-items-center py-5">
+     
       <div className="login-tarjeta">
-        <div className="login-encabezado mb-3">
+        <div className="login-encabezado">
           <h2 className="login-titulo-principal">Bienvenid@ a</h2>
           <h2 className="login-titulo-marca">
             SONIDO <div className="d-inline text-purple-brand">VIVO</div>
@@ -53,43 +32,25 @@ export default function Login({ onLoginSuccess, onIrARegistro }) {
           <small className="login-subtitulo">Por favor ingresa tus datos para ingresar</small>
         </div>
 
-        {}
-        <Error mensaje={errorGeneral} variante="danger" />
-
-        {}
-        <form onSubmit={manejarEnvio} noValidate>
+        <form onSubmit={manejarEnvio}>
           <div className="login-formulario-campos">
             <CampoFormulario 
               valor={correo} 
-              alCambiar={(v) => { 
-                setCorreo(v); 
-                setErroresCampos({ ...erroresCampos, correo: '' }); 
-                setErrorGeneral('');
-              }} 
+              alCambiar={setCorreo} 
               tipo="email" 
               placeholder="correo@electronico.cl" 
-              error={erroresCampos.correo}
             />
 
             <CampoFormulario 
               valor={contrasena} 
-              alCambiar={(v) => { 
-                setContrasena(v); 
-                setErroresCampos({ ...erroresCampos, contrasena: '' }); 
-                setErrorGeneral('');
-              }} 
+              alCambiar={setContrasena} 
               tipo="password" 
               placeholder="Contraseña" 
-              error={erroresCampos.contrasena}
             />
           </div>
 
-          <div className="login-contenedor-enlace mb-3">
-            <a 
-              href="#" 
-              className="login-enlace-olvido" 
-              onClick={(e) => e.preventDefault()}
-            >
+          <div className="login-contenedor-enlace">
+            <a href="#" className="login-enlace-olvido">
               ¿Olvidaste tu contraseña?
             </a>
           </div>
@@ -102,21 +63,9 @@ export default function Login({ onLoginSuccess, onIrARegistro }) {
             />
           </div>
         </form>
-
-        <div className="login-contenedor-enlace mt-4">
-          <span className="text-muted small">¿No tienes una cuenta? </span>
-          <a 
-            href="#" 
-            className="login-enlace-olvido fw-bold" 
-            onClick={(e) => { 
-              e.preventDefault(); 
-              if (onIrARegistro) onIrARegistro(); 
-            }}
-          >
-            Regístrate aquí
-          </a>
-        </div>
       </div>
+      
     </div>
+    </PlantillaPublica>
   );
 }

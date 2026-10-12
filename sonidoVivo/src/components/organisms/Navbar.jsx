@@ -1,32 +1,23 @@
-// src/components/organisms/Navbar.jsx
 import React from "react";
-import Boton from "../atoms/Boton";
+import { Link, NavLink } from "react-router-dom";
 
-function Navbar({ onIrALogin, onIrACatalogo, onIrARegistro }) {
+function Navbar() {
   return (
-    <nav className="navbar-custom d-flex justify-content-between align-items-center p-3">
-      <span className="navbar-logo" style={{ cursor: 'pointer' }} onClick={onIrACatalogo}>
+    <nav className="navbar-custom">
+      <Link to="/" className="navbar-logo text-decoration-none">
         🎵 Sonido Vivo
-      </span>
+      </Link>
 
-      <div className="navbar-actions d-flex gap-2">
-        <Boton 
-          textoBoton="Catálogo" 
-          alHacerClic={onIrACatalogo} 
-          variante="outline-light" 
-        />
-        
-        <Boton 
-          textoBoton="Iniciar Sesión" 
-          alHacerClic={onIrALogin} 
-          variante="outline-light" 
-        />
-
-        <Boton 
-          textoBoton="Registrarse" 
-          alHacerClic={onIrARegistro} 
-          variante="outline-light" 
-        />
+      <div className="navbar-actions">
+        <NavLink to="/catalogo" className="btn btn-outline-light">
+          Catálogo
+        </NavLink>
+        <NavLink to="/carrito" className="btn btn-outline-warning">
+          🛒 Carrito
+        </NavLink>
+        <NavLink to="/login" className="btn btn-primary">
+          Iniciar Sesión
+        </NavLink>
       </div>
     </nav>
   );

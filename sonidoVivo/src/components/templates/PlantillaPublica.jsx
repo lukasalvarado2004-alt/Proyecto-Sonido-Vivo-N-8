@@ -1,24 +1,17 @@
-// src/components/templates/PlantillaPublica.jsx
-import React from 'react';
-import Navbar from '../organisms/Navbar';
-import Footer from '../organisms/Footer';
+import React from "react";
+import Navbar from "../organisms/Navbar";
+import Footer from "../organisms/Footer";
 
-const PlantillaPublica = ({ children, onIrALogin, onIrACatalogo, onIrARegistro }) => {
+function PlantillaPublica({ children }) {
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <Navbar 
-        onIrALogin={onIrALogin} 
-        onIrACatalogo={onIrACatalogo} 
-        onIrARegistro={onIrARegistro} 
-      />
-      
+    <div className="d-flex flex-column min-vh-100 bg-dark text-white">
+      <Navbar />
       <main className="flex-grow-1">
         {children}
       </main>
-
       <Footer />
     </div>
   );
-};
+}
 
 export default PlantillaPublica;

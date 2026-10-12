@@ -1,43 +1,23 @@
-// src/App.jsx
-import { useState } from "react";
-import PlantillaPublica from "./components/templates/PlantillaPublica";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
-import Registro from "./pages/Registro";
 import Catalogo from "./pages/Catalogo";
+import Carrito from "./pages/Carrito";
 import { productos } from "./data/Productos";
+import { ContenidoCarritoProvider } from "./data/ContenidoCarrito";
 
 function App() {
-  const [vista, setVista] = useState("catalogo");
-  const [usuario, setUsuario] = useState(null);
-
-  function manejarIngresoExitoso(correo) {
-    setUsuario(correo);
-    setVista("catalogo");
-  }
-
   return (
-    <PlantillaPublica 
-      onIrALogin={() => setVista("login")} 
-      onIrACatalogo={() => setVista("catalogo")}
-      onIrARegistro={() => setVista("registro")}
-    >
-      {vista === "catalogo" && (
-        <Catalogo productos={productos} />
-      )}
-
-      {vista === "login" && (
-        <Login 
-          onLoginSuccess={manejarIngresoExitoso} 
-        />
-      )}
-
-      {vista === "registro" && (
-        <Registro 
-          onRegistroExitoso={manejarIngresoExitoso} 
-          onIrALogin={() => setVista("login")}
-        />
-      )}
-    </PlantillaPublica>
+    <ContenidoCarritoProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Catalogo productos={productos} />} />
+          <Route path="/catalogo" element={<Catalogo productos={productos} />} />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/login" element={<Login />} />
+           <Route path="*" element={<NoEncontrada />} />
+        </Routes> 
+      </BrowserRouter>
+    </ContenidoCarritoProvider>
   );
 }
 
