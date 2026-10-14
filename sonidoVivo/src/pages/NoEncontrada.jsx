@@ -1,17 +1,24 @@
-import { PlantillaPublica } from '../components/templates/PlantillaPublica/PlantillaPublica'
-import { Button } from '../components/atoms/Button/Button'
-import { useTituloPagina } from '../hooks/useTituloPagina'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import PlantillaPublica from "../components/templates/PlantillaPublica";
+import Boton from "../components/atoms/Boton";
+import { useTituloPagina } from "../hooks/useTituloPagina";
 
-// Página: se muestra cuando ninguna ruta coincide (la ruta "*" en App.jsx).
 export default function NoEncontrada() {
-  const navigate = useNavigate()
-  useTituloPagina('Página no encontrada')
+  const navigate = useNavigate();
+  useTituloPagina('Página no encontrada');
 
   return (
     <PlantillaPublica>
-      <h2 className="h3 mb-3">Página no encontrada</h2>
-      <p>No existe una página en esta dirección.</p>
-      <Button onClick={() => navigate('/catalogo')}>Ir al catálogo</Button>
+      <div className="container py-5 text-center text-white">
+        <h2 className="h3 mb-3">Página no encontrada</h2>
+        <p className="mb-4">No existe una página en esta dirección.</p>
+        <Boton 
+          textoBoton="Ir al catálogo" 
+          alHacerClic={() => navigate('/catalogo')} 
+          variante="warning" 
+        />
+      </div>
     </PlantillaPublica>
-  )
+  );
 }

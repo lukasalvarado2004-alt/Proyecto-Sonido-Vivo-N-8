@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
 import Catalogo from "./pages/Catalogo";
 import Carrito from "./pages/Carrito";
-import { productos } from "./data/Productos";
+import NoEncontrada from "./pages/NoEncontrada";
+import productos from "./data/Productos.json";
 import { ContenidoCarritoProvider } from "./data/ContenidoCarrito";
 
 function App() {
