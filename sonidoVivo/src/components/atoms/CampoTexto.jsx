@@ -1,11 +1,14 @@
-export default function CampoTexto({ valor, alCambiar, tipo = "text", placeholder }) {
+export default function CampoTexto(props) {
+  
+  const tipoInput = props.tipo || "text"; 
+
   return (
     <input
-      type={tipo}
-      className="formulario-input-nativo"
-      placeholder={placeholder}
-      value={valor}
-      onChange={(e) => alCambiar(e.target.value)}
+      type={tipoInput}
+      className="formulario-input-native"
+      placeholder={props.placeholder}
+      value={props.valor}
+      onChange={(e) => props.alCambiar(e.target.value)}
     />
   );
 }

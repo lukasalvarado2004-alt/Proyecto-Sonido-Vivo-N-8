@@ -15,6 +15,23 @@ export default function Login({ onLoginSuccess }) {
       return;
     }
     onLoginSuccess(correo);
+
+      // 1. Obtener la lista de usuarios del localStorage
+  const usuariosExistentes = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+  // 2. Buscar si coincide el correo Y la contraseña
+  const usuarioValido = usuariosExistentes.find(
+    (u) => u.correo === correo && u.contrasena === contrasena
+  );
+
+  if (!usuarioValido) {
+    alert('Correo o contraseña incorrectos. Por favor, inténtalo de nuevo.');
+    return;
+  }
+
+  // 3. Si existe, loguear con éxito
+  alert(`¡Bienvenido de vuelta, ${usuarioValido.nombre}!`);
+  onLoginSuccess(correo)
   };
 
   useTituloPagina('Inicio Sesion')

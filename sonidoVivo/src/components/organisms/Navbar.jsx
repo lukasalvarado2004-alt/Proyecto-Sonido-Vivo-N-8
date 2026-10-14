@@ -18,6 +18,9 @@ function Navbar() {
         <NavLink to="/login" className="btn btn-primary">
           Iniciar Sesión
         </NavLink>
+          <NavLink to="/registro" className="btn btn-primary">
+          Registrarte
+        </NavLink>
       </div>
     </nav>
   );

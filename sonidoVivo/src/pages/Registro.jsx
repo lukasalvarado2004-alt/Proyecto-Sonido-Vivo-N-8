@@ -3,6 +3,7 @@ import { useState } from 'react';
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
 import Error from '../components/atoms/Error';
+import PlantillaPublica from "../components/templates/PlantillaPublica";
 
 export default function Registro({ onRegistroExitoso, onIrALogin }) {
   const [nombre, setNombre] = useState('');
@@ -52,9 +53,12 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
     if (onRegistroExitoso) {
       onRegistroExitoso(correo);
     }
+
+    
   };
 
   return (
+    <PlantillaPublica>
     <div className="d-flex justify-content-center align-items-center py-5">
       <div className="login-tarjeta">
         <div className="login-encabezado mb-4">
@@ -143,5 +147,6 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
         </div>
       </div>
     </div>
+    </PlantillaPublica>
   );
 }

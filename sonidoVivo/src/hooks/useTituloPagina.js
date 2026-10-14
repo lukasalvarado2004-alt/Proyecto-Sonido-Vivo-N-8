@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 export function useTituloPagina(titulo) {
   useEffect(() => {
     // document.title es el texto que aparece en la pestaña del navegador.
-    document.title = `${titulo} | Tienda Demo`
+    document.title = `${titulo} | Sonido Vivo`
     // El arreglo de abajo indica cuándo se repite el efecto: solo si "titulo" cambia.
   }, [titulo])
 }   

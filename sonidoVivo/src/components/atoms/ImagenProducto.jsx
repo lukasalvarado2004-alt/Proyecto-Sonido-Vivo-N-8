@@ -1,10 +1,10 @@
 import React from "react";
 
-function ImagenProducto({ urlImagen, altTexto }) {
+function ImagenProducto(props) {
   return (
     <img 
-      src={urlImagen} 
-      alt={altTexto} 
+      src={props.urlImagen} 
+      alt={props.altTexto} 
       className="card-img-top imagen-producto"
     />
   );
