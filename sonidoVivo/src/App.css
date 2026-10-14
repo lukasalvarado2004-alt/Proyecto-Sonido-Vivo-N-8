@@ -216,3 +216,32 @@ footer a:hover {
   object-fit: cover; /* Mantiene la proporción de la imagen sin deformarla */
   border-radius: var(--radius-sm);
 }
+
+/* tarjeta item carrito*/
+
+.tarjeta-carrito {
+  /* Emula d-flex, align-items-center y justify-content-between */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  
+  /* Emula p-3 (Relleno original de Bootstrap) */
+  padding: 1rem !important; 
+  
+  /* Si en el futuro quieres limitar el ancho o alto de la tarjeta, */
+  /* puedes agregar aquí propiedades como: max-width o width */
+}
+
+
+/* tarjeta producto*/
+.tarjeta-producto-custom {
+  /* Emula h-100 (fuerza a que mida el alto total de su contenedor padre) */
+  height: 100% !important;
+
+  /* Emula p-3 (relleno interno de Bootstrap) */
+  padding: 1rem !important;
+
+  /* Nota: Al estar en tu CSS, si quieres limitar el tamaño en pantallas grandes, */
+  /* puedes descomentar la siguiente línea para fijar un ancho máximo: */
+  /* max-width: 320px; */
+}

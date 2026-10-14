@@ -1,9 +1,9 @@
+import React from "react";
 import Boton from "../atoms/Boton";
 import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
 import { useContenidoCarrito } from "../../data/ContenidoCarrito";
-
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
@@ -23,7 +23,8 @@ function TarjetaProducto(props) {
   };
 
   return (
-    <div className="card h-100 p-3 shadow-sm">
+    /* Reemplazamos h-100 y p-3 por nuestra clase personalizada */
+    <div className="card tarjeta-producto-custom shadow-sm">
       <ImagenProducto urlImagen={props.imagen} altTexto={props.nombre} />
 
       <div className="card-body d-flex flex-column justify-content-between p-0 mt-3">
