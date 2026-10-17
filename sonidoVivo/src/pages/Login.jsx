@@ -1,91 +1,109 @@
+// src/pages/Login.jsx
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
-import PlantillaPublica from "../components/templates/PlantillaPublica";
-import { useTituloPagina } from '../hooks/useTituloPagina';
+import Error from '../components/atoms/Error';
+import PlantillaPublica from '../components/templates/PlantillaPublica';
 
+import { autenticarUsuario } from '../service/usuarioService';
+import { validarCorreo, validarContrasena } from '../utils/validaciones.js';
 
-
-// 1. Importamos las funciones de la carpeta util
-import { validarCorreo, validarContrasena } from '../utils/validaciones';
-
-
-export default function Login({ onLoginSuccess }) {
+export default function Login({ onLoginExitoso }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
-  
-  // Estado para capturar los mensajes de error de cada campo
-  const [errores, setErrores] = useState({ correo: '', contrasena: '' });
+
+  const [errorGeneral, setErrorGeneral] = useState('');
+  const [erroresCampos, setErroresCampos] = useState({});
+
+  const navigate = useNavigate();
 
   const manejarEnvio = (e) => {
     e.preventDefault();
-    
-    // 2. Ejecutamos las validaciones de la carpeta util
-    const errorCorreo = validarCorreo(correo);
-    const errorContrasena = validarContrasena(contrasena);
+    setErrorGeneral('');
+    setErroresCampos({});
 
-    // 3. Si hay algún error, lo guardamos en el estado y detenemos el envío
-    if (errorCorreo || errorContrasena) {
-      setErrores({
-        correo: errorCorreo,
-        contrasena: errorContrasena
+    // Validaciones de formato iniciales
+    const errorFormatoCorreo = validarCorreo(correo);
+    const errorFormatoClave = validarContrasena(contrasena);
+
+    if (errorFormatoCorreo || errorFormatoClave) {
+      setErroresCampos({
+        correo: errorFormatoCorreo,
+        contrasena: errorFormatoClave
       });
+      setErrorGeneral('Por favor, ingresa un correo y contraseña válidos.');
       return;
     }
 
-    // 4. Si todo está correcto, limpiamos errores y procedemos
-    setErrores({ correo: '', contrasena: '' });
-    onLoginSuccess(correo);
-  };
+    // Autenticar mediante el servicio
+    const resultado = autenticarUsuario(correo, contrasena);
 
-  useTituloPagina('Inicio Sesion');
+    if (!resultado.exito) {
+      setErroresCampos({ [resultado.campo]: resultado.error });
+      setErrorGeneral(resultado.error);
+      return;
+    }
+
+    // Guardar la sesión y redirigir
+    localStorage.setItem('sv_sesion', JSON.stringify(resultado.usuario));
+
+    if (onLoginExitoso) {
+      onLoginExitoso(resultado.usuario);
+    }
+
+    if (resultado.usuario.rol === 'Administrador') {
+      navigate('/admin');
+    } else {
+      navigate('/catalogo');
+    }
+  };
 
   return (
     <PlantillaPublica>
       <div className="d-flex justify-content-center align-items-center py-5">
         <div className="login-tarjeta">
-          <div className="login-encabezado">
-            <h2 className="login-titulo-principal">Bienvenid@ a</h2>
+          <div className="login-encabezado mb-4 text-center">
+            <h2 className="login-titulo-principal">Inicia Sesión en</h2>
             <h2 className="login-titulo-marca">
               SONIDO <div className="d-inline text-purple-brand">VIVO</div>
             </h2>
-            <small className="login-subtitulo">Por favor ingresa tus datos para ingresar</small>
+            <small className="login-subtitulo">Ingresa tus credenciales para continuar</small>
           </div>
+
+          <Error mensaje={errorGeneral} variante="danger" />
 
           <form onSubmit={manejarEnvio} noValidate>
             <div className="login-formulario-campos">
               
-              {/* 5. Pasamos el error correspondiente a cada campo */}
               <CampoFormulario 
                 valor={correo} 
-                alCambiar={(valor) => {
-                  setCorreo(valor);
-                  if (errores.correo) setErrores(prev => ({ ...prev, correo: '' })); // Limpia error al escribir
+                alCambiar={(v) => { 
+                  setCorreo(v); 
+                  setErroresCampos(prev => ({ ...prev, correo: '' })); 
+                  setErrorGeneral('');
                 }} 
                 tipo="email" 
                 placeholder="correo@electronico.cl" 
-                error={errores.correo} 
+                error={erroresCampos.correo}
               />
 
               <CampoFormulario 
                 valor={contrasena} 
-                alCambiar={(valor) => {
-                  setContrasena(valor);
-                  if (errores.contrasena) setErrores(prev => ({ ...prev, contrasena: '' })); // Limpia error al escribir
+                alCambiar={(v) => { 
+                  setContrasena(v); 
+                  setErroresCampos(prev => ({ ...prev, contrasena: '' })); 
+                  setErrorGeneral('');
                 }} 
                 tipo="password" 
                 placeholder="Contraseña" 
-                error={errores.contrasena} 
+                error={erroresCampos.contrasena}
               />
+
             </div>
 
-            <div className="login-contenedor-enlace">
-              <a href="#" className="login-enlace-olvido">
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-
-            <div className="w-100 mt-2">
+            <div className="w-100 mt-3">
               <Boton 
                 tipo="submit" 
                 textoBoton="INICIAR SESIÓN" 
@@ -93,6 +111,16 @@ export default function Login({ onLoginSuccess }) {
               />
             </div>
           </form>
+
+          <div className="text-center mt-4">
+            <small className="text-light">
+              ¿No tienes cuenta?{' '}
+              <Link to="/registro" className="text-purple-brand text-decoration-none fw-bold">
+                Regístrate aquí
+              </Link>
+            </small>
+          </div>
+
         </div>
       </div>
     </PlantillaPublica>
