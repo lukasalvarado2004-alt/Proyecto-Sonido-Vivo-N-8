@@ -233,3 +233,52 @@ footer a:hover {
   /* puedes descomentar la siguiente línea para fijar un ancho máximo: */
   /* max-width: 320px; */
 }
+/* ==========================================
+   ESTILOS ADAPTADOS PARA CONFIRMAR COMPRA
+   ========================================== */
+/* Contenedor principal de la tarjeta de despacho que clona el estilo del Login */
+.compra-tarjeta-oscura {
+  background-color: var(--bg-card) !important; 
+  border: 1px solid var(--border-color) !important;   
+  border-radius: var(--radius-lg) !important;         
+  box-shadow: var(--shadow) !important; 
+  padding: 2.5rem 2rem !important;
+  color: var(--text-main) !important;
+}
+
+/* Campos de entrada oscuros y redondeados nativos del sitio */
+.compra-input-control {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0.75rem 1rem !important;
+  width: 100% !important;
+  outline: none !important;
+  transition: var(--transition);
+}
+
+.compra-input-control:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25) !important;
+}
+
+.compra-input-control::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Vista de éxito totalmente blanca y centrada */
+.compra-vista-exito {
+  max-width: 600px !important;
+  margin: 2rem auto !important;
+  text-align: center;
+}
+
+.compra-texto-blanco {
+  color: var(--text-main) !important;
+}
+
+/* Línea divisoria adaptada para el resumen de productos */
+.compra-borde-resumen {
+  border-bottom: 1px solid var(--border-color) !important;
+}

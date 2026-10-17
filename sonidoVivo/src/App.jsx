@@ -7,22 +7,28 @@ import Registro from "./pages/Registro";
 import Admin from "./pages/AdminProductos";
 import NoEncontrada from "./pages/NoEncontrada";
 import productos from "./data/Productos.json";
-import { ContenidoCarritoProvider } from "./data/ContenidoCarrito";
+import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
+import { ProductosProvider } from "./context/ProductosContext";
+import ConfirmarCompra from './pages/ConfirmarCompra';
 
 function App() {
   return (
-    <ContenidoCarritoProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Catalogo productos={productos} />} />
-          <Route path="/catalogo" element={<Catalogo productos={productos} />} />
-          <Route path="/carrito" element={<Carrito />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Registro />} />
-           <Route path="*" element={<NoEncontrada />} />
-        </Routes> 
-      </BrowserRouter>
-    </ContenidoCarritoProvider>
+    <ProductosProvider>
+      <ContenidoCarritoProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Catalogo productos={productos} />} />
+            <Route path="/catalogo" element={<Catalogo productos={productos} />} />
+            <Route path="/carrito" element={<Carrito />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="*" element={<NoEncontrada />} />
+            <Route path="/admin" element={<Admin productos={productos} />} />
+            <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+          </Routes>
+        </BrowserRouter>
+      </ContenidoCarritoProvider>
+    </ProductosProvider>
   );
 }
 
