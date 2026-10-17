@@ -1,12 +1,13 @@
+// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
 import Catalogo from "./pages/Catalogo";
 import Carrito from "./pages/Carrito";
 import Registro from "./pages/Registro";
+import Admin from "./pages/AdminProductos";
 import NoEncontrada from "./pages/NoEncontrada";
 import productos from "./data/Productos.json";
-import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
-import ConfirmarCompra from "./pages/ConfirmarCompra";
+import { ContenidoCarritoProvider } from "./data/ContenidoCarrito";
 
 function App() {
   return (
@@ -18,8 +19,7 @@ function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
-          <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
-          <Route path="*" element={<NoEncontrada />} />
+           <Route path="*" element={<NoEncontrada />} />
         </Routes> 
       </BrowserRouter>
     </ContenidoCarritoProvider>

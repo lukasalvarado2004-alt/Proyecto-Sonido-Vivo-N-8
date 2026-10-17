@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Administrador",
+    "correo": "admin@sonidovivo.cl",
+    "password": "admin",
+    "rol": "Administrador"
+  },
+  {
+    "id": 2,
+    "nombre": "Juan Pérez",
+    "correo": "juan@correo.cl",
+    "password": "123",
+    "rol": "Cliente"
+  }
+]

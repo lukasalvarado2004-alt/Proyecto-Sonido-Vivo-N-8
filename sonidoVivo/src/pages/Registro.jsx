@@ -1,10 +1,13 @@
 // src/pages/Registro.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
 import Error from '../components/atoms/Error';
 import PlantillaPublica from "../components/templates/PlantillaPublica";
 
+import { obtenerUsuarioPorCorreo, crearUsuario } from '../service/usuarioService';
 import { 
   validarNombre, 
   validarCorreo, 
@@ -12,7 +15,7 @@ import {
   validarConfirmarContrasena 
 } from '../utils/validaciones.js';
 
-export default function Registro({ onRegistroExitoso, onIrALogin }) {
+export default function Registro({ onRegistroExitoso }) {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -21,10 +24,13 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
   const [errorGeneral, setErrorGeneral] = useState('');
   const [erroresCampos, setErroresCampos] = useState({});
 
+  const navigate = useNavigate();
+
   const manejarEnvio = (e) => {
     e.preventDefault();
     setErrorGeneral('');
 
+    // Validar formatos
     const errorNombre = validarNombre(nombre);
     const errorCorreo = validarCorreo(correo);
     const errorClave = validarContrasena(contrasena);
@@ -42,17 +48,32 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
       return;
     }
 
-    setErroresCampos({});
+    // Verificar mediante el servicio si el correo ya existe
+    if (obtenerUsuarioPorCorreo(correo)) {
+      setErroresCampos({ correo: 'Este correo electrónico ya está registrado.' });
+      setErrorGeneral('El correo ingresado ya se encuentra registrado.');
+      return;
+    }
+
+    // Guardar usuario nuevo con el servicio
+    crearUsuario({
+      nombre,
+      correo,
+      password: contrasena
+    });
+
     if (onRegistroExitoso) {
       onRegistroExitoso(correo);
     }
+
+    navigate('/login'); 
   };
 
   return (
     <PlantillaPublica>
       <div className="d-flex justify-content-center align-items-center py-5">
         <div className="login-tarjeta">
-          <div className="login-encabezado mb-4">
+          <div className="login-encabezado mb-4 text-center">
             <h2 className="login-titulo-principal">Crea tu cuenta en</h2>
             <h2 className="login-titulo-marca">
               SONIDO <div className="d-inline text-purple-brand">VIVO</div>
@@ -114,7 +135,7 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
               />
             </div>
 
-            <div className="w-100 mt-2">
+            <div className="w-100 mt-3">
               <Boton 
                 tipo="submit" 
                 textoBoton="CREAR CUENTA" 
@@ -122,8 +143,6 @@ export default function Registro({ onRegistroExitoso, onIrALogin }) {
               />
             </div>
           </form>
-
-          
         </div>
       </div>
     </PlantillaPublica>
