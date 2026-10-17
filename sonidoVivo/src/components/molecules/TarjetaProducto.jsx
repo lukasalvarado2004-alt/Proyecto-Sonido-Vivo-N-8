@@ -3,7 +3,7 @@ import Boton from "../atoms/Boton";
 import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
-import { useContenidoCarrito } from "../../data/ContenidoCarrito";
+import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;

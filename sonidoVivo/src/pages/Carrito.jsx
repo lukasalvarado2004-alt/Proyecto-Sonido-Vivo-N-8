@@ -1,14 +1,20 @@
 import React from "react";
-import { useContenidoCarrito } from "../data/ContenidoCarrito";
-import ItemCarrito from "../components/molecules/ItemCarrito";
+// Importamos useNavigate para cambiar de página
+import { useNavigate } from "react-router-dom";
+import { useContenidoCarrito } from "../context/ContenidoCarrito";
+import { ItemCarrito } from "../components/molecules/ItemCarrito";
 import Boton from "../components/atoms/Boton";
 import PlantillaPublica from "../components/templates/PlantillaPublica";
-import { useTituloPagina } from '../hooks/useTituloPagina'
+import { useTituloPagina } from '../hooks/useTituloPagina';
+// IMPORTANTE: Importamos la función desde utilidades
+import { irAConfirmarCompra } from "../utils/compraUtils";
 
-function Carrito() {
+function Carrito(props) {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
+  // Inicializamos el hook de navegación
+  const navigate = useNavigate();
 
-    useTituloPagina('Carrito')
+  useTituloPagina('Carrito');
 
   return (
     <PlantillaPublica>
@@ -24,7 +30,7 @@ function Carrito() {
             ) : (
               <div className="d-flex flex-column">
                 {items.map((item) => (
-                  <ItemCarrito key={item.id || item.nombre} item={item} />
+                  <ItemCarrito key={item.producto.id} item={item} />
                 ))}
               </div>
             )}
@@ -34,7 +40,7 @@ function Carrito() {
             <div className="card-footer border-secondary pt-3 mt-3">
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <span className="fs-5 text-muted">Total General:</span>
-                <strong className="fs-3 text-warning">${precioTotal.toLocaleString()}</strong>
+                <strong className="fs-3 text-warning">${precioTotal.toLocaleString('es-CL')}</strong>
               </div>
               <div className="d-flex gap-3 justify-content-end">
                 <Boton 
@@ -42,8 +48,10 @@ function Carrito() {
                   alHacerClic={vaciarCarrito} 
                   variante="outline-danger" 
                 />
+                {/* CORREGIDO: Conectamos la acción al hacer clic usando la utilidad */}
                 <Boton 
                   textoBoton="Finalizar Pago" 
+                  alHacerClic={() => irAConfirmarCompra(navigate)} 
                   variante="warning" 
                 />
               </div>

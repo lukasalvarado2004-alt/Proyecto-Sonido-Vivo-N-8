@@ -5,7 +5,8 @@ import Carrito from "./pages/Carrito";
 import Registro from "./pages/Registro";
 import NoEncontrada from "./pages/NoEncontrada";
 import productos from "./data/Productos.json";
-import { ContenidoCarritoProvider } from "./data/ContenidoCarrito";
+import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
+import ConfirmarCompra from "./pages/ConfirmarCompra";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
           <Route path="/carrito" element={<Carrito />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registro" element={<Registro />} />
-           <Route path="*" element={<NoEncontrada />} />
+          <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+          <Route path="*" element={<NoEncontrada />} />
         </Routes> 
       </BrowserRouter>
     </ContenidoCarritoProvider>

@@ -1,9 +1,9 @@
 import React from "react";
-import { useContenidoCarrito } from "../../data/ContenidoCarrito";
+import { useContenidoCarrito } from "../../hooks/useContenidoCarrito";
 import ItemCarrito from "../molecules/ItemCarrito";
 import Boton from "../atoms/Boton";
 
-function VisualCarrito() {
+function VisualCarrito(props) {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
 
   return (
@@ -18,7 +18,7 @@ function VisualCarrito() {
         ) : (
           <div className="d-flex flex-column gap-3">
             {items.map((item) => (
-              <ItemCarrito key={item.id} item={item} />
+              <ItemCarrito key={item.producto.id} item={item} />
             ))}
           </div>
         )}

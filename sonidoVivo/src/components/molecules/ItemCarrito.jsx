@@ -1,58 +1,61 @@
 import React from "react";
-import { useContenidoCarrito } from "../../data/ContenidoCarrito";
+import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 
-function ItemCarrito(props) {
+export function ItemCarrito(props) {
   const { actualizarCantidad, eliminarProducto } = useContenidoCarrito();
-  const { id, imagen, nombre, precio, cantidad } = props.item;
-
-  const handleRestar = () => {
-    if (cantidad > 1) {
-      actualizarCantidad(id, cantidad - 1);
-    } else {
-      eliminarProducto(id);
-    }
-  };
+  
+  const subtotal = props.item.producto.precio * props.item.cantidad;
 
   return (
-    /* Reemplazamos las clases de Bootstrap por nuestra clase personalizada */
-    <div className="tarjeta-carrito bg-secondary rounded mb-2 text-white">
-      <div className="d-flex align-items-center gap-3">
+    <li className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3 bg-transparent border-0 text-white py-3">
+      
+      {/* Contenedor de Imagen, Nombre y Cantidad */}
+      <div className="d-flex align-items-center gap-3 flex-grow-1">
+        {/* IMAGEN DEL PRODUCTO (Añadida siguiendo la estructura de props) */}
         <img 
-          src={imagen} 
-          alt={nombre} 
-          style={{ width: "50px", height: "50px", objectFit: "cover" }} 
-          className="rounded" 
+          src={props.item.producto.imagen} 
+          alt={props.item.producto.nombre} 
+          className="img-fluid rounded border border-secondary"
+          style={{ width: "60px", height: "60px", objectFit: "cover" }}
         />
+        
         <div>
-          <h6 className="mb-0 fw-bold">{nombre}</h6>
-          <small className="text-light">
-            ${precio.toLocaleString()} x {cantidad}
-          </small>
+          <span className="fw-semibold fs-5">{props.item.producto.nombre}</span>
+          <span className="badge bg-secondary ms-2">x{props.item.cantidad}</span>
         </div>
       </div>
-      
-      <div className="d-flex align-items-center gap-2">
+
+      {/* Precio y Controles de acción */}
+      <div className="d-flex align-items-center gap-3">
+        <span className="fw-bold fs-5">${subtotal.toLocaleString('es-CL')}</span>
+        
+        <div className="d-flex align-items-center gap-1">
+          <button 
+            className="btn btn-outline-light btn-sm px-2" 
+            onClick={() => actualizarCantidad(props.item.producto.id, props.item.cantidad + 1)}
+          >
+            +
+          </button>
+          
+          <span className="mx-1 fw-bold">{props.item.cantidad}</span>
+
+          <button 
+            className="btn btn-outline-light btn-sm px-2" 
+            onClick={() => actualizarCantidad(props.item.producto.id, props.item.cantidad - 1)}
+            disabled={props.item.cantidad <= 1}
+          >
+            -
+          </button>
+        </div>
+
         <button 
-          className="btn btn-sm btn-light py-0 px-2" 
-          onClick={handleRestar}
+          className="btn btn-danger btn-sm" 
+          onClick={() => eliminarProducto(props.item.producto.id)}
         >
-          -
-        </button>
-        <span className="fw-bold">{cantidad}</span>
-        <button 
-          className="btn btn-sm btn-light py-0 px-2" 
-          onClick={() => actualizarCantidad(id, cantidad + 1)}
-        >
-          +
-        </button>
-        <button 
-          className="btn btn-sm btn-danger ms-2" 
-          onClick={() => eliminarProducto(id)}
-        >
-          Eliminar
+          Quitar
         </button>
       </div>
-    </div>
+    </li>
   );
 }
 
