@@ -28,8 +28,8 @@ export function validarContrasena(contrasena) {
   if (!contrasena || !contrasena.trim()) {
     return 'La contraseña es obligatoria.';
   }
-  if (contrasena.trim().length < 3) {
-    return 'La contraseña debe tener al menos 3 caracteres.';
+  if (contrasena.trim().length < 5) {
+    return 'La contraseña debe tener al menos 5 caracteres.';
   }
   return '';
 }

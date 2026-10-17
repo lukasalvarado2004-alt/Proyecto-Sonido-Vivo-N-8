@@ -24,29 +24,29 @@ export default function Login({ onLoginExitoso }) {
     setErrorGeneral('');
     setErroresCampos({});
 
-    // Validaciones de formato iniciales
-    const errorFormatoCorreo = validarCorreo(correo);
-    const errorFormatoClave = validarContrasena(contrasena);
+    // 1. Validar formato básico de inputs
+    const errorCorreo = validarCorreo(correo);
+    const errorClave = validarContrasena(contrasena);
 
-    if (errorFormatoCorreo || errorFormatoClave) {
+    if (errorCorreo || errorClave) {
       setErroresCampos({
-        correo: errorFormatoCorreo,
-        contrasena: errorFormatoClave
+        correo: errorCorreo,
+        contrasena: errorClave
       });
-      setErrorGeneral('Por favor, ingresa un correo y contraseña válidos.');
       return;
     }
 
-    // Autenticar mediante el servicio
+    // 2. Intentar autenticación
     const resultado = autenticarUsuario(correo, contrasena);
 
     if (!resultado.exito) {
-      setErroresCampos({ [resultado.campo]: resultado.error });
+      // MOSTRAR SOLO 1 MENSAJE: Guardar en errorGeneral y limpiar errores de campos
       setErrorGeneral(resultado.error);
+      setErroresCampos({});
       return;
     }
 
-    // Guardar la sesión y redirigir
+    // 3. Inicio de sesión exitoso
     localStorage.setItem('sv_sesion', JSON.stringify(resultado.usuario));
 
     if (onLoginExitoso) {
@@ -72,6 +72,7 @@ export default function Login({ onLoginExitoso }) {
             <small className="login-subtitulo">Ingresa tus credenciales para continuar</small>
           </div>
 
+          {/* ÚNICO MENSAJE DE ERROR SUPERIOR */}
           <Error mensaje={errorGeneral} variante="danger" />
 
           <form onSubmit={manejarEnvio} noValidate>
