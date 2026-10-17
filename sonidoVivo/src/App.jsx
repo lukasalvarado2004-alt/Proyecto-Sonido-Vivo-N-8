@@ -1,38 +1,28 @@
-// src/App.jsx
-import { useState } from "react";
-import Login from "./pages/Inicio";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from "./pages/Login";
+import Catalogo from "./pages/Catalogo";
+import Carrito from "./pages/Carrito";
+import Registro from "./pages/Registro";
+import NoEncontrada from "./pages/NoEncontrada";
+import productos from "./data/Productos.json";
+import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
+import ConfirmarCompra from "./pages/ConfirmarCompra";
 
 function App() {
-  // Estado para saber si el usuario ya inició sesión
-  const [usuario, setUsuario] = useState(null);
-
-  // Función que se ejecuta cuando el login es correcto
-  function manejarLoginExitoso(correo) {
-    setUsuario(correo);
-    alert("¡Bienvenido a Sonido Vivo! Has iniciado sesión como: " + correo);
-  }
-
   return (
-    <>
-      {/* Si no hay un usuario guardado en el estado, mostramos el Login */}
-      {!usuario ? (
-        <Login onLoginSuccess={manejarLoginExitoso} />
-      ) : (
-        // Si ya hay usuario, mostramos la pantalla de bienvenida del sistema
-        <div className="container mt-5 text-center">
-          <h1 className="display-4 mb-3">Plataforma Sonido Vivo</h1>
-          <p className="lead">
-            Sesión activa: <strong>{usuario}</strong>
-          </p>
-          <button 
-            className="btn btn-danger mt-4" 
-            onClick={() => setUsuario(null)}
-          >
-            Cerrar Sesión
-          </button>
-        </div>
-      )}
-    </>
+    <ContenidoCarritoProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Catalogo productos={productos} />} />
+          <Route path="/catalogo" element={<Catalogo productos={productos} />} />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
+          <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+          <Route path="*" element={<NoEncontrada />} />
+        </Routes> 
+      </BrowserRouter>
+    </ContenidoCarritoProvider>
   );
 }
 
