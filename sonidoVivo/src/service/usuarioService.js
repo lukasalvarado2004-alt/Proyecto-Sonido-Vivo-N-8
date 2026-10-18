@@ -20,54 +20,37 @@ export function listarUsuarios() {
   return leer();
 }
 
+export function obtenerUsuarioPorId(id) {
+  return leer().find((u) => Number(u.id) === Number(id)) ?? null;
+}
+
 export function obtenerUsuarioPorCorreo(correo) {
-  const correoLimpio = (correo || '').trim().toLowerCase();
-  return leer().find((u) => (u.correo || '').trim().toLowerCase() === correoLimpio) ?? null;
+  return leer().find(
+    (u) => (u.correo || u.email)?.toLowerCase() === correo?.toLowerCase()
+  ) ?? null;
+}
+
+// --- FUNCIÓN REQUERIDA POR LOGIN.JSX ---
+export function autenticarUsuario(correo, contrasena) {
+  const lista = leer();
+  const usuarioEncontrado = lista.find(
+    (u) => 
+      ((u.correo || u.email)?.toLowerCase() === correo?.trim().toLowerCase()) && 
+      ((u.contrasena || u.password) === contrasena?.trim())
+  );
+  return usuarioEncontrado || null;
 }
 
 export function crearUsuario(datos) {
   const lista = leer();
   const nuevoId = Math.max(0, ...lista.map((u) => Number(u.id || 0))) + 1;
-  
-  const nuevo = {
-    id: nuevoId,
-    nombre: datos.nombre.trim(),
-    correo: datos.correo.trim().toLowerCase(),
-    password: datos.password.trim(),
-    rol: datos.rol || 'Cliente'
-  };
-
+  const nuevo = { ...datos, id: nuevoId };
   guardar([...lista, nuevo]);
   return nuevo;
 }
 
-export function autenticarUsuario(correo, contrasena) {
-  const usuario = obtenerUsuarioPorCorreo(correo);
-
-  // 1. Si no existe el usuario
-  if (!usuario) {
-    return {
-      exito: false,
-      campo: 'correo',
-      error: 'Esta cuenta no está registrada.'
-    };
-  }
-
-  // 2. Comprobar contraseña
-  const claveGuardada = (usuario.password || usuario.contrasena || '').toString().trim();
-  const claveIngresada = (contrasena || '').toString().trim();
-
-  if (claveGuardada !== claveIngresada) {
-    return {
-      exito: false,
-      campo: 'contrasena',
-      error: 'Contraseña incorrecta.'
-    };
-  }
-
-  // 3. Credenciales correctas
-  return {
-    exito: true,
-    usuario
-  };
+export function actualizarUsuario(id, cambios) {
+  const lista = leer().map((u) => (Number(u.id) === Number(id) ? { ...u, ...cambios } : u));
+  guardar(lista);
+  return lista.find((u) => Number(u.id) === Number(id)) ?? null;
 }
