@@ -6,15 +6,18 @@ import { ItemCarrito } from "../components/molecules/ItemCarrito";
 import Boton from "../components/atoms/Boton";
 import PlantillaPublica from "../components/templates/PlantillaPublica";
 import { useTituloPagina } from '../hooks/useTituloPagina';
-// IMPORTANTE: Importamos la función desde utilidades
-import { irAConfirmarCompra } from "../utils/compraUtils";
+
+
 
 function Carrito(props) {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
-  // Inicializamos el hook de navegación
   const navigate = useNavigate();
 
   useTituloPagina('Carrito');
+
+  function manejarFinalizarPago() {
+    navigate("/confirmar-compra"); 
+  }
 
   return (
     <PlantillaPublica>
@@ -48,10 +51,10 @@ function Carrito(props) {
                   alHacerClic={vaciarCarrito} 
                   variante="outline-danger" 
                 />
-                {/* CORREGIDO: Conectamos la acción al hacer clic usando la utilidad */}
+                
                 <Boton 
                   textoBoton="Finalizar Pago" 
-                  alHacerClic={() => irAConfirmarCompra(navigate)} 
+                  alHacerClic={manejarFinalizarPago} 
                   variante="warning" 
                 />
               </div>

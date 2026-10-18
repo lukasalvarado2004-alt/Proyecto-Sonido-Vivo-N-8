@@ -12,13 +12,21 @@ function Navbar() {
         <NavLink to="/catalogo" className="btn btn-outline-light">
           Catálogo
         </NavLink>
+        
         <NavLink to="/carrito" className="btn btn-outline-warning">
           🛒 Carrito
         </NavLink>
+
+        
+        <NavLink to="/seguimiento" className="btn btn-outline-light">
+          🚚 Seguimiento
+        </NavLink>
+
         <NavLink to="/login" className="btn btn-primary">
           Iniciar Sesión
         </NavLink>
-          <NavLink to="/registro" className="btn btn-primary">
+        
+        <NavLink to="/registro" className="btn btn-primary">
           Registrarte
         </NavLink>
       </div>

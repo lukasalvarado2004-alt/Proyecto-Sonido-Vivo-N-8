@@ -282,3 +282,9 @@ footer a:hover {
 .compra-borde-resumen {
   border-bottom: 1px solid var(--border-color) !important;
 }
+.navbar-actions .btn-outline-light.active {
+  background-color: transparent !important;
+  color: #fff !important;
+  border-color: #fff !important;
+  box-shadow: none !important;
+}

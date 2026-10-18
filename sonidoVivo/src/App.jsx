@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from "./pages/Login";
 import Catalogo from "./pages/Catalogo";
@@ -10,6 +9,7 @@ import productos from "./data/Productos.json";
 import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
 import { ProductosProvider } from "./context/ProductosContext";
 import ConfirmarCompra from './pages/ConfirmarCompra';
+import SeguimientoCompra from './pages/SeguimientoCompra';
 
 function App() {
   return (
@@ -21,10 +21,12 @@ function App() {
             <Route path="/catalogo" element={<Catalogo productos={productos} />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="*" element={<NoEncontrada />} />
+            <Route path="/registro" element={<Registro />} />            
             <Route path="/admin" element={<Admin productos={productos} />} />
             <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+            <Route path="/seguimiento" element={<SeguimientoCompra />} />
+
+            <Route path="*" element={<NoEncontrada />} />
           </Routes>
         </BrowserRouter>
       </ContenidoCarritoProvider>
