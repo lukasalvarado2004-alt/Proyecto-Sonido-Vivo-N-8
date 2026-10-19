@@ -10,6 +10,7 @@ import productos from "./data/Productos.json";
 import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
 import { ProductosProvider } from "./context/ProductosContext";
 import ConfirmarCompra from './pages/ConfirmarCompra';
+import DetalleProducto from './pages/DetalleProducto';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="*" element={<NoEncontrada />} />
             <Route path="/admin" element={<Admin productos={productos} />} />
             <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
           </Routes>
         </BrowserRouter>
       </ContenidoCarritoProvider>
