@@ -4,9 +4,11 @@ import Precio from '../atoms/Precio';
 import EtiquetaStock from '../atoms/EtiquetaStock';
 import Boton from '../atoms/Boton';
 import SelectorCantidad from '../molecules/SelectorCantidad';
+import { useAgregarAlCarrito } from "../../hooks/useAgregarAlCarrito";
 
-export default function InfoProducto(props) {
+export default function InfoProductoDetalle(props) {
   const [cantidad, setCantidad] = useState(1);
+  const agregarAlCarrito = useAgregarAlCarrito();
 
   // Leemos la propiedad desde props.producto
   const producto = props.producto;
@@ -14,6 +16,12 @@ export default function InfoProducto(props) {
   if (!producto) return <p>Cargando producto...</p>;
 
   const tieneStock = producto.stock > 0;
+
+  // Función para agregar al carrito enviando el objeto producto y la cantidad
+  const manejarClickComprar = (e) => {
+    if (props.onComprar) props.onComprar();
+    agregarAlCarrito(producto, cantidad, e);
+  };
 
   return (
     <div className="row g-4 my-2">
@@ -62,7 +70,7 @@ export default function InfoProducto(props) {
                 textoBoton={`Añadir al carrito (${cantidad})`}
                 variante="warning"
                 esBloque={true}
-                alHacerClic={() => props.onAgregarAlCarrito(producto, cantidad)}
+                alHacerClic={manejarClickComprar}
               />
             </div>
           ) : (

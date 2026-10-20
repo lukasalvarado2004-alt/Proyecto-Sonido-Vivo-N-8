@@ -1,34 +1,37 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Boton from "../atoms/Boton";
 import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
-import { useContenidoCarrito } from "../../context/ContenidoCarrito";
+import { useAgregarAlCarrito } from "../../hooks/useAgregarAlCarrito";
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
-  const { agregarProducto } = useContenidoCarrito();
+  const agregarAlCarrito = useAgregarAlCarrito();
 
-  const manejarClickComprar = () => {
-    if (props.onComprar) props.onComprar();
+  // Función EXCLUSIVA para agregar al carrito
+  const manejarClickComprar = (e) => {
+    // 1. Evita que el clic se propague a otros elementos
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
+    }
 
-    agregarProducto({
-      id: props.id || props.nombre,
-      nombre: props.nombre,
-      precio: props.precio,
-      imagen: props.imagen,
-      marca: props.marca,
-      modelo: props.modelo
-    });
+    // 2. Únicamente agrega el producto al carrito sin navegar
+    agregarAlCarrito(props);
   };
 
   return (
-    /* Reemplazamos h-100 y p-3 por nuestra clase personalizada */
-    <div className="card tarjeta-producto-custom shadow-sm">
-      <ImagenProducto urlImagen={props.imagen} altTexto={props.nombre} />
+    <div className="card tarjeta-producto-custom shadow-sm h-100 d-flex flex-column p-3">
+      
+      {/* ZONA 1: Clic en cualquier parte de la tarjeta -> Va a Detalle */}
+      <Link 
+        to={`/producto/${props.id}`} 
+        className="flex-grow-1 text-decoration-none text-dark d-flex flex-column"
+      >
+        <ImagenProducto urlImagen={props.imagen} altTexto={props.nombre} />
 
-      <div className="card-body d-flex flex-column justify-content-between p-0 mt-3">
-        <div>
+        <div className="card-body d-flex flex-column p-0 mt-3 flex-grow-1">
           <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
             <h5 className="card-title fs-6 mb-0 fw-bold">{props.nombre}</h5>
             <EtiquetaStock stock={props.stock} />
@@ -38,17 +41,22 @@ function TarjetaProducto(props) {
             {props.marca} {props.modelo && `· ${props.modelo}`}
           </p>
 
-          <div className="mb-3">
+          <div className="mt-auto mb-2">
             <Precio monto={props.precio} />
           </div>
         </div>
+      </Link>
 
+      {/* ZONA 2: Clic en el Botón -> Únicamente agrega al Carrito */}
+      <div className="mt-auto pt-2">
         <Boton 
-          textoBoton={tieneStock ? "Comprar" : "Sin Stock"} 
+          textoBoton={tieneStock ? "Agregar al Carrito" : "Sin Stock"} 
           alHacerClic={manejarClickComprar} 
           variante={tieneStock ? "warning" : "secondary"} 
+          disabled={!tieneStock}
         />
       </div>
+
     </div>
   );
 }

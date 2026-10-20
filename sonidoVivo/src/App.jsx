@@ -10,6 +10,7 @@ import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
 import { ProductosProvider } from "./context/ProductosContext";
 import ConfirmarCompra from './pages/ConfirmarCompra';
 import SeguimientoCompra from './pages/SeguimientoCompra';
+import DetalleProducto from './pages/DetalleProducto';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/seguimiento" element={<SeguimientoCompra />} />
 
             <Route path="*" element={<NoEncontrada />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
           </Routes>
         </BrowserRouter>
       </ContenidoCarritoProvider>

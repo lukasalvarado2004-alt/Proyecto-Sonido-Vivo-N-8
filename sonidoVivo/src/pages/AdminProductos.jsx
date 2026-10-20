@@ -1,230 +1,315 @@
 // src/pages/AdminProductos.jsx
-import { useState } from 'react'
-import { Table } from 'react-bootstrap'
-import PlantillaPublica from '../components/templates/PlantillaPublica'
-import CampoFormulario from '../components/molecules/CampoFormulario'
-import Boton from '../components/atoms/Boton'
-import { useProductos } from '../context/ProductosContext'
-import { validarNombre, validarNumero, validarCodigo, validarCategoria } from '../utils/validaciones'
-import { useTituloPagina } from '../hooks/useTituloPagina'
+import React, { useState } from 'react';
+import PlantillaPublica from '../components/templates/PlantillaPublica';
+import { useProductos } from '../context/ProductosContext';
+import Error from '../components/atoms/Error';
 
-import '../App.css' 
+import FormularioProducto from '../components/organisms/FormularioProducto';
+import TablaProductos from '../components/organisms/TablaProductos';
+import FormularioUsuario from '../components/organisms/FormularioUsuario';
+import TablaUsuarios from '../components/organisms/TablaUsuario';
+import TablaCriticos from '../components/organisms/TablaCriticos'; // <-- IMPORTANTE
+
+import * as usuarioService from '../service/usuarioService.js';
+
+import { 
+  validarCodigo, 
+  validarCategoria, 
+  validarNombre, 
+  validarMarca, 
+  validarModelo, 
+  validarNumero, 
+  validarStock,
+  validarDescripcion, 
+  validarImagen,
+  validarCorreo,
+  validarContrasena,
+  validarConfirmarContrasena,
+  validarRol
+} from '../utils/validaciones.js';
 
 export default function AdminProductos() {
-  const productosCtx = useProductos()
-  
-  // Estados para capturar los valores del formulario
-  const [codigo, setCodigo] = useState('')
-  const [categoria, setCategoria] = useState('')
-  const [nombre, setNombre] = useState('')
-  const [marca, setMarca] = useState('')
-  const [modelo, setModelo] = useState('')
-  const [stock, setStock] = useState('')
-  const [precio, setPrecio] = useState('')
-  const [descripcion, setDescripcion] = useState('')
-  
-  // Estado para rastrear si estamos editando un producto existente o creando uno nuevo
-  const [idEnEdicion, setIdEnEdicion] = useState(null)
-  const [imagenActual, setImagenActual] = useState('')
-  
-  const [errores, setErrores] = useState({})
-  useTituloPagina('Administrar productos')
+  const { productos, crear, actualizar, eliminar } = useProductos();
 
-  // Obtener categorías únicas dinámicamente desde el estado global
-  const sortedCategories = [
-    ...new Set(productosCtx.productos.map((p) => p.categoria).filter(Boolean))
-  ].sort();
+  const [umbralStock] = useState(5);
+  const [errorGeneral, setErrorGeneral] = useState('');
 
-  // Carga los datos de un artículo en el formulario lateral
-  function activarEdicion(producto) {
-  // Usa el id si existe, de lo contrario usa el codigo
-  setIdEnEdicion(producto.id ?? producto.codigo)
-  setCodigo(producto.codigo || '')
-  setCategoria(producto.categoria || '')
-  setNombre(producto.nombre || '')
-  setMarca(producto.marca || '')
-  setModelo(producto.modelo || '')
-  setStock(String(producto.stock ?? ''))
-  setPrecio(String(producto.precio ?? ''))
-  setDescripcion(producto.descripcion || '')
-  setImagenActual(producto.imagen || '')
-  setErrores({})
-}
+  // --- ESTADO PARA EL MÓDULO DE ÍTEMS CRÍTICOS ---
+  const [umbralCritico, setUmbralCritico] = useState(5);
 
-  // Cancela la edición y devuelve el formulario a su estado base vacío
-  function cancelarEdicion() {
-    setIdEnEdicion(null)
-    setCodigo('')
-    setCategoria('')
-    setNombre('')
-    setMarca('')
-    setModelo('')
-    setStock('')
-    setPrecio('')
-    setDescripcion('')
-    setImagenActual('')
-    setErrores({})
+  // --- ESTADOS CRUD PRODUCTOS ---
+  const [idEnEdicion, setIdEnEdicion] = useState(null);
+  const [errores, setErrores] = useState({});
+  const [codigo, setCodigo] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [marca, setMarca] = useState('');
+  const [modelo, setModelo] = useState('');
+  const [stock, setStock] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [imagen, setImagen] = useState('');
+
+  const categoriasDisponibles = [
+    'Guitarras Acústicas',
+    'Guitarras Eléctricas',
+    'Bajos Eléctricos',
+    'Baterías',
+    'Teclados y Pianos'
+  ];
+
+  // --- ESTADOS CRUD USUARIOS ---
+  const [usuarios, setUsuarios] = useState(() => usuarioService.listarUsuarios());
+  const [usrIdEnEdicion, setUsrIdEnEdicion] = useState(null);
+  const [usrErrores, setUsrErrores] = useState({});
+  const [usrNombre, setUsrNombre] = useState('');
+  const [usrCorreo, setUsrCorreo] = useState('');
+  const [usrRol, setUsrRol] = useState('cliente');
+  const [usrContrasena, setUsrContrasena] = useState('');
+  const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
+
+  // --- HANDLERS PRODUCTOS ---
+  function activarEdicion(p) {
+    setErrorGeneral('');
+    setIdEnEdicion(p.id ?? p.codigo);
+    setCodigo(p.codigo || '');
+    setCategoria(p.categoria || '');
+    setNombre(p.nombre || '');
+    setMarca(p.marca || '');
+    setModelo(p.modelo || '');
+    setStock(String(p.stock ?? ''));
+    setPrecio(String(p.precio ?? ''));
+    setDescripcion(p.descripcion || '');
+    setImagen(p.imagen || '');
+    setErrores({});
   }
 
-  function gestionarEnvio(evento) {
-    evento.preventDefault()
-    
-    // Validamos usando las utilidades centralizadas
+  function cancelarEdicion() {
+    setErrorGeneral('');
+    setIdEnEdicion(null);
+    setCodigo(''); setCategoria(''); setNombre(''); setMarca('');
+    setModelo(''); setStock(''); setPrecio(''); setDescripcion(''); setImagen('');
+    setErrores({});
+  }
+
+  function manejarCargaArchivoImagen(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+      const lector = new FileReader();
+      lector.onloadend = () => {
+        setImagen(lector.result);
+        setErrores(prev => ({ ...prev, imagen: '' }));
+      };
+      lector.readAsDataURL(archivo);
+    }
+  }
+
+  function guardarProducto(e) {
+    e.preventDefault();
+    setErrorGeneral('');
+
     const nuevosErrores = {
       codigo: validarCodigo(codigo),
       categoria: validarCategoria(categoria),
       nombre: validarNombre(nombre),
-      stock: validarNumero(stock, 'El stock', 0),
+      marca: validarMarca(marca),
+      modelo: validarModelo(modelo),
+      stock: validarStock(stock),
       precio: validarNumero(precio, 'El precio', 1),
-    }
-    
-    setErrores(nuevosErrores)
-    
-    // Si pasa todas las validaciones (ningún error tiene texto)
-    if (!nuevosErrores.codigo && !nuevosErrores.categoria && !nuevosErrores.nombre && !nuevosErrores.stock && !nuevosErrores.precio) {
-      const payload = {
-        codigo: codigo.trim().toUpperCase(),
-        categoria: categoria.trim(),
-        nombre: nombre.trim(), 
-        marca: marca.trim(),
-        modelo: modelo.trim(),
-        stock: Number(stock),
-        precio: Number(precio), 
-        descripcion: descripcion.trim(),
-        imagen: idEnEdicion !== null ? imagenActual : "https://unsplash.com"
-      }
+      descripcion: validarDescripcion(descripcion),
+      imagen: validarImagen(imagen)
+    };
 
-      if (idEnEdicion !== null) {
-        // Ejecuta la mutación de actualización si hay un ID activo
-        productosCtx.actualizar(idEnEdicion, payload)
-      } else {
-        // Ejecuta la creación si el ID es nulo
-        productosCtx.crear(payload)
-      }
-      
-      cancelarEdicion()
+    setErrores(nuevosErrores);
+
+    if (Object.values(nuevosErrores).some(msg => msg !== '')) {
+      setErrorGeneral('Por favor, corrige los campos destacados en el formulario de productos.');
+      return;
+    }
+
+    const payload = {
+      codigo: codigo.trim().toUpperCase(),
+      categoria: categoria.trim(),
+      nombre: nombre.trim(),
+      marca: marca.trim(),
+      modelo: modelo.trim(),
+      stock: Number(stock),
+      precio: Number(precio),
+      descripcion: descripcion.trim(),
+      imagen: imagen.trim()
+    };
+
+    if (idEnEdicion !== null) {
+      actualizar(idEnEdicion, payload);
+    } else {
+      crear(payload);
+    }
+
+    cancelarEdicion();
+  }
+
+  // --- HANDLERS USUARIOS ---
+  function activarEdicionUsuario(u) {
+    setErrorGeneral('');
+    setUsrIdEnEdicion(u.id);
+    setUsrNombre(u.nombre || '');
+    setUsrCorreo(u.correo || '');
+    setUsrRol(u.rol || 'cliente');
+    setUsrContrasena(u.contrasena || '');
+    setUsrConfirmarContrasena(u.contrasena || '');
+    setUsrErrores({});
+  }
+
+  function cancelarEdicionUsuario() {
+    setErrorGeneral('');
+    setUsrIdEnEdicion(null);
+    setUsrNombre('');
+    setUsrCorreo('');
+    setUsrRol('cliente');
+    setUsrContrasena('');
+    setUsrConfirmarContrasena('');
+    setUsrErrores({});
+  }
+
+  function guardarUsuario(e) {
+    e.preventDefault();
+    setErrorGeneral('');
+
+    const nuevosErrores = {
+      nombre: validarNombre(usrNombre),
+      correo: validarCorreo(usrCorreo),
+      rol: validarRol(usrRol),
+      contrasena: validarContrasena(usrContrasena),
+      confirmarContrasena: validarConfirmarContrasena(usrContrasena, usrConfirmarContrasena)
+    };
+
+    setUsrErrores(nuevosErrores);
+
+    if (Object.values(nuevosErrores).some(msg => msg !== '')) {
+      setErrorGeneral('Por favor, corrige los campos destacados en el formulario de usuarios.');
+      return;
+    }
+
+    const payload = {
+      nombre: usrNombre.trim(),
+      correo: usrCorreo.trim(),
+      rol: usrRol.trim().toLowerCase(),
+      contrasena: usrContrasena.trim()
+    };
+
+    if (usrIdEnEdicion !== null) {
+      usuarioService.actualizarUsuario(usrIdEnEdicion, payload);
+    } else {
+      usuarioService.crearUsuario(payload);
+    }
+
+    setUsuarios(usuarioService.listarUsuarios());
+    cancelarEdicionUsuario();
+  }
+
+  function eliminarUsuarioHandler(id) {
+    setErrorGeneral('');
+    usuarioService.eliminarUsuario(id);
+    setUsuarios(usuarioService.listarUsuarios());
+    if (usrIdEnEdicion === id) {
+      cancelarEdicionUsuario();
     }
   }
 
   return (
     <PlantillaPublica>
-      <div className="bg-light p-4 text-dark admin-min-altura admin-espacio-inferior">
+      <div className="container py-4 text-white">
         
-        <div className="bg-dark text-white p-3 mb-4 rounded shadow-sm">
-          <h2 className="fw-bold h4 mb-0">Panel de Administración de Inventario</h2>
+        {/* ENCABEZADO */}
+        <div className="bg-dark p-3 rounded shadow-sm mb-4 border border-secondary">
+          <h2 className="h4 fw-bold mb-0 text-white">Panel de Administración</h2>
+          <small className="text-light">Gestión de Productos, Usuarios e Ítems Críticos</small>
         </div>
 
-        <div className="row g-4">
-          
-          {/* Formulario lateral */}
-          <div className="col-md-4 admin-formulario-zona">
-            <div className="card p-3 shadow-sm border-0 bg-white text-dark">
-              <h4 className="h5 fw-bold border-bottom pb-2 mb-3 text-dark">
-                {idEnEdicion !== null ? 'Modificar Producto' : 'Añadir Producto'}
-              </h4>
-              
-              <form onSubmit={gestionarEnvio} noValidate className="admin-scroll-formulario">
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Código</label>
-                  <CampoFormulario id="admin-codigo" valor={codigo} alCambiar={setCodigo} error={errores.codigo} placeholder="GA001" />
-                </div>
+        {/* ÁTOMO DE ERROR GLOBAL */}
+        <Error mensaje={errorGeneral} variante="danger" />
 
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Categoría</label>
-                  <CampoFormulario 
-                    id="admin-categoria" 
-                    tipo="select" 
-                    valor={categoria} 
-                    alCambiar={setCategoria} 
-                    error={errores.categoria} 
-                    opciones={sortedCategories} 
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Nombre del Producto</label>
-                  <CampoFormulario id="admin-nombre" valor={nombre} alCambiar={setNombre} error={errores.nombre} placeholder="Guitarra Acústica Folk" />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Marca</label>
-                  <CampoFormulario id="admin-marca" valor={marca} alCambiar={setMarca} placeholder="Yamaha" />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Modelo</label>
-                  <CampoFormulario id="admin-modelo" valor={modelo} alCambiar={setModelo} placeholder="F310" />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Stock</label>
-                  <CampoFormulario id="admin-stock" tipo="number" valor={stock} alCambiar={setStock} error={errores.stock} placeholder="8" />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Precio</label>
-                  <CampoFormulario id="admin-precio" tipo="number" valor={precio} alCambiar={setPrecio} error={errores.precio} placeholder="129990" />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label fw-bold small text-secondary">Descripción</label>
-                  <textarea 
-                    className="form-control bg-white text-dark border-secondary-subtle admin-descripcion-grande" 
-                    value={descripcion} 
-                    onChange={(e) => setDescripcion(e.target.value)} 
-                    placeholder="Detalles del artículo, maderas, conectividad, etc..."
-                  />
-                </div>
-
-                <div className="d-grid gap-2 mt-4">
-                  <Boton tipo="submit" variante={idEnEdicion !== null ? 'warning' : 'purple'} textoBoton={idEnEdicion !== null ? 'Actualizar Producto' : 'Guardar Producto'} esBloque={true} />
-                  {idEnEdicion !== null && (
-                    <Boton tipo="button" variante="secondary" textoBoton="Cancelar Edición" esBloque={true} alHacerClic={cancelarEdicion} />
-                  )}
-                </div>
-              </form>
-            </div>
+        {/* MÓDULO 1: CRUD DE PRODUCTOS */}
+        <div className="row g-4 text-dark mb-5">
+          <div className="col-12">
+            <h4 className="text-white border-bottom border-secondary pb-2">Catálogo de Productos</h4>
           </div>
 
-          {/* Tabla de registros */}
-          <div className="col-md-8">
-            <div className="card p-3 shadow-sm border-0 bg-white text-dark">
-              <h4 className="h5 fw-bold border-bottom pb-2 mb-3 text-secondary">Inventario Registrado</h4>
-              
-              <Table striped bordered hover responsive className="align-middle mb-0">
-                <thead className="table-dark">
-                  <tr>
-                    <th>Código</th>
-                    <th>Categoría</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th className="text-end" style={{ width: '160px' }}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {productosCtx.productos.map((p, idx) => (
-                    <tr key={p.id ? `prod-${p.id}` : `idx-${idx}`}>
-                      <td className="small fw-bold text-muted">{p.codigo || 'S/C'}</td>
-                      <td className="small text-secondary">{p.categoria || 'Sin Categoría'}</td> 
-                      <td><span className="fw-semibold text-dark">{p.nombre}</span></td>
-                      <td className="text-success fw-bold">
-                        {p.precio ? `$${Number(p.precio).toLocaleString('es-CL')}` : '\$0'}
-                      </td>
-                      <td className="text-end">
-                        <span className="me-2">
-                          <Boton variante="warning" textoBoton="Editar" alHacerClic={() => activarEdicion(p)} />
-                        </span>
-                        <Boton variante="danger" textoBoton="Eliminar" alHacerClic={() => productosCtx.eliminar(p.id)} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
+          <div className="col-md-5">
+            <FormularioProducto
+              codigo={codigo} setCodigo={setCodigo}
+              categoria={categoria} setCategoria={setCategoria}
+              nombre={nombre} setNombre={setNombre}
+              marca={marca} setMarca={setMarca}
+              modelo={modelo} setModelo={setModelo}
+              stock={stock} setStock={setStock}
+              precio={precio} setPrecio={setPrecio}
+              descripcion={descripcion} setDescripcion={setDescripcion}
+              imagen={imagen} setImagen={setImagen}
+              idEnEdicion={idEnEdicion}
+              errores={errores} setErrores={setErrores}
+              categoriasDisponibles={categoriasDisponibles}
+              onGuardar={guardarProducto}
+              onCancelar={cancelarEdicion}
+              onCargarArchivo={manejarCargaArchivoImagen}
+            />
           </div>
 
+          <div className="col-md-7">
+            <TablaProductos
+              productos={productos}
+              umbralStock={umbralStock}
+              onActivarEdicion={activarEdicion}
+              onEliminar={eliminar}
+            />
+          </div>
+        </div>
+
+        {/* MÓDULO 2: CRUD DE USUARIOS */}
+        <div className="row g-4 text-dark mb-5">
+          <div className="col-12">
+            <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Usuarios</h4>
+          </div>
+
+          <div className="col-md-5">
+            <FormularioUsuario
+              nombre={usrNombre} setNombre={setUsrNombre}
+              correo={usrCorreo} setCorreo={setUsrCorreo}
+              rol={usrRol} setRol={setUsrRol}
+              contrasena={usrContrasena} setContrasena={setUsrContrasena}
+              confirmarContrasena={usrConfirmarContrasena} setConfirmarContrasena={setUsrConfirmarContrasena}
+              idEnEdicion={usrIdEnEdicion}
+              errores={usrErrores} setErrores={setUsrErrores}
+              onGuardar={guardarUsuario}
+              onCancelar={cancelarEdicionUsuario}
+            />
+          </div>
+
+          <div className="col-md-7">
+            <TablaUsuarios
+              usuarios={usuarios}
+              onActivarEdicion={activarEdicionUsuario}
+              onEliminar={eliminarUsuarioHandler}
+            />
+          </div>
+        </div>
+
+        {/* MÓDULO 3: ÍTEMS CRÍTICOS (UBICADO DEBAJO DE LA TABLA DE USUARIOS) */}
+        <div className="row g-4 text-dark pt-2">
+          <div className="col-12">
+            <h4 className="text-white border-bottom border-secondary pb-2">Control de Ítems Críticos</h4>
+          </div>
+
+          <div className="col-12">
+            <TablaCriticos
+              productos={productos}
+              umbralStock={umbralCritico}
+              setUmbralStock={setUmbralCritico}
+            />
+          </div>
         </div>
 
       </div>
     </PlantillaPublica>
-  )
+  );
 }
