@@ -5,11 +5,33 @@ const CLAVE = 'usuarios';
 
 function leer() {
   const guardado = localStorage.getItem(CLAVE);
-  if (guardado === null) {
-    localStorage.setItem(CLAVE, JSON.stringify(usuariosIniciales));
-    return [...usuariosIniciales];
+  const listaJSON = Array.isArray(usuariosIniciales) ? usuariosIniciales : [];
+
+  if (!guardado) {
+    localStorage.setItem(CLAVE, JSON.stringify(listaJSON));
+    return [...listaJSON];
   }
-  return JSON.parse(guardado);
+
+  try {
+    const listaLocal = JSON.parse(guardado);
+
+    // Unificar usuarios de Usuarios.json con localStorage por correo para incorporar nuevas cuentas
+    const mapa = new Map();
+    listaJSON.forEach((u) => {
+      const correo = (u.correo || u.email || '').trim().toLowerCase();
+      if (correo) mapa.set(correo, u);
+    });
+    listaLocal.forEach((u) => {
+      const correo = (u.correo || u.email || '').trim().toLowerCase();
+      if (correo) mapa.set(correo, u);
+    });
+
+    const listaUnificada = Array.from(mapa.values());
+    localStorage.setItem(CLAVE, JSON.stringify(listaUnificada));
+    return listaUnificada;
+  } catch (e) {
+    return [...listaJSON];
+  }
 }
 
 function guardar(lista) {
@@ -26,19 +48,33 @@ export function obtenerUsuarioPorId(id) {
 
 export function obtenerUsuarioPorCorreo(correo) {
   return leer().find(
-    (u) => (u.correo || u.email)?.toLowerCase() === correo?.toLowerCase()
+    (u) => (u.correo || u.email)?.toLowerCase() === correo?.trim().toLowerCase()
   ) ?? null;
 }
 
 // --- FUNCIÓN REQUERIDA POR LOGIN.JSX ---
 export function autenticarUsuario(correo, contrasena) {
   const lista = leer();
+  const correoBuscado = correo?.trim().toLowerCase();
+  const claveBuscada = contrasena?.trim();
+
   const usuarioEncontrado = lista.find(
     (u) => 
-      ((u.correo || u.email)?.toLowerCase() === correo?.trim().toLowerCase()) && 
-      ((u.contrasena || u.password) === contrasena?.trim())
+      ((u.correo || u.email)?.toLowerCase() === correoBuscado) && 
+      ((u.contrasena || u.password || u.clave) === claveBuscada)
   );
-  return usuarioEncontrado || null;
+
+  if (usuarioEncontrado) {
+    return {
+      exito: true,
+      usuario: usuarioEncontrado
+    };
+  }
+
+  return {
+    exito: false,
+    error: 'Correo o contraseña incorrectos. Por favor reintenta.'
+  };
 }
 
 export function crearUsuario(datos) {

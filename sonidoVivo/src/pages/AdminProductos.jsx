@@ -8,7 +8,7 @@ import FormularioProducto from '../components/organisms/FormularioProducto';
 import TablaProductos from '../components/organisms/TablaProductos';
 import FormularioUsuario from '../components/organisms/FormularioUsuario';
 import TablaUsuarios from '../components/organisms/TablaUsuario';
-import TablaCriticos from '../components/organisms/TablaCriticos'; // <-- IMPORTANTE
+import TablaCriticos from '../components/organisms/TablaCriticos';
 
 import * as usuarioService from '../service/usuarioService.js';
 
@@ -256,12 +256,15 @@ export default function AdminProductos() {
           </div>
 
           <div className="col-md-7">
-            <TablaProductos
-              productos={productos}
-              umbralStock={umbralStock}
-              onActivarEdicion={activarEdicion}
-              onEliminar={eliminar}
-            />
+            {/* CONTENEDOR CON SCROLL PARA TABLA DE PRODUCTOS */}
+            <div className="admin-tabla-contenedor">
+              <TablaProductos
+                productos={productos}
+                umbralStock={umbralStock}
+                onActivarEdicion={activarEdicion}
+                onEliminar={eliminar}
+              />
+            </div>
           </div>
         </div>
 
@@ -286,26 +289,32 @@ export default function AdminProductos() {
           </div>
 
           <div className="col-md-7">
-            <TablaUsuarios
-              usuarios={usuarios}
-              onActivarEdicion={activarEdicionUsuario}
-              onEliminar={eliminarUsuarioHandler}
-            />
+            {/* CONTENEDOR CON SCROLL PARA TABLA DE USUARIOS */}
+            <div className="admin-tabla-contenedor">
+              <TablaUsuarios
+                usuarios={usuarios}
+                onActivarEdicion={activarEdicionUsuario}
+                onEliminar={eliminarUsuarioHandler}
+              />
+            </div>
           </div>
         </div>
 
-        {/* MÓDULO 3: ÍTEMS CRÍTICOS (UBICADO DEBAJO DE LA TABLA DE USUARIOS) */}
+        {/* MÓDULO 3: ÍTEMS CRÍTICOS */}
         <div className="row g-4 text-dark pt-2">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Control de Ítems Críticos</h4>
           </div>
 
           <div className="col-12">
-            <TablaCriticos
-              productos={productos}
-              umbralStock={umbralCritico}
-              setUmbralStock={setUmbralCritico}
-            />
+            {/* CONTENEDOR CON SCROLL PARA TABLA DE CRÍTICOS */}
+            <div className="admin-tabla-contenedor">
+              <TablaCriticos
+                productos={productos}
+                umbralStock={umbralCritico}
+                setUmbralStock={setUmbralCritico}
+              />
+            </div>
           </div>
         </div>
 

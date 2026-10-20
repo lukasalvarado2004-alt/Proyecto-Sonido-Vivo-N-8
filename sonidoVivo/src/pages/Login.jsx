@@ -39,21 +39,26 @@ export default function Login({ onLoginExitoso }) {
     // 2. Intentar autenticación
     const resultado = autenticarUsuario(correo, contrasena);
 
-    if (!resultado.exito) {
-      // MOSTRAR SOLO 1 MENSAJE: Guardar en errorGeneral y limpiar errores de campos
-      setErrorGeneral(resultado.error);
+    // Verificación defensiva contra null/undefined (Evita TypeError)
+    if (!resultado || !resultado.exito) {
+      setErrorGeneral(resultado?.error || 'Correo o contraseña incorrectos. Por favor reintenta.');
       setErroresCampos({});
       return;
     }
 
-    // 3. Inicio de sesión exitoso
+    // 3. Inicio de sesión exitoso (Guardar en ambas claves para compatibilidad)
     localStorage.setItem('sv_sesion', JSON.stringify(resultado.usuario));
+    localStorage.setItem('usuarioSesion', JSON.stringify(resultado.usuario));
 
     if (onLoginExitoso) {
       onLoginExitoso(resultado.usuario);
     }
 
-    if (resultado.usuario.rol === 'Administrador') {
+    // Normalizar el rol para aceptar tanto 'admin' como 'Administrador'
+    const rolNormalizado = (resultado.usuario?.rol || '').toLowerCase();
+    const esAdmin = rolNormalizado === 'admin' || rolNormalizado === 'administrador';
+
+    if (esAdmin) {
       navigate('/admin');
     } else {
       navigate('/catalogo');

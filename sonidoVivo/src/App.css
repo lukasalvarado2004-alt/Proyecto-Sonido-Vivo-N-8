@@ -282,3 +282,84 @@ footer a:hover {
 .compra-borde-resumen {
   border-bottom: 1px solid var(--border-color) !important;
 }
+
+/* ===================================================
+   CORRECCIÓN DEFINITIVA DE TAMAÑOS EN NAVBAR
+   =================================================== */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Fuerza una altura e igualación exacta para TODOS los botones y enlaces */
+.navbar-actions .btn,
+.navbar-actions button,
+.navbar-actions a {
+  height: 38px !important;              /* Misma altura para todos */
+  padding: 0 0.9rem !important;          /* Relleno lateral uniforme */
+  font-size: 0.875rem !important;        /* Mismo tamaño de texto */
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  
+  /* Alineación horizontal estricta (mantiene los emojis al lado del texto) */
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;              /* Espacio entre el ícono y el texto */
+  
+  white-space: nowrap !important;        /* Evita saltos de línea internos */
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+}
+
+/* Alineación vertical para el saludo ("Hola, Usuario") */
+.navbar-actions .navbar-saludo,
+.navbar-actions span {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  margin: 0;
+}
+
+/* ===================================================
+   CONTENEDORES CON SCROLL EN PANEL DE ADMINISTRACIÓN
+   =================================================== */
+
+/* Contenedor que activa la rueda del mouse (Scrollbar) */
+.admin-tabla-contenedor {
+  max-height: 520px;       /* Altura máxima visible antes de activar scroll */
+  overflow-y: auto;        /* Permite bajar con la rueda del mouse */
+  overflow-x: auto;        /* Scroll horizontal de seguridad si la pantalla es estrecha */
+  padding-right: 4px;      /* Evita que el scroll tape los botones de acción */
+}
+
+/* Encabezado fijo (Sticky Header) para no perder de vista los títulos al bajar */
+.admin-tabla-contenedor table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Personalización de la barra de desplazamiento (Scrollbar Morada) */
+.admin-tabla-contenedor::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.admin-tabla-contenedor::-webkit-scrollbar-track {
+  background: #12131c;
+  border-radius: 4px;
+}
+
+.admin-tabla-contenedor::-webkit-scrollbar-thumb {
+  background: #8a2be2;
+  border-radius: 4px;
+}
+
+.admin-tabla-contenedor::-webkit-scrollbar-thumb:hover {
+  background: #7322bf;
+}
