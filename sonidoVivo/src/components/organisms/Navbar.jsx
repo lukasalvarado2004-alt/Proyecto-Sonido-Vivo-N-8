@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import Boton from "../atoms/Boton";
+import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 
 export default function Navbar() {
   const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Escuchar cambios de ruta para actualizar los datos del usuario en tiempo real
+  // Obtener el total de productos del carrito desde el contexto
+  const { totalProductos } = useContenidoCarrito();
+
   useEffect(() => {
     const sesionGuardada = localStorage.getItem("sv_sesion") || localStorage.getItem("usuarioSesion");
     if (sesionGuardada) {
@@ -21,7 +24,6 @@ export default function Navbar() {
     }
   }, [location.pathname]);
 
-  // Manejador para cerrar sesión y limpiar el almacenamiento local
   const manejarCerrarSesion = () => {
     localStorage.removeItem("sv_sesion");
     localStorage.removeItem("usuarioSesion");
@@ -29,11 +31,8 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  // Determinar si el usuario logueado es Administrador
   const rolNormalizado = (usuario?.rol || "").toLowerCase();
   const esAdmin = rolNormalizado === "admin" || rolNormalizado === "administrador";
-
-  // Obtener el nombre a mostrar (nombre, nombreUsuario o fallback)
   const nombreMostrar = usuario?.nombre || usuario?.nombreUsuario || "Usuario";
 
   return (
@@ -49,55 +48,60 @@ export default function Navbar() {
           Catálogo
         </NavLink>
 
-        <NavLink to="/carrito" className="btn btn-outline-warning">
+        {/* BOTÓN DEL CARRITO CON INSIGNIA CIRCULAR */}
+        <NavLink to="/carrito" className="btn btn-outline-warning d-inline-flex align-items-center gap-1">
           🛒 Carrito
+          {totalProductos > 0 && (
+            <span 
+              className="badge bg-warning text-dark ms-1 fw-bold rounded-circle d-inline-flex align-items-center justify-content-center"
+              style={{ 
+                width: "20px", 
+                height: "20px", 
+                fontSize: "0.7rem", 
+                padding: "0" 
+              }}
+            >
+              {totalProductos}
+            </span>
+          )}
         </NavLink>
 
         <NavLink to="/seguimiento" className="btn btn-outline-light">
           🚚 Seguimiento
         </NavLink>
 
-        {/* ÁREA DINÁMICA: SESIÓN ACTIVA VS INVITADO */}
         {usuario ? (
           <>
-            {/* SALUDO CON EL NOMBRE DEL USUARIO */}
             <span className="navbar-saludo text-light">
               Hola, <strong className="text-purple-brand">{nombreMostrar}</strong>
             </span>
 
-            {/* BOTÓN SOLO PARA ADMINISTRADORES */}
             {esAdmin && (
               <Boton 
                 textoBoton="Panel Admin" 
                 variante="purple" 
                 alHacerClic={() => navigate("/admin")}
-                onClick={() => navigate("/admin")}
               />
             )}
 
-            {/* BOTÓN CERRAR SESIÓN (ÁTOMO) */}
             <Boton 
               textoBoton="Cerrar Sesión" 
               variante="danger" 
               alHacerClic={manejarCerrarSesion}
-              onClick={manejarCerrarSesion}
             />
           </>
         ) : (
           <>
-            {/* BOTONES SI NO HAY SESIÓN INICIADA */}
             <Boton 
               textoBoton="Iniciar Sesión" 
               variante="purple" 
               alHacerClic={() => navigate("/login")}
-              onClick={() => navigate("/login")}
             />
 
             <Boton 
               textoBoton="Registrarte" 
               variante="purple" 
               alHacerClic={() => navigate("/registro")}
-              onClick={() => navigate("/registro")}
             />
           </>
         )}

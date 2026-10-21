@@ -1,46 +1,29 @@
+// src/pages/DetalleProducto.jsx
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import InfoProductoDetalle from '../components/organisms/InfoProductoDetalle';
-import Boton from '../components/atoms/Boton';
-import productos from '../data/Productos.json'; 
 import PlantillaPublica from '../components/templates/PlantillaPublica';
+// 1. Importamos el contexto global de productos
+import { useProductos } from '../context/ProductosContext';
 
-export default function DetalleProducto(props) {
-  // 1. Leemos el 'id' enviado en la URL (/producto/:id)
+export default function DetalleProducto() {
   const params = useParams();
   const navigate = useNavigate();
 
-  // 2. Buscamos el producto en la lista según el código o id de la URL
+  // 2. Extraemos el listado dinámico (incluye productos creados en el Admin)
+  const { productos } = useProductos();
+
+  // 3. Buscamos el producto en la lista dinámica de LocalStorage/Context
   const productoEncontrado = productos.find(
     (item) => item.codigo === params.id || String(item.id) === params.id
   );
 
-  function manejarVolver() {
-    navigate('/catalogo');
-  }
-
-  function manejarAgregarAlCarrito(producto, cantidad) {
-    alert(`Agregaste ${cantidad} unidad(es) de ${producto.nombre} al carrito.`);
-  }
-
   return (
-     <PlantillaPublica>
-    <Container className="py-4">
-      <div className="mb-3">
-        <Boton
-          textoBoton="← Volver al Catálogo"
-          variante="outline-dark"
-          alHacerClic={manejarVolver}
-        />
-      </div>
-
-      {/* 3. Enviamos el producto encontrado como prop al organismo */}
-      <InfoProductoDetalle
-        producto={productoEncontrado}
-        onAgregarAlCarrito={manejarAgregarAlCarrito}
-      />
-    </Container>
+    <PlantillaPublica>
+      <Container className="py-4">
+        <InfoProductoDetalle producto={productoEncontrado} />
+      </Container>
     </PlantillaPublica>
   );
 }

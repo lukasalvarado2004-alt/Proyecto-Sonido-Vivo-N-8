@@ -79,3 +79,15 @@ export function validarRol(rol) {
   }
   return '';
 }
+
+export function validarNombreCategoria(nombre, categoriasExistentes = [], categoriaActual = null) {
+  if (!nombre || !nombre.trim()) return 'El nombre de la categoría es obligatorio.';
+  if (nombre.trim().length < 3) return 'Debe tener al menos 3 caracteres.';
+  
+  const existe = categoriasExistentes.some(
+    (c) => c.toLowerCase() === nombre.trim().toLowerCase() && c.toLowerCase() !== (categoriaActual || '').toLowerCase()
+  );
+  if (existe) return 'Esta categoría ya existe.';
+
+  return '';
+}

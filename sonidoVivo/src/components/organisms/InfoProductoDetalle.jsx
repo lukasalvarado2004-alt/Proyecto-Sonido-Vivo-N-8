@@ -3,24 +3,22 @@ import ImagenProducto from '../atoms/ImagenProducto';
 import Precio from '../atoms/Precio';
 import EtiquetaStock from '../atoms/EtiquetaStock';
 import Boton from '../atoms/Boton';
-import SelectorCantidad from '../molecules/SelectorCantidad';
 import { useAgregarAlCarrito } from "../../hooks/useAgregarAlCarrito";
 
 export default function InfoProductoDetalle(props) {
-  const [cantidad, setCantidad] = useState(1);
+  const [mensajeConfirmacion, setMensajeConfirmacion] = useState('');
   const agregarAlCarrito = useAgregarAlCarrito();
 
-  // Leemos la propiedad desde props.producto
   const producto = props.producto;
 
   if (!producto) return <p>Cargando producto...</p>;
 
   const tieneStock = producto.stock > 0;
 
-  // Función para agregar al carrito enviando el objeto producto y la cantidad
   const manejarClickComprar = (e) => {
     if (props.onComprar) props.onComprar();
-    agregarAlCarrito(producto, cantidad, e);
+    agregarAlCarrito(producto, 1, e);
+    setMensajeConfirmacion(`¡"${producto.nombre}" se añadió al carrito!`);
   };
 
   return (
@@ -36,7 +34,8 @@ export default function InfoProductoDetalle(props) {
       <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
         <div>
           <div className="d-flex justify-content-between align-items-start mb-2">
-            <span className="text-muted text-uppercase fw-bold small">{producto.marca}</span>
+            
+            <span className="text-warning text-uppercase fw-bold small">{producto.marca}</span>
             <EtiquetaStock stock={producto.stock} />
           </div>
 
@@ -55,23 +54,19 @@ export default function InfoProductoDetalle(props) {
         {/* Acciones e interacción con el carrito */}
         <div className="border-top pt-3">
           {tieneStock ? (
-            <div className="d-flex flex-column gap-3">
-              <div className="d-flex align-items-center gap-3">
-                <span className="fw-semibold">Cantidad:</span>
-                <SelectorCantidad
-                  cantidad={cantidad}
-                  onIncrementar={() => setCantidad(prev => Math.min(prev + 1, producto.stock))}
-                  onDecrementar={() => setCantidad(prev => Math.max(prev - 1, 1))}
-                  maxStock={producto.stock}
-                />
-              </div>
-
+            <div className="d-flex flex-column gap-2">
               <Boton
-                textoBoton={`Añadir al carrito (${cantidad})`}
+                textoBoton="Añadir al carrito"
                 variante="warning"
                 esBloque={true}
                 alHacerClic={manejarClickComprar}
               />
+
+              {mensajeConfirmacion && (
+                <div className="alert alert-success py-2 px-3 small text-center mb-0 mt-2" role="alert">
+                  {mensajeConfirmacion}
+                </div>
+              )}
             </div>
           ) : (
             <Boton

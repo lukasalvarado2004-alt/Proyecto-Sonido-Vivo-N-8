@@ -9,8 +9,11 @@ import TablaProductos from '../components/organisms/TablaProductos';
 import FormularioUsuario from '../components/organisms/FormularioUsuario';
 import TablaUsuarios from '../components/organisms/TablaUsuario';
 import TablaCriticos from '../components/organisms/TablaCriticos';
+import FormularioCategoria from '../components/organisms/FormularioCategoria';
+import TablaCategoria from '../components/organisms/TablaCategoria';
 
 import * as usuarioService from '../service/usuarioService.js';
+import * as categoriaService from '../service/categoriaService.js';
 
 import { 
   validarCodigo, 
@@ -25,7 +28,8 @@ import {
   validarCorreo,
   validarContrasena,
   validarConfirmarContrasena,
-  validarRol
+  validarRol,
+  validarNombreCategoria
 } from '../utils/validaciones.js';
 
 export default function AdminProductos() {
@@ -36,6 +40,12 @@ export default function AdminProductos() {
 
   // --- ESTADO PARA EL MÓDULO DE ÍTEMS CRÍTICOS ---
   const [umbralCritico, setUmbralCritico] = useState(5);
+
+  // --- ESTADOS CRUD CATEGORÍAS ---
+  const [categorias, setCategorias] = useState(() => categoriaService.listarCategorias());
+  const [catNombre, setCatNombre] = useState('');
+  const [catEnEdicion, setCatEnEdicion] = useState(null);
+  const [catError, setCatError] = useState('');
 
   // --- ESTADOS CRUD PRODUCTOS ---
   const [idEnEdicion, setIdEnEdicion] = useState(null);
@@ -50,14 +60,6 @@ export default function AdminProductos() {
   const [descripcion, setDescripcion] = useState('');
   const [imagen, setImagen] = useState('');
 
-  const categoriasDisponibles = [
-    'Guitarras Acústicas',
-    'Guitarras Eléctricas',
-    'Bajos Eléctricos',
-    'Baterías',
-    'Teclados y Pianos'
-  ];
-
   // --- ESTADOS CRUD USUARIOS ---
   const [usuarios, setUsuarios] = useState(() => usuarioService.listarUsuarios());
   const [usrIdEnEdicion, setUsrIdEnEdicion] = useState(null);
@@ -67,6 +69,52 @@ export default function AdminProductos() {
   const [usrRol, setUsrRol] = useState('cliente');
   const [usrContrasena, setUsrContrasena] = useState('');
   const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
+
+  // --- HANDLERS CATEGORÍAS ---
+  function activarEdicionCategoria(cat) {
+    setErrorGeneral('');
+    setCatEnEdicion(cat);
+    setCatNombre(cat);
+    setCatError('');
+  }
+
+  function cancelarEdicionCategoria() {
+    setErrorGeneral('');
+    setCatEnEdicion(null);
+    setCatNombre('');
+    setCatError('');
+  }
+
+  function guardarCategoria(e) {
+    e.preventDefault();
+    setErrorGeneral('');
+
+    const err = validarNombreCategoria(catNombre, categorias, catEnEdicion);
+    if (err) {
+      setCatError(err);
+      return;
+    }
+
+    if (catEnEdicion !== null) {
+      categoriaService.actualizarCategoria(catEnEdicion, catNombre.trim());
+    } else {
+      categoriaService.crearCategoria(catNombre.trim());
+    }
+
+    setCategorias(categoriaService.listarCategorias());
+    cancelarEdicionCategoria();
+  }
+
+  function eliminarCategoriaHandler(cat) {
+    if (window.confirm(`¿Seguro que deseas eliminar la categoría "${cat}"?`)) {
+      setErrorGeneral('');
+      categoriaService.eliminarCategoria(cat);
+      setCategorias(categoriaService.listarCategorias());
+      if (catEnEdicion === cat) {
+        cancelarEdicionCategoria();
+      }
+    }
+  }
 
   // --- HANDLERS PRODUCTOS ---
   function activarEdicion(p) {
@@ -223,7 +271,7 @@ export default function AdminProductos() {
         {/* ENCABEZADO */}
         <div className="bg-dark p-3 rounded shadow-sm mb-4 border border-secondary">
           <h2 className="h4 fw-bold mb-0 text-white">Panel de Administración</h2>
-          <small className="text-light">Gestión de Productos, Usuarios e Ítems Críticos</small>
+          <small className="text-light">Gestión de Productos, Categorías, Usuarios e Ítems Críticos</small>
         </div>
 
         {/* ÁTOMO DE ERROR GLOBAL */}
@@ -248,7 +296,7 @@ export default function AdminProductos() {
               imagen={imagen} setImagen={setImagen}
               idEnEdicion={idEnEdicion}
               errores={errores} setErrores={setErrores}
-              categoriasDisponibles={categoriasDisponibles}
+              categoriasDisponibles={categorias}
               onGuardar={guardarProducto}
               onCancelar={cancelarEdicion}
               onCargarArchivo={manejarCargaArchivoImagen}
@@ -256,7 +304,6 @@ export default function AdminProductos() {
           </div>
 
           <div className="col-md-7">
-            {/* CONTENEDOR CON SCROLL PARA TABLA DE PRODUCTOS */}
             <div className="admin-tabla-contenedor">
               <TablaProductos
                 productos={productos}
@@ -268,7 +315,36 @@ export default function AdminProductos() {
           </div>
         </div>
 
-        {/* MÓDULO 2: CRUD DE USUARIOS */}
+        {/* MÓDULO 2: CRUD DE CATEGORÍAS */}
+        <div className="row g-4 text-dark mb-5">
+          <div className="col-12">
+            <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Categorías</h4>
+          </div>
+
+          <div className="col-md-5">
+            <FormularioCategoria
+              nombreCategoria={catNombre}
+              setNombreCategoria={setCatNombre}
+              categoriaEnEdicion={catEnEdicion}
+              errorCategoria={catError}
+              setErrorCategoria={setCatError}
+              onGuardar={guardarCategoria}
+              onCancelar={cancelarEdicionCategoria}
+            />
+          </div>
+
+          <div className="col-md-7">
+            <div className="admin-tabla-contenedor">
+              <TablaCategoria
+                categorias={categorias}
+                onActivarEdicion={activarEdicionCategoria}
+                onEliminar={eliminarCategoriaHandler}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* MÓDULO 3: CRUD DE USUARIOS */}
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Usuarios</h4>
@@ -289,7 +365,6 @@ export default function AdminProductos() {
           </div>
 
           <div className="col-md-7">
-            {/* CONTENEDOR CON SCROLL PARA TABLA DE USUARIOS */}
             <div className="admin-tabla-contenedor">
               <TablaUsuarios
                 usuarios={usuarios}
@@ -300,14 +375,13 @@ export default function AdminProductos() {
           </div>
         </div>
 
-        {/* MÓDULO 3: ÍTEMS CRÍTICOS */}
+        {/* MÓDULO 4: ÍTEMS CRÍTICOS */}
         <div className="row g-4 text-dark pt-2">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Control de Ítems Críticos</h4>
           </div>
 
           <div className="col-12">
-            {/* CONTENEDOR CON SCROLL PARA TABLA DE CRÍTICOS */}
             <div className="admin-tabla-contenedor">
               <TablaCriticos
                 productos={productos}
