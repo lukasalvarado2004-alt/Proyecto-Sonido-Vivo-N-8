@@ -5,6 +5,7 @@ import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
 import { useAgregarAlCarrito } from "../../hooks/useAgregarAlCarrito";
+import { obtenerImagenUrl } from "../../utils/obtenerImagen"; // 1. Importamos el helper
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
@@ -29,7 +30,11 @@ function TarjetaProducto(props) {
         to={`/producto/${props.id}`} 
         className="flex-grow-1 text-decoration-none text-dark d-flex flex-column"
       >
-        <ImagenProducto urlImagen={props.imagen} altTexto={props.nombre} />
+        {/* 2. Transformamos el nombre de la imagen a URL de Vite */}
+<ImagenProducto 
+  urlImagen={props.imagen} 
+  altTexto={props.nombre} 
+/>
 
         <div className="card-body d-flex flex-column p-0 mt-3 flex-grow-1">
           <div className="d-flex justify-content-between align-items-start gap-2 mb-2">

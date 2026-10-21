@@ -1,11 +1,16 @@
-import React from "react";
+import React from 'react';
+import { obtenerImagenUrl } from '../../utils/obtenerImagen';
 
-function ImagenProducto(props) {
+function ImagenProducto({ 
+  urlImagen, 
+  altTexto, 
+  className = "imagen-producto" 
+}) {
   return (
     <img 
-      src={props.urlImagen} 
-      alt={props.altTexto} 
-      className="card-img-top imagen-producto"
+      src={obtenerImagenUrl(urlImagen)} 
+      alt={altTexto || "Imagen de producto"} 
+      className={className}
     />
   );
 }

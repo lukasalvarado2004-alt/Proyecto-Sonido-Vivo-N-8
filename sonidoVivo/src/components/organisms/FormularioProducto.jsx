@@ -1,7 +1,7 @@
-// src/components/organisms/FormularioProducto.jsx
 import React from 'react';
 import CampoFormulario from '../molecules/CampoFormulario';
 import Boton from '../atoms/Boton';
+import ImagenProducto from '../atoms/ImagenProducto'; // 1. Importamos el átomo
 
 export default function FormularioProducto(props) {
   const {
@@ -104,30 +104,56 @@ export default function FormularioProducto(props) {
             onChange={(e) => { setDescripcion(e.target.value); setErrores(p => ({ ...p, descripcion: '' })); }}
             placeholder="Detalles del producto..."
           ></textarea>
-          {errores.descripcion && <div className="invalid-feedback d-block text-danger small mt-1">{errores.descripcion}</div>}
+          {errores.descripcion && (
+            <div className="invalid-feedback d-block text-danger small mt-1">
+              {errores.descripcion}
+            </div>
+          )}
         </div>
 
+        {/* Sección de Carga de Imagen */}
         <div className="mb-3 text-start">
           <label className="form-label text-dark fw-bold small">Imagen del Producto</label>
-          <input type="file" accept="image/*" className="form-control mb-2" onChange={onCargarArchivo} />
-          <CampoFormulario 
-            id="prod-imagen" 
-            valor={imagen} 
-            alCambiar={(v) => { setImagen(v); setErrores(p => ({ ...p, imagen: '' })); }} 
-            error={errores.imagen} 
-            placeholder="O pega una URL: https://..." 
+          <input 
+            type="file" 
+            accept="image/*" 
+            className={`form-control ${errores.imagen ? 'is-invalid' : ''}`} 
+            onChange={onCargarArchivo} 
           />
+          {errores.imagen && (
+            <div className="invalid-feedback d-block text-danger small mt-1">
+              {errores.imagen}
+            </div>
+          )}
           
+          {/* Vista previa usando el Átomo ImagenProducto sin inline styles */}
           {imagen && (
             <div className="mt-2 text-center border p-2 rounded bg-light">
-              <img src={imagen} alt="Vista previa" style={{ maxHeight: '100px', objectFit: 'contain' }} className="img-fluid rounded" />
+              <ImagenProducto 
+                urlImagen={imagen} 
+                altTexto="Vista previa" 
+                className="img-fluid rounded imagen-preview" 
+              />
             </div>
           )}
         </div>
         
         <div className="d-grid gap-2 mt-4">
-          <Boton tipo="submit" variante={idEnEdicion !== null ? 'warning' : 'purple'} textoBoton={idEnEdicion !== null ? 'Guardar Cambios' : 'Añadir Producto'} esBloque={true} />
-          {idEnEdicion !== null && <Boton tipo="button" variante="secondary" textoBoton="Cancelar Edición" esBloque={true} alHacerClic={onCancelar} />}
+          <Boton 
+            tipo="submit" 
+            variante={idEnEdicion !== null ? 'warning' : 'purple'} 
+            textoBoton={idEnEdicion !== null ? 'Guardar Cambios' : 'Añadir Producto'} 
+            esBloque={true} 
+          />
+          {idEnEdicion !== null && (
+            <Boton 
+              tipo="button" 
+              variante="secondary" 
+              textoBoton="Cancelar Edición" 
+              esBloque={true} 
+              alHacerClic={onCancelar} 
+            />
+          )}
         </div>
       </form>
     </div>

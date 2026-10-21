@@ -54,7 +54,7 @@ export function validarDescripcion(descripcion) {
 }
 
 export function validarImagen(imagen) {
-  if (!imagen || !imagen.trim()) return 'Debes subir una imagen o ingresar una URL.';
+  if (!imagen || !imagen.trim()) return 'Debes subir una imagen .';
   return '';
 }
 
