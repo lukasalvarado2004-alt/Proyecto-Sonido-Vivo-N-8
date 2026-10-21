@@ -6,6 +6,8 @@ import PlantillaPublica from "../components/templates/PlantillaPublica";
 import { useTituloPagina } from "../hooks/useTituloPagina";
 import Boton from "../components/atoms/Boton";
 import { validarNombre, validarCorreo } from "../utils/validaciones.js";
+// Importamos la nueva molécula reutilizable
+import { ResumenPedido } from "../components/molecules/ResumenPedido";
 
 function ConfirmarCompra() {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
@@ -14,11 +16,14 @@ function ConfirmarCompra() {
   const navigate = useNavigate();
   useTituloPagina("Confirmar Compra");
 
-  const [resumenCompra, setResumenCompra] = useState({ items: [], total: 0, nroSolicitud: "" });
+  // Almacena la orden generada para renderizarla en la pantalla de éxito
+  const [datosOrdenFinal, setDatosOrdenFinal] = useState(null);
+
   const [formulario, setFormulario] = useState({
     nombreCompleto: "", correoElectronico: "", direccionEnvio: "", ciudadComuna: ""
   });
 
+  // Efecto de autorrelleno con los datos de inicio de sesión activos
   useEffect(() => {
     const sesion = localStorage.getItem("sv_sesion");
     if (sesion) {
@@ -48,20 +53,28 @@ function ConfirmarCompra() {
     setErrores(err);
     if (Object.keys(err).length > 0) return;
 
+    // Generamos el ticket único de compra
     const numeroTicket = `SV-${Math.floor(100000 + Math.random() * 900000)}`;
-
-    setResumenCompra({
-      items: [...items],
-      total: precioTotal,
-      nroSolicitud: numeroTicket
-    });
-
-    localStorage.setItem("sv_ultimo_despacho", JSON.stringify({
+    
+    // Estructura limpia de la orden
+    const nuevaCompra = {
+      nroSolicitud: numeroTicket,
       nombre: formulario.nombreCompleto,
+      correo: formulario.correoElectronico,
       comuna: formulario.ciudadComuna,
       direccion: formulario.direccionEnvio,
-      nroSolicitud: numeroTicket
-    }));
+      items: [...items],
+      total: precioTotal
+    };
+
+    // 1. Guardamos localmente para la pantalla de éxito y el seguimiento del cliente
+    setDatosOrdenFinal(nuevaCompra);
+    localStorage.setItem("sv_ultimo_despacho", JSON.stringify(nuevaCompra));
+
+    // 2. Historial global: Almacenamos el pedido para que el panel de administración pueda leerlo
+    const historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
+    historialExistente.push(nuevaCompra);
+    localStorage.setItem("sv_todas_compras", JSON.stringify(historialExistente));
 
     vaciarCarrito();
     setCompraExitosa(true);
@@ -77,35 +90,16 @@ function ConfirmarCompra() {
             <h2 className="text-success fw-bold mb-2">🎉 ¡Compra Realizada con Éxito!</h2>
             <p className="text-white-50 mb-4">Muchas gracias por comprar en Sonido Vivo.</p>
             
-            <div className="text-start bg-black bg-opacity-20 p-3 rounded mb-4 border border-secondary border-opacity-25">
-              <h5 className="text-warning mb-3 fw-bold">🧾 Detalles de la Solicitud</h5>
-              <p className="mb-2"><strong>N° de Solicitud:</strong> <span className="text-warning fw-bold">{resumenCompra.nroSolicitud}</span></p>
-              
-              <div className="mb-2 border-bottom border-secondary border-opacity-25 pb-2">
-                <strong>Resumen de Productos:</strong>
-                <div className="mt-2 d-flex flex-column gap-1 ps-2">
-                  {resumenCompra.items.map((item) => (
-                    <div key={item.producto.id} className="d-flex justify-content-between small text-white-50">
-                      <span>{item.producto.nombre} (x{item.cantidad})</span>
-                      {/* Corregido con Template Literals para romper el carácter fantasma */}
-                      <span>{`$${(item.producto.precio * item.cantidad).toLocaleString('es-CL')}`}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="d-flex justify-content-between align-items-center pt-1">
-                <strong>Total Pagado:</strong>
-                {/* Corregido con Template Literals para romper el carácter fantasma */}
-                <strong className="text-warning fs-5">{`$${resumenCompra.total.toLocaleString('es-CL')}`}</strong>
-              </div>
-            </div>
+            {/* Llamamos a la molécula para renderizar el resumen en la vista de éxito de forma limpia */}
+            <ResumenPedido compra={datosOrdenFinal} />
 
-            <Boton 
-              textoBoton="Ver Seguimiento de mi Pedido" 
-              variante="purple w-100 fw-bold py-2 fs-5 text-white" 
-              alHacerClic={() => navigate("/seguimiento")} 
-            />
+            <div className="mt-4">
+              <Boton 
+                textoBoton="Ver Seguimiento de mi Pedido" 
+                variante="purple w-100 fw-bold py-2 fs-5 text-white" 
+                alHacerClic={() => navigate("/seguimiento")} 
+              />
+            </div>
           </div>
         ) : items.length === 0 ? (
           <div className="text-center py-5">
@@ -150,14 +144,12 @@ function ConfirmarCompra() {
                         <span className="fw-semibold">{item.producto.nombre}</span>
                         <small className="text-white-50 d-block">Cantidad: {item.cantidad}</small>
                       </div>
-                      {/* Corregido con Template Literals para romper el carácter fantasma */}
                       <span className="fw-bold">{`$${(item.producto.precio * item.cantidad).toLocaleString('es-CL')}`}</span>
                     </div>
                   ))}
                 </div>
                 <div className="d-flex justify-content-between align-items-center pt-2">
                   <span className="fs-5 text-white-50">Total a Pagar:</span>
-                  {/* Corregido con Template Literals para romper el carácter fantasma */}
                   <strong className="fs-3 text-warning">{`$${precioTotal.toLocaleString('es-CL')}`}</strong>
                 </div>
               </div>

@@ -1,3 +1,4 @@
+
 // src/pages/AdminProductos.jsx
 import React, { useState } from 'react';
 import PlantillaPublica from '../components/templates/PlantillaPublica';
@@ -12,8 +13,14 @@ import TablaCriticos from '../components/organisms/TablaCriticos';
 import FormularioCategoria from '../components/organisms/FormularioCategoria';
 import TablaCategoria from '../components/organisms/TablaCategoria';
 
+// Importación de la molécula ResumenPedido
+import { ResumenPedido } from '../components/molecules/ResumenPedido';
+
 import * as usuarioService from '../service/usuarioService.js';
 import * as categoriaService from '../service/categoriaService.js';
+
+// Importación del archivo JSON de compras desde la carpeta data
+import comprasData from '../data/CompraData.json';
 
 import { 
   validarCodigo, 
@@ -69,6 +76,9 @@ export default function AdminProductos() {
   const [usrRol, setUsrRol] = useState('cliente');
   const [usrContrasena, setUsrContrasena] = useState('');
   const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
+
+  // --- ESTADO PARA EL MÓDULO DE PEDIDOS / SOLICITUDES (Cargado desde el JSON) ---
+  const [compras, setCompras] = useState(comprasData);
 
   // --- HANDLERS CATEGORÍAS ---
   function activarEdicionCategoria(cat) {
@@ -271,7 +281,7 @@ export default function AdminProductos() {
         {/* ENCABEZADO */}
         <div className="bg-dark p-3 rounded shadow-sm mb-4 border border-secondary">
           <h2 className="h4 fw-bold mb-0 text-white">Panel de Administración</h2>
-          <small className="text-light">Gestión de Productos, Categorías, Usuarios e Ítems Críticos</small>
+          <small className="text-light">Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos</small>
         </div>
 
         {/* ÁTOMO DE ERROR GLOBAL */}
@@ -376,7 +386,7 @@ export default function AdminProductos() {
         </div>
 
         {/* MÓDULO 4: ÍTEMS CRÍTICOS */}
-        <div className="row g-4 text-dark pt-2">
+        <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Control de Ítems Críticos</h4>
           </div>
@@ -392,7 +402,25 @@ export default function AdminProductos() {
           </div>
         </div>
 
+        {/* MÓDULO 5: RESUMEN DE PEDIDOS / SOLICITUDES */}
+        <div className="row g-4 text-dark pt-2">
+          <div className="col-12">
+            <h4 className="text-white border-bottom border-secondary pb-2">Control y Resumen de Solicitudes</h4>
+          </div>
+
+          <div className="col-md-6">
+            {compras.length === 0 ? (
+              <p className="text-white-50">No hay solicitudes registradas.</p>
+            ) : (
+              compras.map((compra, index) => (
+                <ResumenPedido key={index} compra={compra} />
+              ))
+            )}
+          </div>
+        </div>
+
       </div>
     </PlantillaPublica>
   );
 }
+

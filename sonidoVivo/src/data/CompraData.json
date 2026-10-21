@@ -1,0 +1,23 @@
+[
+  {
+    "nroSolicitud": "SV-523423",
+    "nombre": "María González",
+    "direccion": "Av. Vicuña Mackenna 4520",
+    "comuna": "Macul",
+    "items": [
+      { "producto": { "id": 1, "nombre": "Guitarra Acústica Folk", "precio": 129990 }, "cantidad": 1 },
+      { "producto": { "id": 2, "nombre": "Guitarra 3/4 Niños", "precio": 79990 }, "cantidad": 1 }
+    ],
+    "total": 209980
+  },
+  {
+    "nroSolicitud": "SV-523424",
+    "nombre": "Carlos Soto",
+    "direccion": "Calle San Diego 812",
+    "comuna": "Santiago",
+    "items": [
+      { "producto": { "id": 3, "nombre": "Batería Acústica 5 piezas", "precio": 599990 }, "cantidad": 3 }
+    ],
+    "total": 1799970
+  }
+]
