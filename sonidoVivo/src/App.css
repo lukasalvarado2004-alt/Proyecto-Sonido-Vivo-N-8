@@ -363,3 +363,25 @@ footer a:hover {
 .admin-tabla-contenedor::-webkit-scrollbar-thumb:hover {
   background: #7322bf;
 }
+
+/* --- ESTILOS UNIFICADOS PARA IMÁGENES --- */
+
+/* Ajuste para las tarjetas del Catálogo */
+.imagen-producto {
+  height: 220px;             /* Altura fija idéntica para todas las tarjetas */
+  width: 100%;
+  object-fit: contain;       /* Mantiene la proporción real del instrumento sin deformarlo */
+  padding: 12px;
+  background-color: #ffffff; /* Fondo blanco uniforme */
+  border-radius: 8px;
+}
+
+/* Ajuste para la vista de Detalle del Producto */
+.imagen-detalle {
+  height: 340px;             /* Mayor altura en la vista de detalle */
+  width: 100%;
+  object-fit: contain;       /* Mantiene proporción completa */
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
