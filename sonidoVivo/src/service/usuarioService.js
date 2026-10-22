@@ -3,6 +3,7 @@ import usuariosIniciales from '../data/Usuarios.json';
 
 const CLAVE = 'usuarios';
 
+// Función auxiliar para leer y sincronizar usuarios desde localStorage y Usuarios.json
 function leer() {
   const guardado = localStorage.getItem(CLAVE);
   const listaJSON = Array.isArray(usuariosIniciales) ? usuariosIniciales : [];
@@ -38,6 +39,10 @@ function guardar(lista) {
   localStorage.setItem(CLAVE, JSON.stringify(lista));
 }
 
+export function obtenerUsuarios() {
+  return leer();
+}
+
 export function listarUsuarios() {
   return leer();
 }
@@ -47,34 +52,31 @@ export function obtenerUsuarioPorId(id) {
 }
 
 export function obtenerUsuarioPorCorreo(correo) {
+  const correoBuscado = (correo || '').trim().toLowerCase();
   return leer().find(
-    (u) => (u.correo || u.email)?.toLowerCase() === correo?.trim().toLowerCase()
+    (u) => (u.correo || u.email || '').toLowerCase() === correoBuscado
   ) ?? null;
 }
 
 // --- FUNCIÓN REQUERIDA POR LOGIN.JSX ---
-export function autenticarUsuario(correo, contrasena) {
-  const lista = leer();
-  const correoBuscado = correo?.trim().toLowerCase();
-  const claveBuscada = contrasena?.trim();
+export function autenticarUsuario(email, contrasena) {
+  const usuarios = leer();
+  const emailLimpio = (email || '').trim().toLowerCase();
 
-  const usuarioEncontrado = lista.find(
-    (u) => 
-      ((u.correo || u.email)?.toLowerCase() === correoBuscado) && 
-      ((u.contrasena || u.password || u.clave) === claveBuscada)
-  );
+  const usuarioEncontrado = usuarios.find((u) => {
+    const correoUsuario = (u.email || u.correo || '').trim().toLowerCase();
+    return correoUsuario === emailLimpio && String(u.contrasena) === String(contrasena);
+  });
 
-  if (usuarioEncontrado) {
-    return {
-      exito: true,
-      usuario: usuarioEncontrado
-    };
+  if (!usuarioEncontrado) {
+    return { exito: false, error: 'Correo o contraseña incorrectos. Por favor reintenta.' };
   }
 
-  return {
-    exito: false,
-    error: 'Correo o contraseña incorrectos. Por favor reintenta.'
-  };
+  // Guardar sesión activa en ambas claves para compatibilidad
+  localStorage.setItem('sv_sesion', JSON.stringify(usuarioEncontrado));
+  localStorage.setItem('usuarioSesion', JSON.stringify(usuarioEncontrado));
+
+  return { exito: true, usuario: usuarioEncontrado };
 }
 
 export function crearUsuario(datos) {
@@ -89,4 +91,34 @@ export function actualizarUsuario(id, cambios) {
   const lista = leer().map((u) => (Number(u.id) === Number(id) ? { ...u, ...cambios } : u));
   guardar(lista);
   return lista.find((u) => Number(u.id) === Number(id)) ?? null;
+}
+
+export function registrarUsuario(nuevoUsuario) {
+  const usuarios = leer();
+  const emailNuevo = (nuevoUsuario.email || nuevoUsuario.correo || '').trim().toLowerCase();
+
+  const existe = usuarios.some((u) => {
+    const correoUsuario = (u.email || u.correo || '').trim().toLowerCase();
+    return correoUsuario === emailNuevo;
+  });
+
+  if (existe) {
+    return { exito: false, error: 'El correo ya se encuentra registrado.' };
+  }
+
+  const usuarioCreado = {
+    id: Date.now(),
+    ...nuevoUsuario,
+    rol: nuevoUsuario.rol || 'cliente'
+  };
+
+  const listaActualizada = [...usuarios, usuarioCreado];
+  guardar(listaActualizada);
+
+  return { exito: true, usuario: usuarioCreado };
+}
+
+export function cerrarSesion() {
+  localStorage.removeItem('sv_sesion');
+  localStorage.removeItem('usuarioSesion');
 }

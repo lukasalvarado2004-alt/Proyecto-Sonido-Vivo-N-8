@@ -2,7 +2,11 @@
 import React from 'react';
 import Tabla from '../atoms/Tabla';
 
-export default function TablaCriticos({ productos = [], umbralStock, setUmbralStock }) {
+export default function TablaCriticos(props) {
+  const productos = props.productos || [];
+  const umbralStock = props.umbralStock;
+  const setUmbralStock = props.setUmbralStock;
+
   // Filtrar productos con stock <= umbral y ordenarlos de mayor a menor stock
   const productosCriticos = productos
     .filter((p) => Number(p.stock) <= Number(umbralStock || 0))

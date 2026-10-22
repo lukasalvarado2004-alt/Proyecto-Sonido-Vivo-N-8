@@ -54,15 +54,18 @@ export default function Login({ onLoginExitoso }) {
       onLoginExitoso(resultado.usuario);
     }
 
-    // Normalizar el rol para aceptar tanto 'admin' como 'Administrador'
-    const rolNormalizado = (resultado.usuario?.rol || '').toLowerCase();
-    const esAdmin = rolNormalizado === 'admin' || rolNormalizado === 'administrador';
+    // Normalizar el rol para validar 'admin' o 'ventas'
+const rolNormalizado = (resultado.usuario?.rol || '').toLowerCase();
+const esAdmin = rolNormalizado === 'admin' || rolNormalizado === 'administrador';
+const esVentas = rolNormalizado === 'ventas' || rolNormalizado === 'vendedor';
 
-    if (esAdmin) {
-      navigate('/admin');
-    } else {
-      navigate('/catalogo');
-    }
+if (esAdmin) {
+  navigate('/admin/productos');
+} else if (esVentas) {
+  navigate('/admin/ventas');
+} else {
+  navigate('/catalogo');
+}
   };
 
   return (

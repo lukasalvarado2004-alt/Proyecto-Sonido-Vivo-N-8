@@ -1,40 +1,49 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from "./pages/Login";
-import Inicio from "./pages/Inicio";
-import Catalogo from "./pages/Catalogo";
-import Carrito from "./pages/Carrito";
-import Registro from "./pages/Registro";
-import Admin from "./pages/AdminProductos";
-import NoEncontrada from "./pages/NoEncontrada";
-import productos from "./data/Productos.json";
-import { ContenidoCarritoProvider } from "./context/ContenidoCarrito";
-import { ProductosProvider } from "./context/ProductosContext";
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+import { ProductosProvider } from './context/ProductosContext';
+import { ContenidoCarritoProvider } from './context/ContenidoCarrito';
+
+import Inicio from './pages/Inicio';
+import Catalogo from './pages/Catalogo';
+import DetalleProducto from './pages/DetalleProducto';
+import Carrito from './pages/Carrito';
 import ConfirmarCompra from './pages/ConfirmarCompra';
 import SeguimientoCompra from './pages/SeguimientoCompra';
-import DetalleProducto from './pages/DetalleProducto';
+import Login from './pages/Login';
+import Registro from './pages/Registro';
 
-function App() {
+import AdminProductos from './pages/AdminProductos';
+import PanelVentas from './pages/PanelVentas';
+import NoEncontrada from './pages/NoEncontrada';
+
+export default function App() {
   return (
     <ProductosProvider>
       <ContenidoCarritoProvider>
         <BrowserRouter>
           <Routes>
+            {/* Rutas Públicas */}
             <Route path="/" element={<Inicio />} />
-            <Route path="/inicio" element={<Inicio />} />
-            <Route path="/catalogo" element={<Catalogo productos={productos} />} />
+            <Route path="/catalogo" element={<Catalogo />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
             <Route path="/carrito" element={<Carrito />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} />            
-            <Route path="/admin" element={<Admin productos={productos} />} />
             <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
             <Route path="/seguimiento" element={<SeguimientoCompra />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+
+            {/* Rutas de Administración ha Ventas */}
+            <Route path="/admin" element={<Navigate to="/admin/productos" replace />} />
+            <Route path="/admin/productos" element={<AdminProductos />} />
+            <Route path="/admin/ventas" element={<PanelVentas />} />
+
+            {/* Ruta no encontrada (404) */}
             <Route path="*" element={<NoEncontrada />} />
-            <Route path="/producto/:id" element={<DetalleProducto />} />
           </Routes>
         </BrowserRouter>
       </ContenidoCarritoProvider>
     </ProductosProvider>
   );
 }
-
-export default App;

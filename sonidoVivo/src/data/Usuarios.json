@@ -47,5 +47,12 @@
     "correo": "vale.contreras@correo.cl",
     "password": "valepassword12",
     "rol": "Cliente"
+  },
+  {
+    "id": 8,
+    "nombre": "Ejecutivo de Ventas",
+    "email": "ventas@sonidovivo.cl",
+    "contrasena": "ventas123",
+    "rol": "ventas"
   }
 ]

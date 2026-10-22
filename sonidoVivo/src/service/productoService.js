@@ -2,20 +2,20 @@
 import productosIniciales from '../data/Productos.json';
 
 const CLAVE = 'productos';
-const CLAVE_VERSION = 'productos_version';
-const VERSION_ACTUAL = 'v3_pedales_fix'; // Cambiamos versión para forzar recarga
 
 function leer() {
-  const versionGuardada = localStorage.getItem(CLAVE_VERSION);
   const guardado = localStorage.getItem(CLAVE);
-
-  if (!guardado || versionGuardada !== VERSION_ACTUAL) {
-    localStorage.setItem(CLAVE, JSON.stringify(productosIniciales));
-    localStorage.setItem(CLAVE_VERSION, VERSION_ACTUAL);
-    return [...productosIniciales];
+  if (!guardado) {
+    const iniciales = Array.isArray(productosIniciales) ? productosIniciales : [];
+    localStorage.setItem(CLAVE, JSON.stringify(iniciales));
+    return [...iniciales];
   }
-
-  return JSON.parse(guardado);
+  try {
+    const parseado = JSON.parse(guardado);
+    return Array.isArray(parseado) && parseado.length > 0 ? parseado : productosIniciales;
+  } catch (e) {
+    return productosIniciales;
+  }
 }
 
 function guardar(lista) {
@@ -26,23 +26,62 @@ export function listarProductos() {
   return leer();
 }
 
+export function actualizarProducto(identificador, cambios) {
+  if (identificador === undefined || identificador === null) return null;
+
+  const lista = leer();
+  const idBuscado = String(identificador).trim().toLowerCase();
+  let encontrado = false;
+
+  const listaActualizada = lista.map((p, idx) => {
+    const codigoProd = String(p.codigo || '').trim().toLowerCase();
+    const idProd = String(p.id || '').trim().toLowerCase();
+    const indexStr = String(idx);
+
+    if (codigoProd === idBuscado || idProd === idBuscado || indexStr === idBuscado) {
+      encontrado = true;
+      return {
+        ...p,
+        ...cambios,
+        ...(cambios.stock !== undefined ? { stock: Number(cambios.stock) } : {}),
+        ...(cambios.precio !== undefined ? { precio: Number(cambios.precio) } : {})
+      };
+    }
+    return p;
+  });
+
+  if (encontrado) {
+    guardar(listaActualizada);
+  }
+
+  return listaActualizada;
+}
+
 export function crearProducto(datos) {
   const lista = leer();
-  const nuevo = { ...datos, id: datos.id || datos.codigo };
-  guardar([...lista, nuevo]);
-  return nuevo;
+  const nuevoProducto = {
+    ...datos,
+    id: datos.id || datos.codigo || `PROD-${Date.now()}`,
+    codigo: datos.codigo || `GA${String(lista.length + 1).padStart(3, '0')}`,
+    stock: Number(datos.stock) || 0,
+    precio: Number(datos.precio) || 0
+  };
+  const listaActualizada = [...lista, nuevoProducto];
+  guardar(listaActualizada);
+  return nuevoProducto;
 }
 
-export function actualizarProducto(id, cambios) {
-  const lista = leer().map((p) => 
-    (p.id === id || p.codigo === id) ? { ...p, ...cambios } : p
-  );
-  guardar(lista);
-  return lista.find((p) => p.id === id || p.codigo === id) ?? null;
-}
+export function eliminarProducto(identificador) {
+  const lista = leer();
+  const idBuscado = String(identificador).trim().toLowerCase();
 
-export function eliminarProducto(id) {
-  const listaActual = leer();
-  const listaFiltrada = listaActual.filter((p) => p.id !== id && p.codigo !== id);
+  const listaFiltrada = lista.filter((p, idx) => {
+    const codigoProd = String(p.codigo || '').trim().toLowerCase();
+    const idProd = String(p.id || '').trim().toLowerCase();
+    const indexStr = String(idx);
+    return codigoProd !== idBuscado && idProd !== idBuscado && indexStr !== idBuscado;
+  });
+
   guardar(listaFiltrada);
+  return true;
 }
