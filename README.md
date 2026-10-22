@@ -115,7 +115,7 @@ Abre tu terminal y ejecuta el siguiente comando:
 
 ```bash
 
-git clone https://github.com[TU_REPOSITORIO]/prototipo-sonido-vivo.git
+https://github.com/lukasalvarado2004-alt/Proyecto-Sonido-Vivo-N-8.git
 
 ```
 
