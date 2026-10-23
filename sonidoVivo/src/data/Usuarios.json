@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "nombre": "Administrador",
+    "correo": "admin@sonidovivo.cl",
+    "password": "admin",
+    "rol": "Administrador"
+  },
+  {
+    "id": 2,
+    "nombre": "Juan Pérez",
+    "correo": "juan@correo.cl",
+    "password": "12345",
+    "rol": "Cliente"
+  },
+  {
+    "id": 3,
+    "nombre": "María José Balmaceda",
+    "correo": "mariajose@correo.cl",
+    "password": "mypassword2026",
+    "rol": "Cliente"
+  },
+  {
+    "id": 4,
+    "nombre": "Carlos Mendoza",
+    "correo": "carlos.m@correo.cl",
+    "password": "adminSecret!1",
+    "rol": "Cliente"
+  },
+  {
+    "id": 5,
+    "nombre": "Francisca Muñoz",
+    "correo": "fran.munoz@correo.cl",
+    "password": "claveTemporal99",
+    "rol": "Cliente"
+  },
+  {
+    "id": 6,
+    "nombre": "Diego Andrés Soto",
+    "correo": "diego.soto@correo.cl",
+    "password": "dsoto#2026!",
+    "rol": "Cliente"
+  },
+  {
+    "id": 7,
+    "nombre": "Valentina Contreras",
+    "correo": "vale.contreras@correo.cl",
+    "password": "valepassword12",
+    "rol": "Cliente"
+  },
+  {
+    "id": 8,
+    "nombre": "Ejecutivo de Ventas",
+    "email": "ventas@sonidovivo.cl",
+    "contrasena": "ventas123",
+    "rol": "ventas"
+  }
+]
