@@ -2,6 +2,7 @@
   {
     "nroSolicitud": "SV-523423",
     "nombre": "María González",
+    "correo": "maria.gonzalez@email.com",
     "direccion": "Av. Vicuña Mackenna 4520",
     "comuna": "Macul",
     "items": [
@@ -13,6 +14,7 @@
   {
     "nroSolicitud": "SV-523424",
     "nombre": "Carlos Soto",
+    "correo": "carlos.soto@email.com",
     "direccion": "Calle San Diego 812",
     "comuna": "Santiago",
     "items": [

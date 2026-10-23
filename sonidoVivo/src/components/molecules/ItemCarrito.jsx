@@ -1,5 +1,6 @@
 import React from "react";
 import { useContenidoCarrito } from "../../context/ContenidoCarrito";
+import { obtenerImagenUrl } from "../../utils/obtenerImagen"; // IMPORTAMOS EL RESOLVEDOR DE IMÁGENES
 
 export function ItemCarrito(props) {
   const { actualizarCantidad, eliminarProducto } = useContenidoCarrito();
@@ -15,8 +16,9 @@ export function ItemCarrito(props) {
       
       {/* Contenedor de Imagen, Nombre y Cantidad */}
       <div className="d-flex align-items-center gap-3 flex-grow-1">
+        {/* SOLUCIÓN: Usar obtenerImagenUrl para que cargue desde assets */}
         <img 
-          src={props.item.producto.imagen} 
+          src={obtenerImagenUrl(props.item.producto.imagen)} 
           alt={props.item.producto.nombre} 
           className="img-fluid rounded border border-secondary"
           style={{ width: "60px", height: "60px", objectFit: "cover" }}

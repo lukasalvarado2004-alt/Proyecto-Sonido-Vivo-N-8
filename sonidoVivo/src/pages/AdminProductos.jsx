@@ -1,4 +1,3 @@
-
 // src/pages/AdminProductos.jsx
 import React, { useState } from 'react';
 import PlantillaPublica from '../components/templates/PlantillaPublica';
@@ -12,14 +11,10 @@ import TablaUsuarios from '../components/organisms/TablaUsuario';
 import TablaCriticos from '../components/organisms/TablaCriticos';
 import FormularioCategoria from '../components/organisms/FormularioCategoria';
 import TablaCategoria from '../components/organisms/TablaCategoria';
-
-// Importación de la molécula ResumenPedido
 import { ResumenPedido } from '../components/molecules/ResumenPedido';
 
 import * as usuarioService from '../service/usuarioService.js';
 import * as categoriaService from '../service/categoriaService.js';
-
-// Importación del archivo JSON de compras desde la carpeta data
 import comprasData from '../data/CompraData.json';
 
 import { 
@@ -45,16 +40,13 @@ export default function AdminProductos() {
   const [umbralStock] = useState(5);
   const [errorGeneral, setErrorGeneral] = useState('');
 
-  // --- ESTADO PARA EL MÓDULO DE ÍTEMS CRÍTICOS ---
   const [umbralCritico, setUmbralCritico] = useState(5);
 
-  // --- ESTADOS CRUD CATEGORÍAS ---
   const [categorias, setCategorias] = useState(() => categoriaService.listarCategorias());
   const [catNombre, setCatNombre] = useState('');
   const [catEnEdicion, setCatEnEdicion] = useState(null);
   const [catError, setCatError] = useState('');
 
-  // --- ESTADOS CRUD PRODUCTOS ---
   const [idEnEdicion, setIdEnEdicion] = useState(null);
   const [errores, setErrores] = useState({});
   const [codigo, setCodigo] = useState('');
@@ -67,7 +59,6 @@ export default function AdminProductos() {
   const [descripcion, setDescripcion] = useState('');
   const [imagen, setImagen] = useState('');
 
-  // --- ESTADOS CRUD USUARIOS ---
   const [usuarios, setUsuarios] = useState(() => usuarioService.listarUsuarios());
   const [usrIdEnEdicion, setUsrIdEnEdicion] = useState(null);
   const [usrErrores, setUsrErrores] = useState({});
@@ -77,10 +68,14 @@ export default function AdminProductos() {
   const [usrContrasena, setUsrContrasena] = useState('');
   const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
 
-  // --- ESTADO PARA EL MÓDULO DE PEDIDOS / SOLICITUDES (Cargado desde el JSON) ---
-  const [compras, setCompras] = useState(comprasData);
+  // SOLUCIÓN: Cargar compras leyendo el LocalStorage integrado con el JSON
+  const [compras, setCompras] = useState(() => {
+    const historialGuardado = localStorage.getItem("sv_todas_compras");
+    if (historialGuardado) return JSON.parse(historialGuardado);
+    localStorage.setItem("sv_todas_compras", JSON.stringify(comprasData));
+    return comprasData;
+  });
 
-  // --- HANDLERS CATEGORÍAS ---
   function activarEdicionCategoria(cat) {
     setErrorGeneral('');
     setCatEnEdicion(cat);
@@ -126,7 +121,6 @@ export default function AdminProductos() {
     }
   }
 
-  // --- HANDLERS PRODUCTOS ---
   function activarEdicion(p) {
     setErrorGeneral('');
     setIdEnEdicion(p.id ?? p.codigo);
@@ -206,7 +200,6 @@ export default function AdminProductos() {
     cancelarEdicion();
   }
 
-  // --- HANDLERS USUARIOS ---
   function activarEdicionUsuario(u) {
     setErrorGeneral('');
     setUsrIdEnEdicion(u.id);
@@ -278,136 +271,76 @@ export default function AdminProductos() {
     <PlantillaPublica>
       <div className="container py-4 text-white">
         
-        {/* ENCABEZADO */}
         <div className="bg-dark p-3 rounded shadow-sm mb-4 border border-secondary">
           <h2 className="h4 fw-bold mb-0 text-white">Panel de Administración</h2>
           <small className="text-light">Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos</small>
         </div>
 
-        {/* ÁTOMO DE ERROR GLOBAL */}
         <Error mensaje={errorGeneral} variante="danger" />
 
-        {/* MÓDULO 1: CRUD DE PRODUCTOS */}
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Catálogo de Productos</h4>
           </div>
-
           <div className="col-md-5">
             <FormularioProducto
-              codigo={codigo} setCodigo={setCodigo}
-              categoria={categoria} setCategoria={setCategoria}
-              nombre={nombre} setNombre={setNombre}
-              marca={marca} setMarca={setMarca}
-              modelo={modelo} setModelo={setModelo}
-              stock={stock} setStock={setStock}
-              precio={precio} setPrecio={setPrecio}
-              descripcion={descripcion} setDescripcion={setDescripcion}
-              imagen={imagen} setImagen={setImagen}
-              idEnEdicion={idEnEdicion}
-              errores={errores} setErrores={setErrores}
-              categoriasDisponibles={categorias}
-              onGuardar={guardarProducto}
-              onCancelar={cancelarEdicion}
-              onCargarArchivo={manejarCargaArchivoImagen}
+              codigo={codigo} setCodigo={setCodigo} categoria={categoria} setCategoria={setCategoria} nombre={nombre} setNombre={setNombre} marca={marca} setMarca={setMarca} modelo={modelo} setModelo={setModelo} stock={stock} setStock={setStock} precio={precio} setPrecio={setPrecio} descripcion={descripcion} setDescripcion={setDescripcion} imagen={imagen} setImagen={setImagen} idEnEdicion={idEnEdicion} errores={errores} setErrores={setErrores} categoriasDisponibles={categorias} onGuardar={guardarProducto} onCancelar={cancelarEdicion} onCargarArchivo={manejarCargaArchivoImagen}
             />
           </div>
-
           <div className="col-md-7">
             <div className="admin-tabla-contenedor">
-              <TablaProductos
-                productos={productos}
-                umbralStock={umbralStock}
-                onActivarEdicion={activarEdicion}
-                onEliminar={eliminar}
-              />
+              <TablaProductos productos={productos} umbralStock={umbralStock} onActivarEdicion={activarEdicion} onEliminar={eliminar} />
             </div>
           </div>
         </div>
 
-        {/* MÓDULO 2: CRUD DE CATEGORÍAS */}
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Categorías</h4>
           </div>
-
           <div className="col-md-5">
             <FormularioCategoria
-              nombreCategoria={catNombre}
-              setNombreCategoria={setCatNombre}
-              categoriaEnEdicion={catEnEdicion}
-              errorCategoria={catError}
-              setErrorCategoria={setCatError}
-              onGuardar={guardarCategoria}
-              onCancelar={cancelarEdicionCategoria}
+              nombreCategoria={catNombre} setNombreCategoria={setCatNombre} categoriaEnEdicion={catEnEdicion} errorCategoria={catError} setErrorCategoria={setCatError} onGuardar={guardarCategoria} onCancelar={cancelarEdicionCategoria}
             />
           </div>
-
           <div className="col-md-7">
             <div className="admin-tabla-contenedor">
-              <TablaCategoria
-                categorias={categorias}
-                onActivarEdicion={activarEdicionCategoria}
-                onEliminar={eliminarCategoriaHandler}
-              />
+              <TablaCategoria categorias={categorias} onActivarEdicion={activarEdicionCategoria} onEliminar={eliminarCategoriaHandler} />
             </div>
           </div>
         </div>
 
-        {/* MÓDULO 3: CRUD DE USUARIOS */}
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Usuarios</h4>
           </div>
-
           <div className="col-md-5">
             <FormularioUsuario
-              nombre={usrNombre} setNombre={setUsrNombre}
-              correo={usrCorreo} setCorreo={setUsrCorreo}
-              rol={usrRol} setRol={setUsrRol}
-              contrasena={usrContrasena} setContrasena={setUsrContrasena}
-              confirmarContrasena={usrConfirmarContrasena} setConfirmarContrasena={setUsrConfirmarContrasena}
-              idEnEdicion={usrIdEnEdicion}
-              errores={usrErrores} setErrores={setUsrErrores}
-              onGuardar={guardarUsuario}
-              onCancelar={cancelarEdicionUsuario}
+              nombre={usrNombre} setNombre={setUsrNombre} correo={usrCorreo} setCorreo={setUsrCorreo} rol={usrRol} setRol={setUsrRol} contrasena={usrContrasena} setContrasena={setUsrContrasena} confirmarContrasena={usrConfirmarContrasena} setConfirmarContrasena={setUsrConfirmarContrasena} idEnEdicion={usrIdEnEdicion} errores={usrErrores} setErrores={setUsrErrores} onGuardar={guardarUsuario} onCancelar={cancelarEdicionUsuario}
             />
           </div>
-
           <div className="col-md-7">
             <div className="admin-tabla-contenedor">
-              <TablaUsuarios
-                usuarios={usuarios}
-                onActivarEdicion={activarEdicionUsuario}
-                onEliminar={eliminarUsuarioHandler}
-              />
+              <TablaUsuarios usuarios={usuarios} onActivarEdicion={activarEdicionUsuario} onEliminar={eliminarUsuarioHandler} />
             </div>
           </div>
         </div>
 
-        {/* MÓDULO 4: ÍTEMS CRÍTICOS */}
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Control de Ítems Críticos</h4>
           </div>
-
           <div className="col-12">
             <div className="admin-tabla-contenedor">
-              <TablaCriticos
-                productos={productos}
-                umbralStock={umbralCritico}
-                setUmbralStock={setUmbralCritico}
-              />
+              <TablaCriticos productos={productos} umbralStock={umbralCritico} setUmbralStock={setUmbralCritico} />
             </div>
           </div>
         </div>
 
-        {/* MÓDULO 5: RESUMEN DE PEDIDOS / SOLICITUDES */}
         <div className="row g-4 text-dark pt-2">
           <div className="col-12">
             <h4 className="text-white border-bottom border-secondary pb-2">Control y Resumen de Solicitudes</h4>
           </div>
-
           <div className="col-md-6">
             {compras.length === 0 ? (
               <p className="text-white-50">No hay solicitudes registradas.</p>
@@ -423,4 +356,3 @@ export default function AdminProductos() {
     </PlantillaPublica>
   );
 }
-

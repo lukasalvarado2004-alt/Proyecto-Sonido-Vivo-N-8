@@ -79,7 +79,7 @@ function SeguimientoCompra() {
               </div>
 
               <div className="mt-4 d-flex gap-3 justify-content-center">
-                <Boton textoBoton="Volver al Catálogo" variante="outline-warning py-2 px-4" alHacerClic={() => navigate("/")} />
+                <Boton textoBoton="Volver al Inicio" variante="outline-warning py-2 px-4" alHacerClic={() => navigate("/")} />
               </div>
 
             </div>

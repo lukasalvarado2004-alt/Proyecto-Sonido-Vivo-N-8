@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useContenidoCarrito } from "../context/ContenidoCarrito";
-import { useProductos } from "../context/ProductosContext"; // 1. IMPORTAR HOOK DE PRODUCTOS
+import { useProductos } from "../context/ProductosContext"; 
 import PlantillaPublica from "../components/templates/PlantillaPublica";
 import { useTituloPagina } from "../hooks/useTituloPagina";
 import Boton from "../components/atoms/Boton";
 import { validarNombre, validarCorreo } from "../utils/validaciones.js";
 import { ResumenPedido } from "../components/molecules/ResumenPedido";
+import comprasData from '../data/CompraData.json'; // IMPORTAMOS DATA INICIAL
 
 function ConfirmarCompra() {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
-  const { productos, actualizarStockProducto } = useProductos(); // 2. OBTENER PRODUCTOS Y METODO DE STOCK
+  const { productos, actualizarStockProducto } = useProductos(); 
   
   const [errores, setErrores] = useState({});
   const [compraExitosa, setCompraExitosa] = useState(false);
@@ -53,7 +54,7 @@ function ConfirmarCompra() {
     setErrores(err);
     if (Object.keys(err).length > 0) return;
 
-    // 3. DESCONTAR STOCK DE CADA PRODUCTO COMPRADO EN EL INVENTARIO GLOBAL
+    // DESCONTAR STOCK
     items.forEach((item) => {
       const idProducto = item.producto.id || item.producto.codigo;
       const productoExistente = productos.find(
@@ -66,7 +67,6 @@ function ConfirmarCompra() {
       }
     });
 
-    // Generamos el ticket único de compra
     const numeroTicket = `SV-${Math.floor(100000 + Math.random() * 900000)}`;
     
     const nuevaCompra = {
@@ -82,7 +82,11 @@ function ConfirmarCompra() {
     setDatosOrdenFinal(nuevaCompra);
     localStorage.setItem("sv_ultimo_despacho", JSON.stringify(nuevaCompra));
 
-    const historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
+    // SOLUCIÓN: Guardar en localStorage uniendo las del JSON con la nueva
+    let historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras"));
+    if (!historialExistente) {
+      historialExistente = [...comprasData]; // Si está vacío, cargar las de prueba
+    }
     historialExistente.push(nuevaCompra);
     localStorage.setItem("sv_todas_compras", JSON.stringify(historialExistente));
 

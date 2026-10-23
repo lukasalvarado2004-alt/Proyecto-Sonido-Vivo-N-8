@@ -58,14 +58,16 @@ export function obtenerUsuarioPorCorreo(correo) {
   ) ?? null;
 }
 
-// --- FUNCIÓN REQUERIDA POR LOGIN.JSX ---
+// --- FUNCIÓN REQUERIDA POR LOGIN.JSX (CORREGIDA) ---
 export function autenticarUsuario(email, contrasena) {
   const usuarios = leer();
   const emailLimpio = (email || '').trim().toLowerCase();
 
   const usuarioEncontrado = usuarios.find((u) => {
     const correoUsuario = (u.email || u.correo || '').trim().toLowerCase();
-    return correoUsuario === emailLimpio && String(u.contrasena) === String(contrasena);
+    // SOLUCIÓN: Buscar tanto 'password' como 'contrasena' para que coincida con Usuarios.json
+    const claveUsuario = String(u.password || u.contrasena || '');
+    return correoUsuario === emailLimpio && claveUsuario === String(contrasena);
   });
 
   if (!usuarioEncontrado) {
