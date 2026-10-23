@@ -35,7 +35,7 @@ function TarjetaProducto(props) {
             <div className="d-flex align-items-center gap-1 flex-wrap">
               <h5 className="card-title fs-6 mb-0 fw-bold">{props.nombre}</h5>
               {props.esOferta && (
-                <span className="badge bg-danger text-white fw-bold">🔥 Oferta</span>
+                <span className="badge bg-danger text-white fw-bold"> Oferta</span>
               )}
             </div>
             <EtiquetaStock stock={props.stock} />

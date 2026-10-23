@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useContenidoCarrito } from "../context/ContenidoCarrito";
-import { useProductos } from "../context/ProductosContext"; 
+import { useProductos } from "../context/ProductosContext";
 import PlantillaPublica from "../components/templates/PlantillaPublica";
 import { useTituloPagina } from "../hooks/useTituloPagina";
 import Boton from "../components/atoms/Boton";
+import CampoFormulario from "../components/molecules/CampoFormulario";
 import { validarNombre, validarCorreo } from "../utils/validaciones.js";
 import { ResumenPedido } from "../components/molecules/ResumenPedido";
-import comprasData from '../data/CompraData.json'; // IMPORTAMOS DATA INICIAL
 
 function ConfirmarCompra() {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
-  const { productos, actualizarStockProducto } = useProductos(); 
+  const { productos, actualizarStockProducto } = useProductos();
   
   const [errores, setErrores] = useState({});
   const [compraExitosa, setCompraExitosa] = useState(false);
@@ -37,10 +37,6 @@ function ConfirmarCompra() {
     }
   }, []);
 
-  const manejarCambio = (e) => {
-    setFormulario({ ...formulario, [e.target.name]: e.target.value });
-  };
-
   function ejecutarCompraManual() {
     let err = {};
     const errNom = validarNombre(formulario.nombreCompleto);
@@ -54,7 +50,6 @@ function ConfirmarCompra() {
     setErrores(err);
     if (Object.keys(err).length > 0) return;
 
-    // DESCONTAR STOCK
     items.forEach((item) => {
       const idProducto = item.producto.id || item.producto.codigo;
       const productoExistente = productos.find(
@@ -82,11 +77,7 @@ function ConfirmarCompra() {
     setDatosOrdenFinal(nuevaCompra);
     localStorage.setItem("sv_ultimo_despacho", JSON.stringify(nuevaCompra));
 
-    // SOLUCIÓN: Guardar en localStorage uniendo las del JSON con la nueva
-    let historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras"));
-    if (!historialExistente) {
-      historialExistente = [...comprasData]; // Si está vacío, cargar las de prueba
-    }
+    const historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
     historialExistente.push(nuevaCompra);
     localStorage.setItem("sv_todas_compras", JSON.stringify(historialExistente));
 
@@ -127,21 +118,54 @@ function ConfirmarCompra() {
                 <h2 className="login-titulo-marca text-center mb-4">Sonido <span className="text-purple-brand">Vivo</span></h2>
                 
                 <form onSubmit={(e) => e.preventDefault()}>
-                  {["nombreCompleto", "correoElectronico", "direccionEnvio", "ciudadComuna"].map((campo) => (
-                    <div className="mb-3" key={campo}>
-                      <input 
-                        type={campo === "correoElectronico" ? "email" : "text"} 
-                        name={campo} 
-                        placeholder={campo === "nombreCompleto" ? "Nombre Completo" : campo === "correoElectronico" ? "Correo Electrónico" : campo === "direccionEnvio" ? "Dirección de Envío" : "Ciudad / Comuna"} 
-                        className="compra-input-control" 
-                        value={formulario[campo]} 
-                        onChange={manejarCambio} 
-                      />
-                      {errores[campo] && <div className="text-danger small mt-2 ms-1 fw-bold">{errores[campo]}</div>}
-                    </div>
-                  ))}
+                  <CampoFormulario
+                    valor={formulario.nombreCompleto}
+                    alCambiar={(v) => {
+                      setFormulario(p => ({ ...p, nombreCompleto: v }));
+                      setErrores(p => ({ ...p, nombreCompleto: '' }));
+                    }}
+                    placeholder="Nombre Completo"
+                    error={errores.nombreCompleto}
+                  />
+
+                  <CampoFormulario
+                    valor={formulario.correoElectronico}
+                    alCambiar={(v) => {
+                      setFormulario(p => ({ ...p, correoElectronico: v }));
+                      setErrores(p => ({ ...p, correoElectronico: '' }));
+                    }}
+                    tipo="email"
+                    placeholder="Correo Electrónico"
+                    error={errores.correoElectronico}
+                  />
+
+                  <CampoFormulario
+                    valor={formulario.direccionEnvio}
+                    alCambiar={(v) => {
+                      setFormulario(p => ({ ...p, direccionEnvio: v }));
+                      setErrores(p => ({ ...p, direccionEnvio: '' }));
+                    }}
+                    placeholder="Dirección de Envío"
+                    error={errores.direccionEnvio}
+                  />
+
+                  <CampoFormulario
+                    valor={formulario.ciudadComuna}
+                    alCambiar={(v) => {
+                      setFormulario(p => ({ ...p, ciudadComuna: v }));
+                      setErrores(p => ({ ...p, ciudadComuna: '' }));
+                    }}
+                    placeholder="Ciudad / Comuna"
+                    error={errores.ciudadComuna}
+                  />
+
                   <div className="mt-4">
-                    <Boton textoBoton="CONFIRMAR Y PAGAR PEDIDO" variante="purple w-100 fw-bold py-2 fs-5 text-white" tipo="button" alHacerClic={ejecutarCompraManual} />
+                    <Boton 
+                      textoBoton="CONFIRMAR Y PAGAR PEDIDO" 
+                      variante="purple w-100 fw-bold py-2 fs-5 text-white" 
+                      tipo="button" 
+                      alHacerClic={ejecutarCompraManual} 
+                    />
                   </div>
                 </form>
               </div>

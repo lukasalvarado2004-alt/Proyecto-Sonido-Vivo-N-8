@@ -12,7 +12,7 @@ import TablaCriticos from '../components/organisms/TablaCriticos';
 import FormularioCategoria from '../components/organisms/FormularioCategoria';
 import TablaCategoria from '../components/organisms/TablaCategoria';
 import { ResumenPedido } from '../components/molecules/ResumenPedido';
-
+import EncabezadoPanel from '../components/molecules/EncabezadoPanel';
 import * as usuarioService from '../service/usuarioService.js';
 import * as categoriaService from '../service/categoriaService.js';
 import comprasData from '../data/CompraData.json';
@@ -271,10 +271,10 @@ export default function AdminProductos() {
     <PlantillaPublica>
       <div className="container py-4 text-white">
         
-        <div className="bg-dark p-3 rounded shadow-sm mb-4 border border-secondary">
-          <h2 className="h4 fw-bold mb-0 text-white">Panel de Administración</h2>
-          <small className="text-light">Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos</small>
-        </div>
+        <EncabezadoPanel 
+        titulo="Panel de Administración" 
+        subtitulo="Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos" 
+      />  
 
         <Error mensaje={errorGeneral} variante="danger" />
 

@@ -5,7 +5,7 @@ import ControlSolicitudes from '../components/organisms/ControlSolicitudes';
 import TablaStockVentas from '../components/organisms/TablaStockVentas';
 import { useProductos } from '../context/ProductosContext';
 import comprasIniciales from '../data/CompraData.json';
-
+import EncabezadoPanel from '../components/molecules/EncabezadoPanel';
 export default function PanelVentas() {
   const { productos, actualizarStockProducto } = useProductos();
 
@@ -35,12 +35,10 @@ export default function PanelVentas() {
     <PlantillaAdmin>
       <div className="container py-2 d-flex flex-column gap-4">
         {/* Encabezado del Panel */}
-        <div className="card bg-dark text-light border-secondary p-3 rounded">
-          <h2 className="h4 fw-bold mb-1">Panel de Ventas</h2>
-          <p className="text-secondary small mb-0">
-            Gestión de Solicitudes de Despacho, Control de Envíos e Inventario de Stock
-          </p>
-        </div>
+       <EncabezadoPanel 
+  titulo="Panel de Ventas" 
+  subtitulo="Gestión de Solicitudes de Despacho, Control de Envíos e Inventario de Stock" 
+/>
 
         {/* 1. Tabla de Solicitudes */}
         <ControlSolicitudes

@@ -1,5 +1,5 @@
 import React from "react";
-import { useContenidoCarrito } from "../../hooks/useContenidoCarrito";
+import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 import ItemCarrito from "../molecules/ItemCarrito";
 import Boton from "../atoms/Boton";
 
@@ -28,7 +28,7 @@ function VisualCarrito(props) {
         <div className="card-footer border-secondary pt-3 mt-2">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <span className="fs-5 text-muted">Subtotal a pagar:</span>
-            <strong className="fs-3 text-warning">${precioTotal.toLocaleString()}</strong>
+            <strong className="fs-3 text-warning">${precioTotal.toLocaleString('es-CL')}</strong>
           </div>
           <div className="d-flex gap-3 justify-content-end">
             <Boton 
@@ -39,6 +39,7 @@ function VisualCarrito(props) {
             <Boton 
               textoBoton="Finalizar y Pagar" 
               variante="warning" 
+              alHacerClic={props.onFinalizarPago}
             />
           </div>
         </div>
@@ -47,4 +48,4 @@ function VisualCarrito(props) {
   );
 }
 
-export default VisualCarrito;
+export default VisualCarrito; 

@@ -56,7 +56,7 @@ export default function Inicio() {
           <section className="mb-5 p-4 rounded-3 bg-dark bg-opacity-50 border border-warning border-opacity-50 shadow-sm">
             <div className="d-flex align-items-center justify-content-between mb-3 border-bottom border-warning pb-2">
               <h2 className="h3 fw-bold text-warning mb-0 d-flex align-items-center gap-2">
-                <span>🔥</span> Ofertas e Ítems en Promoción
+                 Ofertas e Ítems en Promoción
               </h2>
               <span className="badge bg-danger fs-6 px-3 py-2">
                 ¡Precios Especiales!
