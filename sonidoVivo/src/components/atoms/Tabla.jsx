@@ -1,4 +1,3 @@
-// src/components/atoms/Tabla.jsx
 import React from 'react';
 
 export default function Tabla(props) {
@@ -9,9 +8,9 @@ export default function Tabla(props) {
       <table className={`table table-hover align-middle ${claseExtra}`}>
         <thead className="table-dark">
           <tr>
-            {columnas.map((col, idx) => (
+            {columnas.map((col) => (
               <th 
-                key={idx} 
+                key={col.id || col.titulo} 
                 className={col.alineacion ? `text-${col.alineacion}` : ''}
               >
                 {col.titulo}

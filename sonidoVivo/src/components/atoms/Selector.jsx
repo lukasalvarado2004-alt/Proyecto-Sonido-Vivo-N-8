@@ -10,9 +10,9 @@ export default function Selector(props) {
       onChange={(e) => props.alCambiar(e.target.value)}
       className="form-select formulario-input-native"
     >
-      <option value="">-- Selecciona una categoría --</option>
-      {opciones.map((opcion, idx) => (
-        <option key={idx} value={opcion}>
+      <option value="">-- Selecciona una opción --</option>
+      {opciones.map((opcion) => (
+        <option key={opcion} value={opcion}>
           {opcion}
         </option>
       ))}

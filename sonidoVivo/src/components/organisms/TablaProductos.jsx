@@ -1,4 +1,3 @@
-// src/components/organisms/TablaProductos.jsx
 import React from 'react';
 import Tabla from '../atoms/Tabla';
 import Boton from '../atoms/Boton';
@@ -7,26 +6,26 @@ export default function TablaProductos(props) {
   const { productos = [], umbralStock = 5, onActivarEdicion, onEliminar } = props;
 
   const columnas = [
-    { titulo: 'Código' },
-    { titulo: 'Nombre' },
-    { titulo: 'Stock' },
-    { titulo: 'Precio' },
-    { titulo: 'Acciones', alineacion: 'center' }
+    { id: 'col-codigo', titulo: 'Código' },
+    { id: 'col-nombre', titulo: 'Nombre' },
+    { id: 'col-stock', titulo: 'Stock' },
+    { id: 'col-precio', titulo: 'Precio' },
+    { id: 'col-acciones', titulo: 'Acciones', alineacion: 'center' }
   ];
 
   return (
     <div className="card p-3 shadow-sm border-0 bg-white">
       <h5 className="fw-bold border-bottom pb-2 mb-3">Inventario Registrado</h5>
 
-      {/* CONTENEDOR CON DESPLAZAMIENTO VERTICAL (SCROLL) */}
       <div className="tabla-scroll-admin table-responsive">
         <Tabla columnas={columnas}>
-          {productos.map((p, idx) => {
+          {productos.map((p) => {
             const stock = Number(p.stock ?? 0);
             const esCritico = stock <= Number(umbralStock);
+            const claveUnica = p.id || p.codigo;
 
             return (
-              <tr key={p.id ?? p.codigo ?? idx}>
+              <tr key={claveUnica}>
                 <td className="fw-bold small">{p.codigo}</td>
                 <td className="fw-semibold">{p.nombre}</td>
                 <td>

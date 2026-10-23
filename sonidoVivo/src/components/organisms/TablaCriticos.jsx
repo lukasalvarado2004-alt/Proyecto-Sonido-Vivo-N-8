@@ -1,4 +1,3 @@
-// src/components/organisms/TablaCriticos.jsx
 import React from 'react';
 import Tabla from '../atoms/Tabla';
 
@@ -7,17 +6,16 @@ export default function TablaCriticos(props) {
   const umbralStock = props.umbralStock;
   const setUmbralStock = props.setUmbralStock;
 
-  // Filtrar productos con stock <= umbral y ordenarlos de mayor a menor stock
   const productosCriticos = productos
     .filter((p) => Number(p.stock) <= Number(umbralStock || 0))
     .sort((a, b) => Number(b.stock) - Number(a.stock));
 
   const columnas = [
-    { titulo: 'Código' },
-    { titulo: 'Nombre' },
-    { titulo: 'Categoría' },
-    { titulo: 'Stock' },
-    { titulo: 'Precio' }
+    { id: 'col-codigo', titulo: 'Código' },
+    { id: 'col-nombre', titulo: 'Nombre' },
+    { id: 'col-categoria', titulo: 'Categoría' },
+    { id: 'col-stock', titulo: 'Stock' },
+    { id: 'col-precio', titulo: 'Precio' }
   ];
 
   return (
@@ -28,7 +26,6 @@ export default function TablaCriticos(props) {
           <small className="text-muted">Los ítems con poco stock</small>
         </div>
         
-        {/* FILTRO POR NÚMERO DE STOCK */}
         <div className="d-flex align-items-center gap-2">
           <label htmlFor="umbral-stock" className="fw-semibold small text-nowrap">
             Filtrar stock &le;:
@@ -47,21 +44,25 @@ export default function TablaCriticos(props) {
       <div className="tabla-scroll-admin table-responsive">
         <Tabla columnas={columnas}>
           {productosCriticos.length > 0 ? (
-            productosCriticos.map((p, idx) => (
-              <tr key={p.id ?? p.codigo ?? idx}>
-                <td className="fw-bold small">{p.codigo}</td>
-                <td className="fw-semibold">{p.nombre}</td>
-                <td className="text-muted">{p.categoria}</td>
-                <td>
-                  <span className="badge bg-danger">
-                    {p.stock} un.
-                  </span>
-                </td>
-                <td className="fw-bold text-success">
-                  ${Number(p.precio || 0).toLocaleString('es-CL')}
-                </td>
-              </tr>
-            ))
+            productosCriticos.map((p) => {
+              const claveUnica = p.id || p.codigo;
+
+              return (
+                <tr key={claveUnica}>
+                  <td className="fw-bold small">{p.codigo}</td>
+                  <td className="fw-semibold">{p.nombre}</td>
+                  <td className="text-muted">{p.categoria}</td>
+                  <td>
+                    <span className="badge bg-danger">
+                      {p.stock} un.
+                    </span>
+                  </td>
+                  <td className="fw-bold text-success">
+                    ${Number(p.precio || 0).toLocaleString('es-CL')}
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="5" className="text-center py-4 text-muted">

@@ -1,4 +1,3 @@
-// src/components/organisms/TablaStockVentas.jsx
 import React, { useState } from 'react';
 
 export default function TablaStockVentas(props) {
@@ -19,7 +18,7 @@ export default function TablaStockVentas(props) {
     const nuevoStock = valorInput !== undefined ? parseInt(valorInput, 10) : parseInt(prod.stock, 10);
 
     if (!isNaN(nuevoStock) && nuevoStock >= 0) {
-      const idParaGuardar = prod.codigo || prod.id || key;
+      const idParaGuardar = prod.id || prod.codigo;
       if (typeof onActualizarStock === 'function') {
         onActualizarStock(idParaGuardar, nuevoStock);
       }
@@ -54,13 +53,13 @@ export default function TablaStockVentas(props) {
               </tr>
             </thead>
             <tbody>
-              {productos.map((prod, idx) => {
-                const key = prod.codigo || prod.id || `idx-${idx}`;
+              {productos.map((prod) => {
+                const key = prod.id || prod.codigo;
                 const valorInput = stocksLocales[key] !== undefined ? stocksLocales[key] : prod.stock;
 
                 return (
                   <tr key={key}>
-                    <td className="fw-bold text-dark">{prod.codigo || prod.id || `GA00${idx + 1}`}</td>
+                    <td className="fw-bold text-dark">{prod.codigo || prod.id}</td>
                     <td className="fw-semibold">{prod.nombre}</td>
                     <td className="text-secondary small">{prod.categoria || 'Guitarras'}</td>
                     <td className="text-success fw-bold">
