@@ -25,6 +25,8 @@ function CatalogoProducto(props) {
               modelo={p.modelo}
               stock={p.stock}
               precio={p.precio}
+              esOferta={p.esOferta}
+              precioAnterior={p.precioAnterior}
               onComprar={() => manejarIrADetalle(idActual)}
             />
           </Col>

@@ -5,13 +5,16 @@ export function ItemCarrito(props) {
   const { actualizarCantidad, eliminarProducto } = useContenidoCarrito();
   
   const subtotal = props.item.producto.precio * props.item.cantidad;
+  const stockDisponible = props.item.producto.stock !== undefined && props.item.producto.stock !== null
+    ? Number(props.item.producto.stock)
+    : Infinity;
+  const alcanoStockMaximo = props.item.cantidad >= stockDisponible;
 
   return (
     <li className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3 bg-transparent border-0 text-white py-3">
       
       {/* Contenedor de Imagen, Nombre y Cantidad */}
       <div className="d-flex align-items-center gap-3 flex-grow-1">
-        {/* IMAGEN DEL PRODUCTO (Añadida siguiendo la estructura de props) */}
         <img 
           src={props.item.producto.imagen} 
           alt={props.item.producto.nombre} 
@@ -33,6 +36,7 @@ export function ItemCarrito(props) {
           <button 
             className="btn btn-outline-light btn-sm px-2" 
             onClick={() => actualizarCantidad(props.item.producto.id, props.item.cantidad + 1)}
+            disabled={alcanoStockMaximo}
           >
             +
           </button>

@@ -7,6 +7,8 @@
     "modelo": "F310",
     "stock": 8,
     "precio": 129990,
+    "precioAnterior": 159990,
+    "esOferta": true,
     "descripcion": "Tapa de abeto, aros y fondo de meranti. Ideal para iniciantes.",
     "imagen": "Guitarra Acustica Folk.jpg"
   },
@@ -62,6 +64,8 @@
     "modelo": "Affinity Strat",
     "stock": 5,
     "precio": 249990,
+    "precioAnterior": 289990,
+    "esOferta": true,
     "descripcion": "Cuerpo de álamo, mástil de arce, pastillas SSS.",
     "imagen": "Guitarra Electrica Stratocaster.webp"
   },
@@ -150,6 +154,8 @@
     "modelo": "Roadshow",
     "stock": 2,
     "precio": 599990,
+    "precioAnterior": 699990,
+    "esOferta": true,
     "descripcion": "Incluye stands, platillos y pedal de bombo.",
     "imagen": "Bateria Acustica 5 piezas.webp"
   },
@@ -205,6 +211,8 @@
     "modelo": "PSR-E373",
     "stock": 4,
     "precio": 249990,
+    "precioAnterior": 299990,
+    "esOferta": true,
     "descripcion": "61 teclas sensibles al tacto, 622 voces.",
     "imagen": "Teclado Digital 61 teclas.jpg"
   },
@@ -337,6 +345,8 @@
     "modelo": "DS-1",
     "stock": 7,
     "precio": 79990,
+    "precioAnterior": 99990,
+    "esOferta": true,
     "descripcion": "Clásico pedal de distorsión, 3 controles.",
     "imagen": "Pedal Distorsion.jpg"
   },

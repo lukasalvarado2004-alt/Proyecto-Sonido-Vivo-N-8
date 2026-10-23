@@ -5,20 +5,15 @@ import ImagenProducto from "../atoms/ImagenProducto";
 import Precio from "../atoms/Precio";
 import EtiquetaStock from "../atoms/EtiquetaStock";
 import { useAgregarAlCarrito } from "../../hooks/useAgregarAlCarrito";
-import { obtenerImagenUrl } from "../../utils/obtenerImagen"; // 1. Importamos el helper
 
 function TarjetaProducto(props) {
   const tieneStock = props.stock > 0;
   const agregarAlCarrito = useAgregarAlCarrito();
 
-  // Función EXCLUSIVA para agregar al carrito
   const manejarClickComprar = (e) => {
-    // 1. Evita que el clic se propague a otros elementos
     if (e && e.stopPropagation) {
       e.stopPropagation();
     }
-
-    // 2. Únicamente agrega el producto al carrito sin navegar
     agregarAlCarrito(props);
   };
 
@@ -30,15 +25,19 @@ function TarjetaProducto(props) {
         to={`/producto/${props.id}`} 
         className="flex-grow-1 text-decoration-none text-dark d-flex flex-column"
       >
-        {/* 2. Transformamos el nombre de la imagen a URL de Vite */}
-<ImagenProducto 
-  urlImagen={props.imagen} 
-  altTexto={props.nombre} 
-/>
+        <ImagenProducto 
+          urlImagen={props.imagen} 
+          altTexto={props.nombre} 
+        />
 
         <div className="card-body d-flex flex-column p-0 mt-3 flex-grow-1">
           <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
-            <h5 className="card-title fs-6 mb-0 fw-bold">{props.nombre}</h5>
+            <div className="d-flex align-items-center gap-1 flex-wrap">
+              <h5 className="card-title fs-6 mb-0 fw-bold">{props.nombre}</h5>
+              {props.esOferta && (
+                <span className="badge bg-danger text-white fw-bold">🔥 Oferta</span>
+              )}
+            </div>
             <EtiquetaStock stock={props.stock} />
           </div>
 
@@ -47,12 +46,12 @@ function TarjetaProducto(props) {
           </p>
 
           <div className="mt-auto mb-2">
-            <Precio monto={props.precio} />
+            <Precio monto={props.precio} precioAnterior={props.precioAnterior} />
           </div>
         </div>
       </Link>
 
-      {/* ZONA 2: Clic en el Botón -> Únicamente agrega al Carrito */}
+      {/* ZONA 2: Clic en el Botón -> Agrega al Carrito */}
       <div className="mt-auto pt-2">
         <Boton 
           textoBoton={tieneStock ? "Agregar al Carrito" : "Sin Stock"} 

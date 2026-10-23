@@ -16,6 +16,7 @@ export function useAgregarAlCarrito() {
       imagen: producto.imagen,
       marca: producto.marca,
       modelo: producto.modelo,
+      stock: producto.stock, 
       cantidad: cantidad
     });
   };

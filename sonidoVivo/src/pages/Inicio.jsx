@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Container, Form, InputGroup, Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import PlantillaPublica from '../components/templates/PlantillaPublica';
 import CatalogoProducto from '../components/organisms/CatalogoProducto';
+import Buscador from '../components/organisms/Buscador';
 import FiltroCategoria from '../components/molecules/FiltroCategoria';
 import { useProductos } from '../context/ProductosContext';
 import { useTituloPagina } from '../hooks/useTituloPagina';
@@ -17,12 +18,12 @@ export default function Inicio() {
 
   useTituloPagina('Inicio');
 
-  // Obtener categorías únicas dinámicamente
   const categoriasUnicas = Array.from(
     new Set(todosLosProductos.map((p) => p.categoria).filter(Boolean))
   );
 
-  // Manejador del evento submit para la búsqueda (basado en 'ejemplo')
+  const productosEnOferta = todosLosProductos.filter((p) => p.esOferta === true);
+
   const manejarBuscar = (e) => {
     e.preventDefault();
     setBusquedaAplicada(textoBusqueda.trim());
@@ -33,7 +34,6 @@ export default function Inicio() {
     setBusquedaAplicada('');
   };
 
-  // Filtrar la lista completa según la búsqueda y categoría
   const productosFiltrados = filtrarProductos(todosLosProductos, {
     texto: busquedaAplicada,
     categoria: categoriaSeleccionada,
@@ -42,45 +42,44 @@ export default function Inicio() {
   return (
     <PlantillaPublica>
       <Container className="py-4">
-        {/* Banner principal y Buscador */}
-        <div className="bg-dark p-4 p-md-5 rounded-3 mb-4 text-center border border-secondary shadow-lg">
-          <h1 className="display-5 fw-bold text-white mb-2">
-            Bienvenidos a <span className="text-purple-brand">Sonido Vivo</span>
-          </h1>
-          <p className="lead text-secondary mb-4">
-            Explora nuestro catálogo completo de instrumentos musicales y accesorios.
-          </p>
+        {/* ORGANISMO BUSCADOR HERO EXTRAÍDO */}
+        <Buscador
+          textoBusqueda={textoBusqueda}
+          setTextoBusqueda={setTextoBusqueda}
+          busquedaAplicada={busquedaAplicada}
+          onBuscar={manejarBuscar}
+          onLimpiar={manejarLimpiar}
+        />
 
-          {/* Formulario Buscador */}
-          <Form onSubmit={manejarBuscar} className="mx-auto" style={{ maxWidth: '600px' }}>
-            <InputGroup size="lg" className="shadow-sm">
-              <Form.Control
-                type="search"
-                placeholder="¿Qué estás buscando? (ej. Guitarra, Yamaha, SM58...)"
-                aria-label="Buscar productos"
-                value={textoBusqueda}
-                onChange={(e) => setTextoBusqueda(e.target.value)}
-                className="bg-black text-white border-secondary"
-              />
-              <Button type="submit" variant="warning" className="fw-bold px-4">
-                🔍 Buscar
-              </Button>
-              {busquedaAplicada && (
-                <Button type="button" variant="outline-secondary" onClick={manejarLimpiar}>
-                  Limpiar
-                </Button>
-              )}
-            </InputGroup>
-          </Form>
-        </div>
+        {/* MÓDULO DESTACADO: OFERTAS EN PROMOCIÓN */}
+        {!busquedaAplicada && categoriaSeleccionada === 'todas' && productosEnOferta.length > 0 && (
+          <section className="mb-5 p-4 rounded-3 bg-dark bg-opacity-50 border border-warning border-opacity-50 shadow-sm">
+            <div className="d-flex align-items-center justify-content-between mb-3 border-bottom border-warning pb-2">
+              <h2 className="h3 fw-bold text-warning mb-0 d-flex align-items-center gap-2">
+                <span>🔥</span> Ofertas e Ítems en Promoción
+              </h2>
+              <span className="badge bg-danger fs-6 px-3 py-2">
+                ¡Precios Especiales!
+              </span>
+            </div>
+            <CatalogoProducto productos={productosEnOferta} />
+          </section>
+        )}
 
-        {/* Filtro por Categoría e indicador de resultados */}
+        {/* CATÁLOGO GENERAL */}
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-          <FiltroCategoria
-            categorias={categoriasUnicas}
-            categoriaSeleccionada={categoriaSeleccionada}
-            onSeleccionarCategoria={setCategoriaSeleccionada}
-          />
+          <div>
+            <h2 className="h4 fw-bold text-white mb-1">
+              {busquedaAplicada || categoriaSeleccionada !== 'todas' 
+                ? 'Resultados de Búsqueda' 
+                : 'Todos los Productos'}
+            </h2>
+            <FiltroCategoria
+              categorias={categoriasUnicas}
+              categoriaSeleccionada={categoriaSeleccionada}
+              onSeleccionarCategoria={setCategoriaSeleccionada}
+            />
+          </div>
 
           {busquedaAplicada && (
             <div className="text-secondary small align-self-md-center">
@@ -89,7 +88,6 @@ export default function Inicio() {
           )}
         </div>
 
-        {/* Catálogo de Productos filtrados */}
         {productosFiltrados.length > 0 ? (
           <CatalogoProducto productos={productosFiltrados} />
         ) : (

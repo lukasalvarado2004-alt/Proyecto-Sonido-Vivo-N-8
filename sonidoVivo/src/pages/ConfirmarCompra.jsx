@@ -2,28 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useContenidoCarrito } from "../context/ContenidoCarrito";
+import { useProductos } from "../context/ProductosContext"; // 1. IMPORTAR HOOK DE PRODUCTOS
 import PlantillaPublica from "../components/templates/PlantillaPublica";
 import { useTituloPagina } from "../hooks/useTituloPagina";
 import Boton from "../components/atoms/Boton";
 import { validarNombre, validarCorreo } from "../utils/validaciones.js";
-// Importamos la nueva molécula reutilizable
 import { ResumenPedido } from "../components/molecules/ResumenPedido";
 
 function ConfirmarCompra() {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
+  const { productos, actualizarStockProducto } = useProductos(); // 2. OBTENER PRODUCTOS Y METODO DE STOCK
+  
   const [errores, setErrores] = useState({});
   const [compraExitosa, setCompraExitosa] = useState(false);
   const navigate = useNavigate();
   useTituloPagina("Confirmar Compra");
 
-  // Almacena la orden generada para renderizarla en la pantalla de éxito
   const [datosOrdenFinal, setDatosOrdenFinal] = useState(null);
 
   const [formulario, setFormulario] = useState({
     nombreCompleto: "", correoElectronico: "", direccionEnvio: "", ciudadComuna: ""
   });
 
-  // Efecto de autorrelleno con los datos de inicio de sesión activos
   useEffect(() => {
     const sesion = localStorage.getItem("sv_sesion");
     if (sesion) {
@@ -53,10 +53,22 @@ function ConfirmarCompra() {
     setErrores(err);
     if (Object.keys(err).length > 0) return;
 
+    // 3. DESCONTAR STOCK DE CADA PRODUCTO COMPRADO EN EL INVENTARIO GLOBAL
+    items.forEach((item) => {
+      const idProducto = item.producto.id || item.producto.codigo;
+      const productoExistente = productos.find(
+        (p) => String(p.id) === String(idProducto) || String(p.codigo) === String(idProducto)
+      );
+
+      if (productoExistente) {
+        const nuevoStock = Math.max(0, Number(productoExistente.stock) - Number(item.cantidad));
+        actualizarStockProducto(idProducto, nuevoStock);
+      }
+    });
+
     // Generamos el ticket único de compra
     const numeroTicket = `SV-${Math.floor(100000 + Math.random() * 900000)}`;
     
-    // Estructura limpia de la orden
     const nuevaCompra = {
       nroSolicitud: numeroTicket,
       nombre: formulario.nombreCompleto,
@@ -67,11 +79,9 @@ function ConfirmarCompra() {
       total: precioTotal
     };
 
-    // 1. Guardamos localmente para la pantalla de éxito y el seguimiento del cliente
     setDatosOrdenFinal(nuevaCompra);
     localStorage.setItem("sv_ultimo_despacho", JSON.stringify(nuevaCompra));
 
-    // 2. Historial global: Almacenamos el pedido para que el panel de administración pueda leerlo
     const historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
     historialExistente.push(nuevaCompra);
     localStorage.setItem("sv_todas_compras", JSON.stringify(historialExistente));
@@ -90,7 +100,6 @@ function ConfirmarCompra() {
             <h2 className="text-success fw-bold mb-2">🎉 ¡Compra Realizada con Éxito!</h2>
             <p className="text-white-50 mb-4">Muchas gracias por comprar en Sonido Vivo.</p>
             
-            {/* Llamamos a la molécula para renderizar el resumen en la vista de éxito de forma limpia */}
             <ResumenPedido compra={datosOrdenFinal} />
 
             <div className="mt-4">
