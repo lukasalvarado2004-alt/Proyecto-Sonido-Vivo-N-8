@@ -1,10 +1,9 @@
-// src/components/molecules/FiltroCategoria.jsx
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
 function FiltroCategoria(props) {
   return (
-    <Form.Group className="mb-4" style={{ maxWidth: '300px' }}>
+    <Form.Group className="mb-4 filtro-categoria-container">
       <Form.Label className="text-white fw-semibold">Filtrar por categoría:</Form.Label>
       <Form.Select
         value={props.categoriaSeleccionada}

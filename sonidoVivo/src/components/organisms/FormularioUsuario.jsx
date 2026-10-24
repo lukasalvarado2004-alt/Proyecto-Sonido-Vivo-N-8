@@ -16,7 +16,7 @@ export default function FormularioUsuario(props) {
     onCancelar 
   } = props;
 
-  const rolesDisponibles = ['admin', 'cliente'];
+  const rolesDisponibles = ['admin', 'cliente','ventas'];
 
   return (
     <div className="card p-4 shadow-sm border-0 bg-white">

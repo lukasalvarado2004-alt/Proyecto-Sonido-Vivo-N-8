@@ -1,42 +1,27 @@
-// src/service/usuarioService.js
 import usuariosIniciales from '../data/Usuarios.json';
 
-const CLAVE = 'usuarios';
+const CLAVE_STORAGE = 'usuarios';
+const CLAVE_SESION = 'sv_sesion';
 
-// Función auxiliar para leer y sincronizar usuarios desde localStorage y Usuarios.json
 function leer() {
-  const guardado = localStorage.getItem(CLAVE);
-  const listaJSON = Array.isArray(usuariosIniciales) ? usuariosIniciales : [];
+  const guardado = localStorage.getItem(CLAVE_STORAGE);
 
   if (!guardado) {
-    localStorage.setItem(CLAVE, JSON.stringify(listaJSON));
+    const listaJSON = Array.isArray(usuariosIniciales) ? usuariosIniciales : [];
+    localStorage.setItem(CLAVE_STORAGE, JSON.stringify(listaJSON));
     return [...listaJSON];
   }
 
   try {
     const listaLocal = JSON.parse(guardado);
-
-    // Unificar usuarios de Usuarios.json con localStorage por correo para incorporar nuevas cuentas
-    const mapa = new Map();
-    listaJSON.forEach((u) => {
-      const correo = (u.correo || u.email || '').trim().toLowerCase();
-      if (correo) mapa.set(correo, u);
-    });
-    listaLocal.forEach((u) => {
-      const correo = (u.correo || u.email || '').trim().toLowerCase();
-      if (correo) mapa.set(correo, u);
-    });
-
-    const listaUnificada = Array.from(mapa.values());
-    localStorage.setItem(CLAVE, JSON.stringify(listaUnificada));
-    return listaUnificada;
+    return Array.isArray(listaLocal) ? listaLocal : [];
   } catch (e) {
-    return [...listaJSON];
+    return Array.isArray(usuariosIniciales) ? usuariosIniciales : [];
   }
 }
 
 function guardar(lista) {
-  localStorage.setItem(CLAVE, JSON.stringify(lista));
+  localStorage.setItem(CLAVE_STORAGE, JSON.stringify(lista));
 }
 
 export function obtenerUsuarios() {
@@ -58,34 +43,37 @@ export function obtenerUsuarioPorCorreo(correo) {
   ) ?? null;
 }
 
-// --- FUNCIÓN REQUERIDA POR LOGIN.JSX (CORREGIDA) ---
-export function autenticarUsuario(email, contrasena) {
+export function autenticarUsuario(correo, contrasena) {
   const usuarios = leer();
-  const emailLimpio = (email || '').trim().toLowerCase();
+  const correoLimpio = (correo || '').trim().toLowerCase();
 
   const usuarioEncontrado = usuarios.find((u) => {
-    const correoUsuario = (u.email || u.correo || '').trim().toLowerCase();
-    // SOLUCIÓN: Buscar tanto 'password' como 'contrasena' para que coincida con Usuarios.json
+    const correoUsuario = (u.correo || u.email || '').trim().toLowerCase();
     const claveUsuario = String(u.password || u.contrasena || '');
-    return correoUsuario === emailLimpio && claveUsuario === String(contrasena);
+    return correoUsuario === correoLimpio && claveUsuario === String(contrasena);
   });
 
   if (!usuarioEncontrado) {
     return { exito: false, error: 'Correo o contraseña incorrectos. Por favor reintenta.' };
   }
 
-  // Guardar sesión activa en ambas claves para compatibilidad
-  localStorage.setItem('sv_sesion', JSON.stringify(usuarioEncontrado));
-  localStorage.setItem('usuarioSesion', JSON.stringify(usuarioEncontrado));
-
+  localStorage.setItem(CLAVE_SESION, JSON.stringify(usuarioEncontrado));
   return { exito: true, usuario: usuarioEncontrado };
 }
 
 export function crearUsuario(datos) {
   const lista = leer();
   const nuevoId = Math.max(0, ...lista.map((u) => Number(u.id || 0))) + 1;
-  const nuevo = { ...datos, id: nuevoId };
-  guardar([...lista, nuevo]);
+  const nuevo = {
+    id: nuevoId,
+    nombre: datos.nombre,
+    correo: datos.correo,
+    password: datos.password || datos.contrasena,
+    rol: datos.rol || 'cliente'
+  };
+
+  const listaActualizada = [...lista, nuevo];
+  guardar(listaActualizada);
   return nuevo;
 }
 
@@ -95,14 +83,17 @@ export function actualizarUsuario(id, cambios) {
   return lista.find((u) => Number(u.id) === Number(id)) ?? null;
 }
 
+export function eliminarUsuario(id) {
+  const lista = leer().filter((u) => Number(u.id) !== Number(id));
+  guardar(lista);
+  return true;
+}
+
 export function registrarUsuario(nuevoUsuario) {
   const usuarios = leer();
-  const emailNuevo = (nuevoUsuario.email || nuevoUsuario.correo || '').trim().toLowerCase();
+  const correoNuevo = (nuevoUsuario.correo || nuevoUsuario.email || '').trim().toLowerCase();
 
-  const existe = usuarios.some((u) => {
-    const correoUsuario = (u.email || u.correo || '').trim().toLowerCase();
-    return correoUsuario === emailNuevo;
-  });
+  const existe = usuarios.some((u) => (u.correo || u.email || '').trim().toLowerCase() === correoNuevo);
 
   if (existe) {
     return { exito: false, error: 'El correo ya se encuentra registrado.' };
@@ -110,17 +101,17 @@ export function registrarUsuario(nuevoUsuario) {
 
   const usuarioCreado = {
     id: Date.now(),
-    ...nuevoUsuario,
+    nombre: nuevoUsuario.nombre,
+    correo: correoNuevo,
+    password: nuevoUsuario.password || nuevoUsuario.contrasena,
     rol: nuevoUsuario.rol || 'cliente'
   };
 
-  const listaActualizada = [...usuarios, usuarioCreado];
-  guardar(listaActualizada);
-
+  guardar([...usuarios, usuarioCreado]);
   return { exito: true, usuario: usuarioCreado };
 }
 
 export function cerrarSesion() {
-  localStorage.removeItem('sv_sesion');
+  localStorage.removeItem(CLAVE_SESION);
   localStorage.removeItem('usuarioSesion');
 }

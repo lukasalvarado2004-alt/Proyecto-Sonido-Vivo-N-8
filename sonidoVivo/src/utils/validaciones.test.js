@@ -8,6 +8,7 @@ describe('Validaciones de Formulario', () => {
     expect(validarCorreo('correo-invalido')).toBe('El correo esta mal')
   })
 
+
   it('2. retorna texto vacio si el correo es valido', () => {
     expect(validarCorreo('juan@correo.cl')).toBe('')
   })

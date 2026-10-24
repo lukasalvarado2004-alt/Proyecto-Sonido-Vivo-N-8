@@ -8,10 +8,7 @@ export default function NotificacionStock() {
   if (!mensajeErrorStock) return null;
 
   return (
-    <div 
-      className="position-fixed top-0 start-50 translate-middle-x mt-4 z-3 shadow-lg px-3" 
-      style={{ maxWidth: '500px', width: '90%' }}
-    >
+    <div className="position-fixed top-0 start-50 translate-middle-x mt-4 z-3 shadow-lg px-3 notificacion-stock-contenedor">
       <Error mensaje={mensajeErrorStock} variante="warning" />
     </div>
   );

@@ -14,9 +14,7 @@
   --transition: all 0.3s ease;
 }
 
-/* ==========================================
-   RESET GLOBAL PARA PANTALLA COMPLETA
-   ========================================== */
+/* RESET GLOBAL PARA PANTALLA COMPLETA */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -34,7 +32,6 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Anula los límites centrados (1280px max-width) que pone Vite por defecto */
 #root {
   width: 100%;
   max-width: 100% !important;
@@ -43,9 +40,7 @@ html, body {
   text-align: left;
 }
 
-/* ==========================================
-   TARJETA Y FORMULARIO DE LOGIN
-   ========================================== */
+/* FORMULARIOS Y LOGIN */
 .formulario-input-nativo,
 .login-tarjeta input {
   background-color: var(--bg-primary) !important;
@@ -54,9 +49,10 @@ html, body {
   border-radius: var(--radius-sm) !important;
   padding: 0.75rem 1rem !important;
   width: 100% !important;
-  margin-bottom: 1.25rem !important;
+  margin-bottom: 1rem !important;
   outline: none !important;
   transition: var(--transition);
+  display: block;
 }
 
 .formulario-input-nativo:focus,
@@ -70,9 +66,6 @@ html, body {
   color: var(--text-muted) !important;
 }
 
-/* ==========================================
-   CONTENEDOR DE TARJETA LOGIN
-   ========================================== */
 .login-tarjeta, 
 .login-tarjeta-forzada {
   background-color: #1e1e24 !important; 
@@ -111,7 +104,6 @@ html, body {
   font-size: 0.875rem;
 }
 
-/* Enlaces */
 .login-enlace-olvido,
 .login-tarjeta a {
   color: var(--accent-light) !important;
@@ -126,9 +118,7 @@ html, body {
   text-decoration: underline !important;
 }
 
-/* ==========================================
-   BOTÓN (Boton)
-   ========================================== */
+/* BOTÓN */
 .btn-warning,
 .btn-purple,
 .login-tarjeta button {
@@ -149,9 +139,7 @@ html, body {
   background-color: var(--accent-hover) !important;
 }
 
-/* ==========================================
-   FOOTER
-   ========================================== */
+/* FOOTER */
 footer {
   width: 100%;
   background-color: var(--bg-primary) !important;
@@ -177,9 +165,7 @@ footer a:hover {
   color: var(--accent-light) !important;
 }
 
-/* ==========================================
-   ESTILOS DE NAVBAR
-   ========================================== */
+/* NAVBAR Y NAVEGACIÓN */
 .navbar-custom {
   width: 100%;
   background-color: #1a1a24;
@@ -206,17 +192,51 @@ footer a:hover {
 
 .navbar-actions {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
+  gap: 0.5rem;
 }
 
-.imagen-producto {
-  height: 180px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
+.navbar-actions .btn,
+.navbar-actions button,
+.navbar-actions a {
+  height: 38px !important;
+  padding: 0 0.9rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
 }
 
-/* tarjeta item carrito */
+.navbar-actions .navbar-saludo {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  margin: 0;
+}
+
+.navbar-badge-carrito {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  font-size: 0.75rem !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* TARJETAS E IMÁGENES */
 .tarjeta-carrito {
   display: flex !important;
   align-items: center !important;
@@ -224,19 +244,30 @@ footer a:hover {
   padding: 1rem !important; 
 }
 
-/* tarjeta producto */
 .tarjeta-producto-custom {
   height: 100% !important;
   padding: 1rem !important;
-
-  /* Nota: Al estar en tu CSS, si quieres limitar el tamaño en pantallas grandes, */
-  /* puedes descomentar la siguiente línea para fijar un ancho máximo: */
-  /* max-width: 320px; */
 }
-/* ==========================================
-   ESTILOS ADAPTADOS PARA CONFIRMAR COMPRA
-   ========================================== */
-/* Contenedor principal de la tarjeta de despacho que clona el estilo del Login */
+
+.imagen-producto {
+  height: 220px;
+  width: 100%;
+  object-fit: contain;
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.imagen-detalle {
+  height: 340px;
+  width: 100%;
+  object-fit: contain;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/* CONFIRMAR COMPRA */
 .compra-tarjeta-oscura {
   background-color: var(--bg-card) !important; 
   border: 1px solid var(--border-color) !important;   
@@ -246,7 +277,6 @@ footer a:hover {
   color: var(--text-main) !important;
 }
 
-/* Campos de entrada oscuros y redondeados nativos del sitio */
 .compra-input-control {
   background-color: var(--bg-primary) !important;
   color: var(--text-main) !important;
@@ -267,7 +297,6 @@ footer a:hover {
   color: var(--text-muted) !important;
 }
 
-/* Vista de éxito totalmente blanca y centrada */
 .compra-vista-exito {
   max-width: 600px !important;
   margin: 2rem auto !important;
@@ -278,73 +307,28 @@ footer a:hover {
   color: var(--text-main) !important;
 }
 
-/* Línea divisoria adaptada para el resumen de productos */
 .compra-borde-resumen {
   border-bottom: 1px solid var(--border-color) !important;
 }
 
-/* ===================================================
-   CORRECCIÓN DEFINITIVA DE TAMAÑOS EN NAVBAR
-   =================================================== */
-
-.navbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.compra-tarjeta-exito {
+  max-width: 650px;
 }
 
-/* Fuerza una altura e igualación exacta para TODOS los botones y enlaces */
-.navbar-actions .btn,
-.navbar-actions button,
-.navbar-actions a {
-  height: 38px !important;              /* Misma altura para todos */
-  padding: 0 0.9rem !important;          /* Relleno lateral uniforme */
-  font-size: 0.875rem !important;        /* Mismo tamaño de texto */
-  font-weight: 600 !important;
-  line-height: 1 !important;
-  
-  /* Alineación horizontal estricta (mantiene los emojis al lado del texto) */
-  display: inline-flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.35rem !important;              /* Espacio entre el ícono y el texto */
-  
-  white-space: nowrap !important;        /* Evita saltos de línea internos */
-  box-sizing: border-box !important;
-  margin: 0 !important;
-  border-radius: 6px !important;
-}
-
-/* Alineación vertical para el saludo ("Hola, Usuario") */
-.navbar-actions .navbar-saludo,
-.navbar-actions span {
-  display: inline-flex;
-  align-items: center;
-  height: 38px;
-  margin: 0;
-}
-
-/* ===================================================
-   CONTENEDORES CON SCROLL EN PANEL DE ADMINISTRACIÓN
-   =================================================== */
-
-/* Contenedor que activa la rueda del mouse (Scrollbar) */
+/* CONTENEDORES ADMIN */
 .admin-tabla-contenedor {
-  max-height: 520px;       /* Altura máxima visible antes de activar scroll */
-  overflow-y: auto;        /* Permite bajar con la rueda del mouse */
-  overflow-x: auto;        /* Scroll horizontal de seguridad si la pantalla es estrecha */
-  padding-right: 4px;      /* Evita que el scroll tape los botones de acción */
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding-right: 4px;
 }
 
-/* Encabezado fijo (Sticky Header) para no perder de vista los títulos al bajar */
 .admin-tabla-contenedor table thead {
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
-/* Personalización de la barra de desplazamiento (Scrollbar Morada) */
 .admin-tabla-contenedor::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -364,24 +348,31 @@ footer a:hover {
   background: #7322bf;
 }
 
-/* --- ESTILOS UNIFICADOS PARA IMÁGENES --- */
-
-/* Ajuste para las tarjetas del Catálogo */
-.imagen-producto {
-  height: 220px;             /* Altura fija idéntica para todas las tarjetas */
-  width: 100%;
-  object-fit: contain;       /* Mantiene la proporción real del instrumento sin deformarlo */
-  padding: 12px;
-  background-color: #ffffff; /* Fondo blanco uniforme */
-  border-radius: 8px;
+/* COMPONENTES REFACTORIZADOS */
+.filtro-categoria-container {
+  max-width: 300px;
 }
 
-/* Ajuste para la vista de Detalle del Producto */
-.imagen-detalle {
-  height: 340px;             /* Mayor altura en la vista de detalle */
-  width: 100%;
-  object-fit: contain;       /* Mantiene proporción completa */
-  padding: 16px;
-  background-color: #ffffff;
-  border-radius: 8px;
+.img-item-carrito {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.notificacion-stock-contenedor {
+  max-width: 500px;
+  width: 90%;
+}
+
+.buscador-hero-formulario {
+  max-width: 600px;
+}
+
+.barra-seguimiento-altura {
+  height: 10px !important;
+}
+
+.barra-seguimiento-item {
+  width: 23%;
+  text-align: center;
 }

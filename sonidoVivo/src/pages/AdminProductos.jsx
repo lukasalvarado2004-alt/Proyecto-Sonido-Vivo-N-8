@@ -1,6 +1,6 @@
 // src/pages/AdminProductos.jsx
 import React, { useState } from 'react';
-import PlantillaPublica from '../components/templates/PlantillaPublica';
+import PlantillaAdmin from '../components/templates/PlantillaAdmin'; // 1. Cambiado de PlantillaPublica a PlantillaAdmin
 import { useProductos } from '../context/ProductosContext';
 import Error from '../components/atoms/Error';
 
@@ -68,8 +68,7 @@ export default function AdminProductos() {
   const [usrContrasena, setUsrContrasena] = useState('');
   const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
 
-  // SOLUCIÓN: Cargar compras leyendo el LocalStorage integrado con el JSON
-  const [compras, setCompras] = useState(() => {
+  const [compras] = useState(() => {
     const historialGuardado = localStorage.getItem("sv_todas_compras");
     if (historialGuardado) return JSON.parse(historialGuardado);
     localStorage.setItem("sv_todas_compras", JSON.stringify(comprasData));
@@ -111,13 +110,12 @@ export default function AdminProductos() {
   }
 
   function eliminarCategoriaHandler(cat) {
-    if (window.confirm(`¿Seguro que deseas eliminar la categoría "${cat}"?`)) {
-      setErrorGeneral('');
-      categoriaService.eliminarCategoria(cat);
-      setCategorias(categoriaService.listarCategorias());
-      if (catEnEdicion === cat) {
-        cancelarEdicionCategoria();
-      }
+    // 2. Se remueve window.confirm() para cumplir la Guía 14
+    setErrorGeneral('');
+    categoriaService.eliminarCategoria(cat);
+    setCategorias(categoriaService.listarCategorias());
+    if (catEnEdicion === cat) {
+      cancelarEdicionCategoria();
     }
   }
 
@@ -268,13 +266,13 @@ export default function AdminProductos() {
   }
 
   return (
-    <PlantillaPublica>
+    <PlantillaAdmin>
       <div className="container py-4 text-white">
         
         <EncabezadoPanel 
-        titulo="Panel de Administración" 
-        subtitulo="Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos" 
-      />  
+          titulo="Panel de Administración" 
+          subtitulo="Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos" 
+        />  
 
         <Error mensaje={errorGeneral} variante="danger" />
 
@@ -345,14 +343,15 @@ export default function AdminProductos() {
             {compras.length === 0 ? (
               <p className="text-white-50">No hay solicitudes registradas.</p>
             ) : (
-              compras.map((compra, index) => (
-                <ResumenPedido key={index} compra={compra} />
+              compras.map((compra) => (
+                /* 3. Se cambia key={index} por identificador único estable (Guía 11) */
+                <ResumenPedido key={compra.nroSolicitud} compra={compra} />
               ))
             )}
           </div>
         </div>
 
       </div>
-    </PlantillaPublica>
+    </PlantillaAdmin>
   );
 }

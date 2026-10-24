@@ -11,29 +11,56 @@ function SeguimientoCompra() {
   const navigate = useNavigate();
   
   const [infoEnvio, setInfoEnvio] = useState({ nombre: "", comuna: "", direccion: "", nroSolicitud: "" });
+  const [pasoActual, setPasoActual] = useState(0);
 
-  const [pasoActual] = useState(2); 
   const estados = ["Pago Confirmado", "Preparando Pedido", "En Camino", "Entregado"];
 
   useEffect(() => {
     const ultimoDespacho = localStorage.getItem("sv_ultimo_despacho");
+    const historialCompras = localStorage.getItem("sv_todas_compras");
     const sesion = localStorage.getItem("sv_sesion");
 
+    let nroSolicitudActual = "";
+    let datosBase = null;
+
     if (ultimoDespacho) {
-      const despacho = JSON.parse(ultimoDespacho);
-      setInfoEnvio({
-        nombre: despacho.nombre || "Cliente",
-        comuna: despacho.comuna || "",
-        direccion: despacho.direccion || "",
-        nroSolicitud: despacho.nroSolicitud || `SV-${Math.floor(100000 + Math.random() * 900000)}`
-      });
+      datosBase = JSON.parse(ultimoDespacho);
+      nroSolicitudActual = datosBase.nroSolicitud;
     } else if (sesion) {
       const user = JSON.parse(sesion);
-      setInfoEnvio({
+      datosBase = {
         nombre: user.nombre || "Cliente",
         comuna: "",
         direccion: "",
-        nroSolicitud: `SV-${Math.floor(100000 + Math.random() * 900000)}`
+        nroSolicitud: `SV-523423`
+      };
+      nroSolicitudActual = datosBase.nroSolicitud;
+    }
+
+    if (datosBase) {
+      // Buscar si el Ejecutivo de Ventas actualizó el estado de esta solicitud específica
+      let estadoActualTexto = "Pago Confirmado";
+
+      if (historialCompras) {
+        const lista = JSON.parse(historialCompras);
+        const ordenEncontrada = lista.find((item) => item.nroSolicitud === nroSolicitudActual);
+        if (ordenEncontrada && ordenEncontrada.estado) {
+          estadoActualTexto = ordenEncontrada.estado;
+        }
+      }
+
+      // Mapear el texto del estado con el índice numérico de la barra
+      const indiceEstado = estados.findIndex(
+        (e) => e.toLowerCase() === estadoActualTexto.toLowerCase()
+      );
+
+      setPasoActual(indiceEstado !== -1 ? indiceEstado : 0);
+
+      setInfoEnvio({
+        nombre: datosBase.nombre || "Cliente",
+        comuna: datosBase.comuna || "",
+        direccion: datosBase.direccion || "",
+        nroSolicitud: nroSolicitudActual
       });
     }
   }, []);
@@ -49,10 +76,9 @@ function SeguimientoCompra() {
               
               <h3 className="text-success fw-bold mb-2">¡Hola, {infoEnvio.nombre}!</h3>
               <p className="text-white-50 mb-4">
-                Tu pedido con código <strong className="text-warning">#{infoEnvio.nroSolicitud}</strong> está en camino.
+                Tu pedido con código <strong className="text-warning">#{infoEnvio.nroSolicitud}</strong> se encuentra en procesamiento.
               </p>
 
-              {/* MOLÉCULA EXTRAÍDA */}
               <BarraSeguimiento pasoActual={pasoActual} estados={estados} />
 
               <div className="text-start bg-black bg-opacity-20 p-3 rounded my-4 border border-secondary border-opacity-25">
@@ -61,7 +87,9 @@ function SeguimientoCompra() {
                 <p className="mb-2">
                   <strong>Destino:</strong> {infoEnvio.direccion ? `${infoEnvio.direccion}, ${infoEnvio.comuna}` : infoEnvio.comuna || "No especificado"}, Chile
                 </p>
-                <p className="mb-0"><strong>Estado Actual:</strong> <span className="text-success fw-bold">{estados[pasoActual]}</span></p>
+                <p className="mb-0">
+                  <strong>Estado Actual:</strong> <span className="text-success fw-bold">{estados[pasoActual] || "Pendiente"}</span>
+                </p>
               </div>
 
               <div className="mt-4 d-flex gap-3 justify-content-center">

@@ -74,8 +74,8 @@ export function validarStock(stock) {
 export function validarRol(rol) {
   if (!rol || !rol.trim()) return 'Selecciona un rol para el usuario.';
   const rolNormalizado = rol.trim().toLowerCase();
-  if (rolNormalizado !== 'admin' && rolNormalizado !== 'cliente') {
-    return 'El rol solo puede ser "admin" o "cliente".';
+  if (rolNormalizado !== 'admin' && rolNormalizado !== 'cliente' && rolNormalizado !== 'ventas') {
+    return 'El rol solo puede ser "admin", "cliente" o "ventas".';
   }
   return '';
 }

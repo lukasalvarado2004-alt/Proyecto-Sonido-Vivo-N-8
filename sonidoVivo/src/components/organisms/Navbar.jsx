@@ -8,7 +8,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Obtener el total de productos del carrito desde el contexto
   const { totalProductos } = useContenidoCarrito();
 
   useEffect(() => {
@@ -37,30 +36,19 @@ export default function Navbar() {
 
   return (
     <nav className="navbar-custom">
-      {/* LOGO DE LA MARCA */}
       <Link to="/" className="navbar-logo text-decoration-none">
         🎵 Sonido Vivo
       </Link>
 
-      {/* NAVEGACIÓN Y ZONA DE SESIÓN */}
       <div className="navbar-actions">
         <NavLink to="/catalogo" className="btn btn-outline-light">
           Catálogo
         </NavLink>
 
-        {/* BOTÓN DEL CARRITO CON INSIGNIA CIRCULAR */}
         <NavLink to="/carrito" className="btn btn-outline-warning d-inline-flex align-items-center gap-1">
           🛒 Carrito
           {totalProductos > 0 && (
-            <span 
-              className="badge bg-warning text-dark ms-1 fw-bold rounded-circle d-inline-flex align-items-center justify-content-center"
-              style={{ 
-                width: "20px", 
-                height: "20px", 
-                fontSize: "0.7rem", 
-                padding: "0" 
-              }}
-            >
+            <span className="badge bg-warning text-dark ms-1 fw-bold rounded-circle d-inline-flex align-items-center justify-content-center navbar-badge-carrito">
               {totalProductos}
             </span>
           )}

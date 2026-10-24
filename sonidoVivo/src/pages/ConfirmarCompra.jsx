@@ -91,7 +91,7 @@ function ConfirmarCompra() {
         <h1 className="mb-4 text-warning fw-bold text-center">📦 Finalizar tu Compra</h1>
         
         {compraExitosa ? (
-          <div className="card p-4 p-md-5 shadow-lg compra-tarjeta-oscura text-center mx-auto" style={{ maxWidth: "650px" }}>
+          <div className="card p-4 p-md-5 shadow-lg compra-tarjeta-oscura compra-tarjeta-exito text-center mx-auto">
             <h2 className="text-success fw-bold mb-2">🎉 ¡Compra Realizada con Éxito!</h2>
             <p className="text-white-50 mb-4">Muchas gracias por comprar en Sonido Vivo.</p>
             

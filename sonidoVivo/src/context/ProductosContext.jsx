@@ -4,7 +4,7 @@ import * as productoService from '../service/productoService';
 
 const ProductosContext = createContext(null);
 
-export function ProductosProvider({ children }) {
+export function ProductosProvider(props) {
   const [productos, setProductos] = useState(() => productoService.listarProductos());
 
   const recargarProductos = () => {
@@ -25,11 +25,10 @@ export function ProductosProvider({ children }) {
     actualizar(identificador, { stock: Number(nuevoStock) });
   };
 
+  // Se eliminó window.confirm() nativo para cumplir estrictamente con la Guía 14
   const eliminar = (identificador) => {
-    if (window.confirm('¿Seguro que deseas eliminar este artículo?')) {
-      productoService.eliminarProducto(identificador);
-      recargarProductos();
-    }
+    productoService.eliminarProducto(identificador);
+    recargarProductos();
   };
 
   return (
@@ -43,7 +42,7 @@ export function ProductosProvider({ children }) {
         recargarProductos
       }}
     >
-      {children}
+      {props.children}
     </ProductosContext.Provider>
   );
 }

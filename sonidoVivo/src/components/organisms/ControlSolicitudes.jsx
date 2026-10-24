@@ -1,9 +1,18 @@
-// src/components/organisms/ControlSolicitudes.jsx
 import React from 'react';
 import Selector from '../atoms/Selector';
 
-export default function ControlSolicitudes({ solicitudes = [], onCambiarEstado }) {
-  const opcionesEstado = ['Pendiente', 'Enviado', 'Entregado', 'Cancelado'];
+export default function ControlSolicitudes(props) {
+  const solicitudes = props.solicitudes || [];
+  const onCambiarEstado = props.onCambiarEstado;
+
+  // Estados coordinados con las vistas de despacho y seguimiento
+  const opcionesEstado = [
+    'Pendiente',
+    'Preparando Pedido',
+    'En Camino',
+    'Entregado',
+    'Cancelado'
+  ];
 
   return (
     <div className="card bg-dark text-light border-secondary p-4">
@@ -24,22 +33,32 @@ export default function ControlSolicitudes({ solicitudes = [], onCambiarEstado }
               </tr>
             </thead>
             <tbody>
-              {solicitudes.map((sol) => (
-                <tr key={sol.id}>
-                  <td className="fw-bold text-warning">{sol.codigo}</td>
-                  <td>{sol.cliente}</td>
-                  <td>{sol.destino}</td>
-                  <td>${sol.total?.toLocaleString('es-CL')}</td>
-                  <td>
-                    <Selector
-                      opciones={opcionesEstado}
-                      valorSeleccionado={sol.estado}
-                      alCambiar={(nuevoEstado) => onCambiarEstado(sol.id, nuevoEstado)}
-                      placeholder="-- Estado de envío --"
-                    />
-                  </td>
-                </tr>
-              ))}
+              {solicitudes.map((sol) => {
+                const claveUnica = sol.id || sol.codigo;
+
+                return (
+                  <tr key={claveUnica}>
+                    <td className="fw-bold text-warning">{sol.codigo}</td>
+                    <td>{sol.cliente}</td>
+                    <td>{sol.destino}</td>
+                    <td>
+                      ${typeof sol.total === 'number' ? sol.total.toLocaleString('es-CL') : '0'}
+                    </td>
+                    <td>
+                      {/* Corrección de prop: valorSeleccionado -> valor */}
+                      <Selector
+                        opciones={opcionesEstado}
+                        valor={sol.estado}
+                        alCambiar={(nuevoEstado) => {
+                          if (typeof onCambiarEstado === 'function') {
+                            onCambiarEstado(sol.id, nuevoEstado);
+                          }
+                        }}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

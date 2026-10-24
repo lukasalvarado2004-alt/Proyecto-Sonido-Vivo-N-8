@@ -11,15 +11,13 @@ export default function BarraSeguimiento(props) {
       <ProgressBar 
         now={porcentajeProgreso} 
         variant="warning" 
-        className="bg-secondary" 
-        style={{ height: "10px" }} 
+        className="bg-secondary barra-seguimiento-altura" 
       />
       <div className="d-flex justify-content-between mt-3 text-start small">
         {estados.map((text, index) => (
           <div 
-            key={index} 
-            className={`fw-bold ${index <= pasoActual ? "text-warning" : "text-white-50"}`} 
-            style={{ width: "23%", textAlign: "center" }}
+            key={text} 
+            className={`fw-bold text-center barra-seguimiento-item ${index <= pasoActual ? "text-warning" : "text-white-50"}`}
           >
             <div className="fs-4 mb-1">
               {index === 0 ? "🧾" : index === 1 ? "📦" : index === 2 ? "🚛" : "🏠"}

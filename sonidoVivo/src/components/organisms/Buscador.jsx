@@ -11,7 +11,7 @@ export default function BuscadorHero(props) {
         Explora nuestro catálogo completo de instrumentos musicales y accesorios.
       </p>
 
-      <Form onSubmit={props.onBuscar} className="mx-auto" style={{ maxWidth: '600px' }}>
+      <Form onSubmit={props.onBuscar} className="mx-auto buscador-hero-formulario">
         <InputGroup size="lg" className="shadow-sm">
           <Form.Control
             type="search"
