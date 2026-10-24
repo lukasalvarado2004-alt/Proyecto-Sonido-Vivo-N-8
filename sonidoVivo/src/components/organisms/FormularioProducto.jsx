@@ -1,7 +1,8 @@
 import React from 'react';
 import CampoFormulario from '../molecules/CampoFormulario';
+import CampoMensaje from '../molecules/CampoMensaje'; // Importamos la molécula
 import Boton from '../atoms/Boton';
-import ImagenProducto from '../atoms/ImagenProducto'; // 1. Importamos el átomo
+import ImagenProducto from '../atoms/ImagenProducto';
 
 export default function FormularioProducto(props) {
   const {
@@ -24,7 +25,7 @@ export default function FormularioProducto(props) {
 
   return (
     <div className="card p-4 shadow-sm border-0 bg-white">
-      <h5 className="fw-bold border-bottom pb-2 mb-3">
+      <h5 className="fw-bold border-bottom pb-2 mb-3 text-dark">
         {idEnEdicion !== null ? 'Editar Producto' : 'Añadir Producto'}
       </h5>
       
@@ -95,21 +96,17 @@ export default function FormularioProducto(props) {
           placeholder="129990" 
         />
 
-        <div className="mb-3 text-start">
-          <label className="form-label text-dark fw-bold small">Descripción</label>
-          <textarea 
-            className={`form-control ${errores.descripcion ? 'is-invalid' : ''}`}
-            rows="2"
-            value={descripcion}
-            onChange={(e) => { setDescripcion(e.target.value); setErrores(p => ({ ...p, descripcion: '' })); }}
-            placeholder="Detalles del producto..."
-          ></textarea>
-          {errores.descripcion && (
-            <div className="invalid-feedback d-block text-danger small mt-1">
-              {errores.descripcion}
-            </div>
-          )}
-        </div>
+        {/* Molécula CampoMensaje con el colorEtiqueta ajustado para fondo blanco */}
+        <CampoMensaje
+          id="prod-descripcion"
+          etiqueta="Descripción"
+          valor={descripcion}
+          alCambiar={(v) => { setDescripcion(v); setErrores(p => ({ ...p, descripcion: '' })); }}
+          error={errores.descripcion}
+          placeholder="Detalles del producto..."
+          filas={2}
+          colorEtiqueta="text-dark" 
+        />
 
         {/* Sección de Carga de Imagen */}
         <div className="mb-3 text-start">
@@ -126,7 +123,7 @@ export default function FormularioProducto(props) {
             </div>
           )}
           
-          {/* Vista previa usando el Átomo ImagenProducto sin inline styles */}
+          {/* Vista previa usando el Átomo ImagenProducto */}
           {imagen && (
             <div className="mt-2 text-center border p-2 rounded bg-light">
               <ImagenProducto 

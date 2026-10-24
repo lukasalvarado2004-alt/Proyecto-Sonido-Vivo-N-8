@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { ProductosProvider } from './context/ProductosContext';
 import { ContenidoCarritoProvider } from './context/ContenidoCarrito';
-
+import Contacto from './pages/Contacto';
 import Inicio from './pages/Inicio';
 import Catalogo from './pages/Catalogo';
 import DetalleProducto from './pages/DetalleProducto';
@@ -33,6 +33,7 @@ export default function App() {
             <Route path="/seguimiento" element={<SeguimientoCompra />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
+            <Route path="/contacto" element={<Contacto />} />
 
             {/* Rutas de Administración ha Ventas */}
             <Route path="/admin" element={<Navigate to="/admin/productos" replace />} />

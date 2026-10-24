@@ -19,15 +19,14 @@ const Footer = () => {
           <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
             <h6 className="text-uppercase mb-4 fw-bold text-light">Navegación</h6>
             <p className="mb-2">
-              {/* Cambiado de <a href="/inicio"> a <Link to="/"> */}
               <Link to="/" className="text-secondary text-decoration-none hover-purple">Inicio</Link>
             </p>
             <p className="mb-2">
-              {/* Cambiado de <a href="/catalogo"> a <Link to="/catalogo"> */}
               <Link to="/catalogo" className="text-secondary text-decoration-none hover-purple">Catálogo</Link>
             </p>
             <p className="mb-2">
-              <Link to="*" className="text-secondary text-decoration-none hover-purple">Contacto</Link>
+              {/* Aquí está el cambio: de to="*" a to="/contacto" */}
+              <Link to="/contacto" className="text-secondary text-decoration-none hover-purple">Contacto</Link>
             </p>
           </div>
 
