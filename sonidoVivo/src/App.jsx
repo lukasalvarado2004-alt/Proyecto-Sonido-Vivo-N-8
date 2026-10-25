@@ -1,39 +1,52 @@
 // src/App.jsx
-import { useState } from "react";
-import Login from "./pages/Inicio";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
-  // Estado para saber si el usuario ya inició sesión
-  const [usuario, setUsuario] = useState(null);
+import { ProductosProvider } from './context/ProductosContext';
+import { ContenidoCarritoProvider } from './context/ContenidoCarrito';
+import Contacto from './pages/Contacto';
+import Inicio from './pages/Inicio';
+import Catalogo from './pages/Catalogo';
+import DetalleProducto from './pages/DetalleProducto';
+import Carrito from './pages/Carrito';
+import ConfirmarCompra from './pages/ConfirmarCompra';
+import SeguimientoCompra from './pages/SeguimientoCompra';
+import Login from './pages/Login';
+import Registro from './pages/Registro';
+import DetalleBlog from './pages/NosotrosHistoria';
 
-  // Función que se ejecuta cuando el login es correcto
-  function manejarLoginExitoso(correo) {
-    setUsuario(correo);
-    alert("¡Bienvenido a Sonido Vivo! Has iniciado sesión como: " + correo);
-  }
+import AdminProductos from './pages/AdminProductos';
+import PanelVentas from './pages/PanelVentas';
+import NoEncontrada from './pages/NoEncontrada';
 
+export default function App() {
   return (
-    <>
-      {/* Si no hay un usuario guardado en el estado, mostramos el Login */}
-      {!usuario ? (
-        <Login onLoginSuccess={manejarLoginExitoso} />
-      ) : (
-        // Si ya hay usuario, mostramos la pantalla de bienvenida del sistema
-        <div className="container mt-5 text-center">
-          <h1 className="display-4 mb-3">Plataforma Sonido Vivo</h1>
-          <p className="lead">
-            Sesión activa: <strong>{usuario}</strong>
-          </p>
-          <button 
-            className="btn btn-danger mt-4" 
-            onClick={() => setUsuario(null)}
-          >
-            Cerrar Sesión
-          </button>
-        </div>
-      )}
-    </>
+    <ProductosProvider>
+      <ContenidoCarritoProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Rutas Públicas */}
+            <Route path="/" element={<Inicio />} />
+            <Route path="/catalogo" element={<Catalogo />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
+            <Route path="/carrito" element={<Carrito />} />
+            <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
+            <Route path="/seguimiento" element={<SeguimientoCompra />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/blog" element={<DetalleBlog />} />
+
+         
+            <Route path="/admin" element={<Navigate to="/admin/productos" replace />} />
+            <Route path="/admin/productos" element={<AdminProductos />} />
+            <Route path="/admin/ventas" element={<PanelVentas />} />
+
+           
+            <Route path="*" element={<NoEncontrada />} />
+          </Routes>
+        </BrowserRouter>
+      </ContenidoCarritoProvider>
+    </ProductosProvider>
   );
 }
-
-export default App;
