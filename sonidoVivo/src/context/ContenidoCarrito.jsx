@@ -1,10 +1,26 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ContenidoCarritoContext = createContext();
+const CLAVE_CARRITO = 'sv_carrito';
 
 export function ContenidoCarritoProvider(props) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    try {
+      const guardado = localStorage.getItem(CLAVE_CARRITO);
+      return guardado ? JSON.parse(guardado) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [mensajeErrorStock, setMensajeErrorStock] = useState('');
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CLAVE_CARRITO, JSON.stringify(items));
+    } catch (e) {
+      // Ignorar errores de escritura en localStorage
+    }
+  }, [items]);
 
   // Función para desplegar la notificación y borrarla automáticamente en 3.5s
   const notificarErrorStock = (mensaje) => {

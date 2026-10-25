@@ -5,12 +5,14 @@ import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 
 export default function Navbar() {
   const [usuario, setUsuario] = useState(null);
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const { totalProductos } = useContenidoCarrito();
 
   useEffect(() => {
+    setMenuAbierto(false);
     const sesionGuardada = localStorage.getItem("sv_sesion") || localStorage.getItem("usuarioSesion");
     if (sesionGuardada) {
       try {
@@ -27,6 +29,7 @@ export default function Navbar() {
     localStorage.removeItem("sv_sesion");
     localStorage.removeItem("usuarioSesion");
     setUsuario(null);
+    setMenuAbierto(false);
     navigate("/login");
   };
 
@@ -36,12 +39,24 @@ export default function Navbar() {
   const nombreMostrar = usuario?.nombre || usuario?.nombreUsuario || "Usuario";
 
   return (
-    <nav className="navbar-custom">
-      <Link to="/" className="navbar-logo text-decoration-none">
-        🎵 Sonido Vivo
-      </Link>
+    <nav className="navbar-custom container-fluid">
+      <div className="d-flex justify-content-between align-items-center w-100 navbar-header-mobile">
+        <Link to="/" className="navbar-logo text-decoration-none">
+          🎵 Sonido Vivo
+        </Link>
 
-      <div className="navbar-actions">
+        <button
+          type="button"
+          className="btn btn-outline-light d-md-none navbar-toggle-btn"
+          onClick={() => setMenuAbierto(!menuAbierto)}
+          aria-expanded={menuAbierto}
+          aria-label="Alternar menú de navegación"
+        >
+          {menuAbierto ? "✕" : "☰"}
+        </button>
+      </div>
+
+      <div className={`navbar-actions ${menuAbierto ? "d-flex menu-abierto" : "d-none d-md-flex"}`}>
         <NavLink to="/catalogo" className="btn btn-outline-light">
           Catálogo
         </NavLink>

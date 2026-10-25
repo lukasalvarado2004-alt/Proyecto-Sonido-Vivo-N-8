@@ -171,10 +171,23 @@ footer a:hover {
   background-color: #1a1a24;
   padding: 0.8rem 1.5rem;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   margin-bottom: 2rem;
+}
+
+.navbar-header-mobile {
+  width: auto !important;
+}
+
+.navbar-toggle-btn {
+  width: auto !important;
+  padding: 0.35rem 0.75rem !important;
+  font-size: 1.1rem !important;
+  line-height: 1 !important;
 }
 
 .navbar-logo {
@@ -192,13 +205,16 @@ footer a:hover {
 
 .navbar-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
 }
 
 .navbar-actions .btn,
 .navbar-actions button,
 .navbar-actions a {
+  width: auto !important;
   height: 38px !important;
   padding: 0 0.9rem !important;
   font-size: 0.875rem !important;
@@ -375,4 +391,67 @@ footer a:hover {
 .barra-seguimiento-item {
   width: 23%;
   text-align: center;
+}
+
+/* MEDIA QUERIES PARA DISEÑO RESPONSIVO (TABLETA Y MÓVIL) */
+@media (max-width: 767.98px) {
+  .navbar-custom {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar-header-mobile {
+    width: 100% !important;
+  }
+
+  .navbar-actions.menu-abierto {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .navbar-actions.menu-abierto .btn,
+  .navbar-actions.menu-abierto button,
+  .navbar-actions.menu-abierto a {
+    width: auto !important;
+    justify-content: center !important;
+  }
+
+  .navbar-actions.menu-abierto .navbar-saludo {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .imagen-detalle {
+    height: 240px;
+  }
+
+  .compra-tarjeta-oscura {
+    padding: 1.5rem 1.25rem !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .login-tarjeta,
+  .login-tarjeta-forzada {
+    padding: 1.75rem 1.25rem !important;
+    margin: 1rem auto;
+  }
+
+  .imagen-producto {
+    height: 180px;
+  }
+
+  .filtro-categoria-container {
+    max-width: 100%;
+  }
+
+  .barra-seguimiento-item {
+    font-size: 0.75rem;
+  }
 }
