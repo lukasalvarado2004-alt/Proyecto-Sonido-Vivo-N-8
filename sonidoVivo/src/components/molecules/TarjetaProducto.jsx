@@ -20,7 +20,7 @@ function TarjetaProducto(props) {
   return (
     <div className="card tarjeta-producto-custom shadow-sm h-100 d-flex flex-column p-3">
       
-      {/* ZONA 1: Clic en cualquier parte de la tarjeta -> Va a Detalle */}
+      
       <Link 
         to={`/producto/${props.id}`} 
         className="flex-grow-1 text-decoration-none text-dark d-flex flex-column"
@@ -51,7 +51,7 @@ function TarjetaProducto(props) {
         </div>
       </Link>
 
-      {/* ZONA 2: Clic en el Botón -> Agrega al Carrito */}
+      
       <div className="mt-auto pt-2">
         <Boton 
           textoBoton={tieneStock ? "Agregar al Carrito" : "Sin Stock"} 

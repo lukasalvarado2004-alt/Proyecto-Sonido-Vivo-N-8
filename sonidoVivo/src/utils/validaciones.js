@@ -1,6 +1,4 @@
-// src/utils/validaciones.js
 
-// --- VALIDACIONES DE USUARIO ---
 export function validarNombre(nombre) {
   if (!nombre || !nombre.trim()) return 'El nombre es obligatorio.';
   if (nombre.trim().length < 3) return 'El nombre debe tener al menos 3 caracteres.';
@@ -26,7 +24,7 @@ export function validarConfirmarContrasena(contrasena, confirmarContrasena) {
   return '';
 }
 
-// --- VALIDACIONES DE PRODUCTO Y STOCK ---
+
 export function validarCodigo(codigo) {
   if (!codigo || !codigo.trim()) return 'El código es obligatorio.';
   return '';

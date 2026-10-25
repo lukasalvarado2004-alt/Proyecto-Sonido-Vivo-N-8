@@ -1,6 +1,6 @@
 import React from 'react';
 import CampoFormulario from '../molecules/CampoFormulario';
-import CampoMensaje from '../molecules/CampoMensaje'; // Importamos la molécula
+import CampoMensaje from '../molecules/CampoMensaje'; 
 import Boton from '../atoms/Boton';
 import ImagenProducto from '../atoms/ImagenProducto';
 
@@ -96,7 +96,7 @@ export default function FormularioProducto(props) {
           placeholder="129990" 
         />
 
-        {/* Molécula CampoMensaje con el colorEtiqueta ajustado para fondo blanco */}
+        
         <CampoMensaje
           id="prod-descripcion"
           etiqueta="Descripción"
@@ -108,7 +108,7 @@ export default function FormularioProducto(props) {
           colorEtiqueta="text-dark" 
         />
 
-        {/* Sección de Carga de Imagen */}
+      
         <div className="mb-3 text-start">
           <label className="form-label text-dark fw-bold small">Imagen del Producto</label>
           <input 
@@ -123,7 +123,7 @@ export default function FormularioProducto(props) {
             </div>
           )}
           
-          {/* Vista previa usando el Átomo ImagenProducto */}
+          
           {imagen && (
             <div className="mt-2 text-center border p-2 rounded bg-light">
               <ImagenProducto 

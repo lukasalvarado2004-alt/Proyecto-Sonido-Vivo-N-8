@@ -7,7 +7,7 @@ export function ResumenPedido(props) {
 
   return (
     <div className="text-start bg-black bg-opacity-20 p-3 rounded mb-3 border border-secondary border-opacity-25 text-white">
-      <h5 className="text-warning mb-2 fw-bold">🧾 Solicitud: {compra.nroSolicitud}</h5>
+      <h5 className="text-warning mb-2 fw-bold"> Solicitud: {compra.nroSolicitud}</h5>
       
       <p className="mb-1 small"><strong>Cliente:</strong> {compra.nombre}</p>
       

@@ -3,7 +3,7 @@ import Textarea from '../atoms/Textarea';
 import Error from '../atoms/Error';
 
 export default function CampoMensaje(props) {
-  // Si nos pasan colorEtiqueta lo usamos, si no, por defecto será texto blanco
+  
   const claseColor = props.colorEtiqueta || 'text-light';
 
   return (

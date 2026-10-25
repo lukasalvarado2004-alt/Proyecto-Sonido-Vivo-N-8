@@ -32,6 +32,7 @@ export default function Navbar() {
 
   const rolNormalizado = (usuario?.rol || "").toLowerCase();
   const esAdmin = rolNormalizado === "admin" || rolNormalizado === "administrador";
+  const esVentas = rolNormalizado === "ventas" || rolNormalizado === "vendedor";
   const nombreMostrar = usuario?.nombre || usuario?.nombreUsuario || "Usuario";
 
   return (
@@ -68,7 +69,15 @@ export default function Navbar() {
               <Boton 
                 textoBoton="Panel Admin" 
                 variante="purple" 
-                alHacerClic={() => navigate("/admin")}
+                alHacerClic={() => navigate("/admin/productos")}
+              />
+            )}
+
+            {esVentas && (
+              <Boton 
+                textoBoton="Panel Ventas" 
+                variante="warning" 
+                alHacerClic={() => navigate("/admin/ventas")}
               />
             )}
 

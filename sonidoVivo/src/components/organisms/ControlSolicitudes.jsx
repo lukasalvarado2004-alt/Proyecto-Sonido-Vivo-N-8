@@ -5,7 +5,7 @@ export default function ControlSolicitudes(props) {
   const solicitudes = props.solicitudes || [];
   const onCambiarEstado = props.onCambiarEstado;
 
-  // Estados coordinados con las vistas de despacho y seguimiento
+  
   const opcionesEstado = [
     'Pendiente',
     'Preparando Pedido',
@@ -16,7 +16,7 @@ export default function ControlSolicitudes(props) {
 
   return (
     <div className="card bg-dark text-light border-secondary p-4">
-      <h3 className="h4 text-warning mb-4">📑 Control de Solicitudes de Despacho</h3>
+      <h3 className="h4 text-warning mb-4"> Control de Solicitudes de Despacho</h3>
 
       {solicitudes.length === 0 ? (
         <p className="text-secondary">No hay solicitudes pendientes.</p>
@@ -45,7 +45,7 @@ export default function ControlSolicitudes(props) {
                       ${typeof sol.total === 'number' ? sol.total.toLocaleString('es-CL') : '0'}
                     </td>
                     <td>
-                      {/* Corrección de prop: valorSeleccionado -> valor */}
+                    
                       <Selector
                         opciones={opcionesEstado}
                         valor={sol.estado}

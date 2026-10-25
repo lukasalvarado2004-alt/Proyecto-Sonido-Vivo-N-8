@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CampoFormulario from '../molecules/CampoFormulario';
-import CampoMensaje from '../molecules/CampoMensaje'; // Importamos la nueva molécula
+import CampoMensaje from '../molecules/CampoMensaje'; 
 import Boton from '../atoms/Boton';
 
 export default function FormularioContacto() {
@@ -24,7 +24,7 @@ export default function FormularioContacto() {
     setErrores(nuevosErrores);
 
     if (Object.keys(nuevosErrores).length === 0) {
-      // Simulación de envío exitoso
+      
       setEnviado(true);
       setNombre('');
       setCorreo('');
@@ -75,7 +75,7 @@ export default function FormularioContacto() {
           placeholder="Consulta sobre disponibilidad, envíos, etc."
         />
 
-        {/* Reemplazamos el textarea crudo por nuestra Molécula CampoMensaje */}
+    
         <CampoMensaje
           id="contacto-mensaje"
           etiqueta="Mensaje"

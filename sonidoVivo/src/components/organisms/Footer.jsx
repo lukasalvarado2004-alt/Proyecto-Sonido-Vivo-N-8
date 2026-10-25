@@ -6,10 +6,10 @@ const Footer = () => {
     <footer className="bg-black text-white pt-5 pb-4 mt-auto border-top border-purple">
       <div className="container text-center text-md-start">
         <div className="row text-center text-md-start">
-          
+
           <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mt-3">
             <h5 className="text-uppercase mb-4 fw-bold text-purple">
-               SONIDO <div className="d-inline text-purple-brand">VIVO</div>
+              SONIDO <div className="d-inline text-purple-brand">VIVO</div>
             </h5>
             <p className="text-secondary small">
               Tu tienda de música e instrumentos de confianza. Llevamos la mejor calidad de audio e instrumentos a la puerta de tu hogar.
@@ -25,8 +25,12 @@ const Footer = () => {
               <Link to="/catalogo" className="text-secondary text-decoration-none hover-purple">Catálogo</Link>
             </p>
             <p className="mb-2">
-              {/* Aquí está el cambio: de to="*" a to="/contacto" */}
+
               <Link to="/contacto" className="text-secondary text-decoration-none hover-purple">Contacto</Link>
+            </p>
+            <p className="mb-2">
+
+              <Link to="/blog" className="text-secondary text-decoration-none hover-purple">Nosotros</Link>
             </p>
           </div>
 

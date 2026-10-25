@@ -1,8 +1,8 @@
-// src/service/productoService.js
+
 import productosIniciales from '../data/Productos.json';
 
 const CLAVE = 'productos';
-// ⚠️ Cambia este número (v1, v2, v3...) cada vez que actualices Productos.json
+
 const VERSION_DATOS = 'v2'; 
 const CLAVE_VERSION = 'productos_version';
 
@@ -10,7 +10,7 @@ function leer() {
   const versionGuardada = localStorage.getItem(CLAVE_VERSION);
   const guardado = localStorage.getItem(CLAVE);
 
-  // Si la versión cambió o no hay datos, reinicia localStorage con el nuevo Productos.json
+
   if (versionGuardada !== VERSION_DATOS || !guardado) {
     const iniciales = Array.isArray(productosIniciales) ? productosIniciales : [];
     localStorage.setItem(CLAVE, JSON.stringify(iniciales));

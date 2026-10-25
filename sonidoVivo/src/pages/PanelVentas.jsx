@@ -9,7 +9,7 @@ import EncabezadoPanel from '../components/molecules/EncabezadoPanel';
 export default function PanelVentas() {
   const { productos, actualizarStockProducto } = useProductos();
 
-  // Lee el historial unificado desde localStorage o inicializa desde CompraData.json
+  
   const [solicitudes, setSolicitudes] = useState(() => {
     const historialGuardado = localStorage.getItem("sv_todas_compras");
     const base = historialGuardado ? JSON.parse(historialGuardado) : comprasIniciales;
@@ -30,7 +30,7 @@ export default function PanelVentas() {
         sol.id === idSolicitud ? { ...sol, estado: nuevoEstado } : sol
       );
 
-      // Persistir el cambio de estado en localStorage para que se sincronice en Seguimiento
+      
       const historial = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
       const historialActualizado = historial.map((c) =>
         c.nroSolicitud === idSolicitud ? { ...c, estado: nuevoEstado } : c

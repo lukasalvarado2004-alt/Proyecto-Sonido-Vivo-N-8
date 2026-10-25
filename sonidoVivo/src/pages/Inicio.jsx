@@ -42,7 +42,7 @@ export default function Inicio() {
   return (
     <PlantillaPublica>
       <Container className="py-4">
-        {/* ORGANISMO BUSCADOR HERO EXTRAÍDO */}
+        
         <Buscador
           textoBusqueda={textoBusqueda}
           setTextoBusqueda={setTextoBusqueda}
@@ -51,7 +51,7 @@ export default function Inicio() {
           onLimpiar={manejarLimpiar}
         />
 
-        {/* MÓDULO DESTACADO: OFERTAS EN PROMOCIÓN */}
+       
         {!busquedaAplicada && categoriaSeleccionada === 'todas' && productosEnOferta.length > 0 && (
           <section className="mb-5 p-4 rounded-3 bg-dark bg-opacity-50 border border-warning border-opacity-50 shadow-sm">
             <div className="d-flex align-items-center justify-content-between mb-3 border-bottom border-warning pb-2">
@@ -66,7 +66,7 @@ export default function Inicio() {
           </section>
         )}
 
-        {/* CATÁLOGO GENERAL */}
+       
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
           <div>
             <h2 className="h4 fw-bold text-white mb-1">

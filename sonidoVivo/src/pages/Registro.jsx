@@ -30,7 +30,6 @@ export default function Registro({ onRegistroExitoso }) {
     e.preventDefault();
     setErrorGeneral('');
 
-    // Validar formatos
     const errorNombre = validarNombre(nombre);
     const errorCorreo = validarCorreo(correo);
     const errorClave = validarContrasena(contrasena);
@@ -48,14 +47,14 @@ export default function Registro({ onRegistroExitoso }) {
       return;
     }
 
-    // Verificar mediante el servicio si el correo ya existe
+    
     if (obtenerUsuarioPorCorreo(correo)) {
       setErroresCampos({ correo: 'Este correo electrónico ya está registrado.' });
       setErrorGeneral('El correo ingresado ya se encuentra registrado.');
       return;
     }
 
-    // Guardar usuario nuevo con el servicio
+   
     crearUsuario({
       nombre,
       correo,

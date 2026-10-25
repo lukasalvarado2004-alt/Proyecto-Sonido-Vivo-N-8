@@ -175,16 +175,19 @@ function ConfirmarCompra() {
               <div className="card p-4 shadow-lg compra-tarjeta-oscura">
                 <h3 className="h5 mb-4 text-warning fw-bold">🧾 Resumen del Pedido</h3>
                 <div className="d-flex flex-column gap-3 mb-4">
-                  {items.map((item) => (
-                    <div key={item.producto.id} className="d-flex justify-content-between align-items-center pb-2 compra-borde-resumen">
-                      <div>
-                        <span className="fw-semibold">{item.producto.nombre}</span>
-                        <small className="text-white-50 d-block">Cantidad: {item.cantidad}</small>
-                      </div>
-                      <span className="fw-bold">{`$${(item.producto.precio * item.cantidad).toLocaleString('es-CL')}`}</span>
-                    </div>
-                  ))}
-                </div>
+  {items.map((item, index) => {
+    const claveItem = item.producto.id || item.producto.codigo || index;
+    return (
+      <div key={claveItem} className="d-flex justify-content-between align-items-center pb-2 compra-borde-resumen">
+        <div>
+          <span className="fw-semibold">{item.producto.nombre}</span>
+          <small className="text-white-50 d-block">Cantidad: {item.cantidad}</small>
+        </div>
+        <span className="fw-bold">{`$${(item.producto.precio * item.cantidad).toLocaleString('es-CL')}`}</span>
+      </div>
+    );
+  })}
+</div>
                 <div className="d-flex justify-content-between align-items-center pt-2">
                   <span className="fs-5 text-white-50">Total a Pagar:</span>
                   <strong className="fs-3 text-warning">{`$${precioTotal.toLocaleString('es-CL')}`}</strong>

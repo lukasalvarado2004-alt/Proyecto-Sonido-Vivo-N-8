@@ -1,6 +1,6 @@
 // src/pages/AdminProductos.jsx
 import React, { useState } from 'react';
-import PlantillaAdmin from '../components/templates/PlantillaAdmin'; // 1. Cambiado de PlantillaPublica a PlantillaAdmin
+import PlantillaAdmin from '../components/templates/PlantillaAdmin'; 
 import { useProductos } from '../context/ProductosContext';
 import Error from '../components/atoms/Error';
 
@@ -110,7 +110,7 @@ export default function AdminProductos() {
   }
 
   function eliminarCategoriaHandler(cat) {
-    // 2. Se remueve window.confirm() para cumplir la Guía 14
+    
     setErrorGeneral('');
     categoriaService.eliminarCategoria(cat);
     setCategorias(categoriaService.listarCategorias());
@@ -344,7 +344,7 @@ export default function AdminProductos() {
               <p className="text-white-50">No hay solicitudes registradas.</p>
             ) : (
               compras.map((compra) => (
-                /* 3. Se cambia key={index} por identificador único estable (Guía 11) */
+                
                 <ResumenPedido key={compra.nroSolicitud} compra={compra} />
               ))
             )}

@@ -1,6 +1,4 @@
-// src/utils/filtrarProductos.js
 
-// Exportación que requiere Catalogo.jsx
 export function filtrarPorCategoria(productos, categoria) {
   if (!categoria || categoria === "todas" ) {
     return productos;
@@ -11,7 +9,7 @@ export function filtrarPorCategoria(productos, categoria) {
   );
 }
 
-// Exportación que requiere Inicio.jsx
+
 export function filtrarProductos(productos, filtros = {}) {
   const buscado = (filtros.texto || '').trim().toLowerCase();
   const categoria = (filtros.categoria || '').trim().toLowerCase();

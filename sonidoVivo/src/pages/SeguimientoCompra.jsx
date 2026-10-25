@@ -38,7 +38,7 @@ function SeguimientoCompra() {
     }
 
     if (datosBase) {
-      // Buscar si el Ejecutivo de Ventas actualizó el estado de esta solicitud específica
+    
       let estadoActualTexto = "Pago Confirmado";
 
       if (historialCompras) {
@@ -49,7 +49,6 @@ function SeguimientoCompra() {
         }
       }
 
-      // Mapear el texto del estado con el índice numérico de la barra
       const indiceEstado = estados.findIndex(
         (e) => e.toLowerCase() === estadoActualTexto.toLowerCase()
       );

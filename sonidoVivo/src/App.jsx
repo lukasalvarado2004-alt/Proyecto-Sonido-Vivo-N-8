@@ -13,6 +13,7 @@ import ConfirmarCompra from './pages/ConfirmarCompra';
 import SeguimientoCompra from './pages/SeguimientoCompra';
 import Login from './pages/Login';
 import Registro from './pages/Registro';
+import DetalleBlog from './pages/NosotrosHistoria';
 
 import AdminProductos from './pages/AdminProductos';
 import PanelVentas from './pages/PanelVentas';
@@ -34,13 +35,14 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/contacto" element={<Contacto />} />
+            <Route path="/blog" element={<DetalleBlog />} />
 
-            {/* Rutas de Administración ha Ventas */}
+         
             <Route path="/admin" element={<Navigate to="/admin/productos" replace />} />
             <Route path="/admin/productos" element={<AdminProductos />} />
             <Route path="/admin/ventas" element={<PanelVentas />} />
 
-            {/* Ruta no encontrada (404) */}
+           
             <Route path="*" element={<NoEncontrada />} />
           </Routes>
         </BrowserRouter>

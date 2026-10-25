@@ -13,8 +13,7 @@ export function ItemCarrito(props) {
 
   return (
     <li className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3 bg-transparent border-0 text-white py-3">
-      
-      {/* Contenedor de Imagen, Nombre y Cantidad */}
+   
       <div className="d-flex align-items-center gap-3 flex-grow-1">
         <img 
           src={obtenerImagenUrl(props.item.producto.imagen)} 
@@ -28,7 +27,7 @@ export function ItemCarrito(props) {
         </div>
       </div>
 
-      {/* Precio y Controles de acción */}
+      
       <div className="d-flex align-items-center gap-3">
         <span className="fw-bold fs-5">${subtotal.toLocaleString('es-CL')}</span>
         

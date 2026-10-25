@@ -1,15 +1,13 @@
 import React from 'react';
 import { obtenerImagenUrl } from '../../utils/obtenerImagen';
 
-function ImagenProducto({ 
-  urlImagen, 
-  altTexto, 
-  className = "imagen-producto" 
-}) {
+function ImagenProducto(props) {
+  const className = props.className || "imagen-producto";
+
   return (
     <img 
-      src={obtenerImagenUrl(urlImagen)} 
-      alt={altTexto || "Imagen de producto"} 
+      src={obtenerImagenUrl(props.urlImagen)} 
+      alt={props.altTexto || "Imagen de producto"} 
       className={className}
     />
   );

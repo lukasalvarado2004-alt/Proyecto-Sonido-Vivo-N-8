@@ -1,4 +1,4 @@
-// src/context/ProductosContext.jsx
+
 import React, { createContext, useContext, useState } from 'react';
 import * as productoService from '../service/productoService';
 
@@ -25,7 +25,7 @@ export function ProductosProvider(props) {
     actualizar(identificador, { stock: Number(nuevoStock) });
   };
 
-  // Se eliminó window.confirm() nativo para cumplir estrictamente con la Guía 14
+ 
   const eliminar = (identificador) => {
     productoService.eliminarProducto(identificador);
     recargarProductos();

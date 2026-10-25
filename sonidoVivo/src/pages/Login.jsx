@@ -24,7 +24,6 @@ export default function Login({ onLoginExitoso }) {
     setErrorGeneral('');
     setErroresCampos({});
 
-    // 1. Validar formato básico de inputs
     const errorCorreo = validarCorreo(correo);
     const errorClave = validarContrasena(contrasena);
 
@@ -36,17 +35,17 @@ export default function Login({ onLoginExitoso }) {
       return;
     }
 
-    // 2. Intentar autenticación
+    
     const resultado = autenticarUsuario(correo, contrasena);
 
-    // Verificación defensiva contra null/undefined (Evita TypeError)
+    
     if (!resultado || !resultado.exito) {
       setErrorGeneral(resultado?.error || 'Correo o contraseña incorrectos. Por favor reintenta.');
       setErroresCampos({});
       return;
     }
 
-    // 3. Inicio de sesión exitoso (Guardar en ambas claves para compatibilidad)
+    
     localStorage.setItem('sv_sesion', JSON.stringify(resultado.usuario));
     localStorage.setItem('usuarioSesion', JSON.stringify(resultado.usuario));
 
@@ -54,7 +53,7 @@ export default function Login({ onLoginExitoso }) {
       onLoginExitoso(resultado.usuario);
     }
 
-    // Normalizar el rol para validar 'admin' o 'ventas'
+   
 const rolNormalizado = (resultado.usuario?.rol || '').toLowerCase();
 const esAdmin = rolNormalizado === 'admin' || rolNormalizado === 'administrador';
 const esVentas = rolNormalizado === 'ventas' || rolNormalizado === 'vendedor';
@@ -80,7 +79,7 @@ if (esAdmin) {
             <small className="login-subtitulo">Ingresa tus credenciales para continuar</small>
           </div>
 
-          {/* ÚNICO MENSAJE DE ERROR SUPERIOR */}
+          
           <Error mensaje={errorGeneral} variante="danger" />
 
           <form onSubmit={manejarEnvio} noValidate>

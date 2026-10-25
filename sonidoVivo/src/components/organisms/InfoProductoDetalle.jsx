@@ -23,7 +23,7 @@ export default function InfoProductoDetalle(props) {
 
   return (
     <div className="row g-4 my-2">
-      {/* Columna Izquierda: Átomo ImagenProducto */}
+     
       <div className="col-12 col-md-6 text-center">
         <div className="border rounded p-4 bg-light shadow-sm">
           <ImagenProducto 
@@ -33,7 +33,7 @@ export default function InfoProductoDetalle(props) {
         </div>
       </div>
 
-      {/* Columna Derecha: Información del Producto (Composición de Átomos) */}
+      
       <div className="col-12 col-md-6 d-flex flex-column justify-content-between">
         <div>
           <div className="d-flex justify-content-between align-items-start mb-2">
@@ -53,7 +53,7 @@ export default function InfoProductoDetalle(props) {
           </p>
         </div>
 
-        {/* Acciones e interacción */}
+       
         <div className="border-top pt-3">
           {tieneStock ? (
             <div className="d-flex flex-column gap-2">

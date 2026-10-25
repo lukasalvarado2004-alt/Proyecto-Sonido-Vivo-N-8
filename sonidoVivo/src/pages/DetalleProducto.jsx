@@ -22,7 +22,7 @@ export default function DetalleProducto() {
           <InfoProductoDetalle producto={productoEncontrado} />
         ) : (
           <div className="text-center text-white py-5">
-            <h2 className="h3 mb-3 text-warning">⚠️ Producto no encontrado</h2>
+            <h2 className="h3 mb-3 text-warning"> Producto no encontrado</h2>
             <p className="text-white-50 mb-4">El producto que buscas no existe o fue removido del catálogo.</p>
             <Boton 
               textoBoton="Volver al Catálogo" 

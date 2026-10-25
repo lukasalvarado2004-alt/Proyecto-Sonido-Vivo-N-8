@@ -25,7 +25,7 @@ export function ContenidoCarritoProvider(props) {
       if (existe) {
         const nuevaCantidad = existe.cantidad + cantidadASumar;
         if (nuevaCantidad > stockMaximo) {
-          notificarErrorStock(`⚠️ No puedes agregar más unidades. El stock disponible de "${producto.nombre}" es de ${stockMaximo} un.`);
+          notificarErrorStock(` No puedes agregar más unidades. El stock disponible de "${producto.nombre}" es de ${stockMaximo} un.`);
           return prevItems.map((item) =>
             item.producto.id === producto.id
               ? { ...item, cantidad: stockMaximo }
@@ -87,7 +87,7 @@ export function ContenidoCarritoProvider(props) {
         vaciarCarrito,
         totalProductos,
         precioTotal,
-        mensajeErrorStock // Se expone el estado de notificación en el contexto
+        mensajeErrorStock 
       }}
     >
       {props.children}
