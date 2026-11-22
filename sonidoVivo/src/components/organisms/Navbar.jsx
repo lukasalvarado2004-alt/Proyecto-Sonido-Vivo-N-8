@@ -92,7 +92,7 @@ export default function Navbar() {
               <Boton 
                 textoBoton="Panel Ventas" 
                 variante="warning" 
-                alHacerClic={() => navigate("/admin/ventas")}
+                alHacerClic={() => navigate("/ventas")}
               />
             )}
 
