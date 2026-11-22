@@ -13,7 +13,7 @@
 ---
 ##  Links
 
-Dirección de repos tirio frontend: github.com/lukasalvarado2004-alt/Backend-Proyecto-Grupo-N-8
+Dirección de repositorio frontend: github.com/lukasalvarado2004-alt/Backend-Proyecto-Grupo-N-8
 
 ---
 
