@@ -11,6 +11,11 @@
 * **Lukas Tirapegui** — lu.tirapegui@duocuc.cl
 
 ---
+##  Links
+
+Dirección de repos tirio frontend: github.com/lukasalvarado2004-alt/Backend-Proyecto-Grupo-N-8
+
+---
 
 ##  Caso de Negocio
 
