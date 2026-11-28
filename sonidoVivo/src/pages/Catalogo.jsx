@@ -8,14 +8,14 @@ import { useTituloPagina } from '../hooks/useTituloPagina';
 import { useProductos } from '../context/ProductosContext';
 import { filtrarPorCategoria } from '../utils/filtrarProductos';
 
-function Catalogo() {
+function Catalogo({ titulo }) {
   const productosCtx = useProductos();
   const todosLosProductos = productosCtx.productos || [];
 
   // Estado para la categoría seleccionada
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("todas");
 
-  useTituloPagina('Catálogo');
+  useTituloPagina(titulo);
 
   // Extraemos dinámicamente la lista de categorías únicas sin duplicados
   const categoriasUnicas = Array.from(
@@ -25,6 +25,12 @@ function Catalogo() {
   // Aplicamos la util de filtrado
   const productosFiltrados = filtrarPorCategoria(todosLosProductos, categoriaSeleccionada);
 
+  if (productosCtx.cargando || productosCtx.error) {
+    return <PlantillaPublica><div className="container py-4" role="status">
+      {productosCtx.error || 'Cargando productos…'}
+      {productosCtx.error && <button className="btn btn-outline-warning ms-2" onClick={productosCtx.recargarProductos}>Reintentar</button>}
+    </div></PlantillaPublica>;
+  }
   return (
     <PlantillaPublica>
       <Container className="py-4">

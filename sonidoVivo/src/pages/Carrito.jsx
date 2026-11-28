@@ -4,10 +4,10 @@ import PlantillaPublica from "../components/templates/PlantillaPublica";
 import VisualCarrito from "../components/organisms/VisualCarrito";
 import { useTituloPagina } from '../hooks/useTituloPagina';
 
-function Carrito() {
+function Carrito({ titulo }) {
   const navigate = useNavigate();
 
-  useTituloPagina('Carrito');
+  useTituloPagina(titulo);
 
   function manejarFinalizarPago() {
     navigate("/confirmar-compra"); 

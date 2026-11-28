@@ -10,14 +10,18 @@ import CampoFormulario from "../components/molecules/CampoFormulario";
 import { validarNombre, validarCorreo } from "../utils/validaciones.js";
 import { ResumenPedido } from "../components/molecules/ResumenPedido";
 
-function ConfirmarCompra() {
+import { crearPedido, resumenPedido } from '../service/pedidoService';
+import { obtenerMensajeError } from '../services/obtenerMensajeError';
+
+function ConfirmarCompra({ titulo }) {
   const { items, precioTotal, vaciarCarrito } = useContenidoCarrito();
-  const { productos, actualizarStockProducto } = useProductos();
+  const { recargarProductos } = useProductos();
   
+  const [enviando, setEnviando] = useState(false);
   const [errores, setErrores] = useState({});
   const [compraExitosa, setCompraExitosa] = useState(false);
   const navigate = useNavigate();
-  useTituloPagina("Confirmar Compra");
+  useTituloPagina(titulo);
 
   const [datosOrdenFinal, setDatosOrdenFinal] = useState(null);
 
@@ -37,7 +41,8 @@ function ConfirmarCompra() {
     }
   }, []);
 
-  function ejecutarCompraManual() {
+  async function ejecutarCompraManual() {
+    if (enviando) return;
     let err = {};
     const errNom = validarNombre(formulario.nombreCompleto);
     const errCor = validarCorreo(formulario.correoElectronico);
@@ -50,39 +55,25 @@ function ConfirmarCompra() {
     setErrores(err);
     if (Object.keys(err).length > 0) return;
 
-    items.forEach((item) => {
-      const idProducto = item.producto.id || item.producto.codigo;
-      const productoExistente = productos.find(
-        (p) => String(p.id) === String(idProducto) || String(p.codigo) === String(idProducto)
-      );
-
-      if (productoExistente) {
-        const nuevoStock = Math.max(0, Number(productoExistente.stock) - Number(item.cantidad));
-        actualizarStockProducto(idProducto, nuevoStock);
-      }
-    });
-
-    const numeroTicket = `SV-${Math.floor(100000 + Math.random() * 900000)}`;
-    
-    const nuevaCompra = {
-      nroSolicitud: numeroTicket,
-      nombre: formulario.nombreCompleto,
-      correo: formulario.correoElectronico,
-      comuna: formulario.ciudadComuna,
-      direccion: formulario.direccionEnvio,
-      items: [...items],
-      total: precioTotal
-    };
-
-    setDatosOrdenFinal(nuevaCompra);
-    localStorage.setItem("sv_ultimo_despacho", JSON.stringify(nuevaCompra));
-
-    const historialExistente = JSON.parse(localStorage.getItem("sv_todas_compras")) || [];
-    historialExistente.push(nuevaCompra);
-    localStorage.setItem("sv_todas_compras", JSON.stringify(historialExistente));
-
-    vaciarCarrito();
-    setCompraExitosa(true);
+    const direccion = [formulario.direccionEnvio.trim(), formulario.ciudadComuna.trim()].join(', ');
+    if (direccion.length > 500) {
+      setErrores({ direccionEnvio: 'La dirección con la comuna debe tener hasta 500 caracteres.' });
+      return;
+    }
+    setEnviando(true);
+    try {
+      const pedido = await crearPedido(direccion, items);
+      setDatosOrdenFinal(resumenPedido(pedido, items.map(item => item.producto), {
+        nombre: formulario.nombreCompleto, correo: formulario.correoElectronico
+      }));
+      setCompraExitosa(true);
+      vaciarCarrito();
+      void recargarProductos();
+    } catch (error) {
+      setErrores({ general: obtenerMensajeError(error) });
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -159,9 +150,11 @@ function ConfirmarCompra() {
                     error={errores.ciudadComuna}
                   />
 
+                  {errores.general && <p role="alert" className="text-warning">{errores.general}</p>}
                   <div className="mt-4">
                     <Boton 
-                      textoBoton="CONFIRMAR Y PAGAR PEDIDO" 
+                      disabled={enviando}
+                      textoBoton={enviando ? "Enviando pedido…" : "CONFIRMAR PEDIDO"} 
                       variante="purple w-100 fw-bold py-2 fs-5 text-white" 
                       tipo="button" 
                       alHacerClic={ejecutarCompraManual} 

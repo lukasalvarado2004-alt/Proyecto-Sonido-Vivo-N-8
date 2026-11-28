@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import Boton from "../atoms/Boton";
 import { cerrarSesion } from "../../service/usuarioService";
-import { useContenidoCarrito } from "../../context/ContenidoCarrito";
 
-export default function Navbar() {
+export default function Navbar({ totalProductos }) {
   const [usuario, setUsuario] = useState(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { totalProductos } = useContenidoCarrito();
+
 
   useEffect(() => {
     setMenuAbierto(false);

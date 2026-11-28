@@ -1,6 +1,6 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import CampoFormulario from '../components/molecules/CampoFormulario';
 import Boton from '../components/atoms/Boton';
@@ -19,6 +19,7 @@ export default function Login({ onLoginExitoso }) {
   const [erroresCampos, setErroresCampos] = useState({});
   const [enviando, setEnviando] = useState(false);
 
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   const manejarEnvio = async (e) => {
@@ -58,7 +59,9 @@ const rolNormalizado = (resultado.usuario?.rol || '').toLowerCase();
 const esAdmin = rolNormalizado === 'admin' || rolNormalizado === 'administrador';
 const esVentas = rolNormalizado === 'ventas' || rolNormalizado === 'vendedor';
 
-if (esAdmin) {
+if (['/confirmar-compra', '/seguimiento'].includes(state?.origen)) {
+  navigate(state.origen, { replace: true });
+} else if (esAdmin) {
   navigate('/admin/productos');
 } else if (esVentas) {
   navigate('/admin/ventas');

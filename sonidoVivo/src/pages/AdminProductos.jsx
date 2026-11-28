@@ -16,18 +16,11 @@ import { ResumenPedido } from '../components/molecules/ResumenPedido';
 import EncabezadoPanel from '../components/molecules/EncabezadoPanel';
 import * as usuarioService from '../service/usuarioService.js';
 import * as categoriaService from '../service/categoriaService.js';
-import comprasData from '../data/CompraData.json';
+import { useMisPedidos } from '../hooks/useMisPedidos';
+import { resumenPedido } from '../service/pedidoService';
 
 import { 
-  validarCodigo, 
-  validarCategoria, 
-  validarNombre, 
-  validarMarca, 
-  validarModelo, 
-  validarNumero, 
-  validarStock,
-  validarDescripcion, 
-  validarImagen,
+  validarNombre,
   validarCorreo,
   validarContrasena,
   validarConfirmarContrasena,
@@ -35,8 +28,8 @@ import {
   validarNombreCategoria
 } from '../utils/validaciones.js';
 
-export default function AdminProductos() {
-  const { productos, crear, actualizar, eliminar } = useProductos();
+export default function AdminProductos({ titulo }) {
+  const { productos, error: errorCatalogo, crear, actualizar, eliminar } = useProductos();
 
   const [umbralStock] = useState(5);
   const [errorGeneral, setErrorGeneral] = useState('');
@@ -48,13 +41,11 @@ export default function AdminProductos() {
   const [catEnEdicion, setCatEnEdicion] = useState(null);
   const [catError, setCatError] = useState('');
 
+  const [guardandoProducto, setGuardandoProducto] = useState(false);
   const [idEnEdicion, setIdEnEdicion] = useState(null);
   const [errores, setErrores] = useState({});
-  const [codigo, setCodigo] = useState('');
   const [categoria, setCategoria] = useState('');
   const [nombre, setNombre] = useState('');
-  const [marca, setMarca] = useState('');
-  const [modelo, setModelo] = useState('');
   const [stock, setStock] = useState('');
   const [precio, setPrecio] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -89,12 +80,8 @@ export default function AdminProductos() {
   const [usrContrasena, setUsrContrasena] = useState('');
   const [usrConfirmarContrasena, setUsrConfirmarContrasena] = useState('');
 
-  const [compras] = useState(() => {
-    const historialGuardado = localStorage.getItem("sv_todas_compras");
-    if (historialGuardado) return JSON.parse(historialGuardado);
-    localStorage.setItem("sv_todas_compras", JSON.stringify(comprasData));
-    return comprasData;
-  });
+  const { pedidos, mensaje: mensajePedidos } = useMisPedidos();
+  const compras = pedidos.map(p => resumenPedido(p, productos));
 
   function activarEdicionCategoria(cat) {
     setErrorGeneral('');
@@ -143,11 +130,8 @@ export default function AdminProductos() {
   function activarEdicion(p) {
     setErrorGeneral('');
     setIdEnEdicion(p.id ?? p.codigo);
-    setCodigo(p.codigo || '');
-    setCategoria(p.categoria || '');
+    setCategoria(String(p.idCategoria));
     setNombre(p.nombre || '');
-    setMarca(p.marca || '');
-    setModelo(p.modelo || '');
     setStock(String(p.stock ?? ''));
     setPrecio(String(p.precio ?? ''));
     setDescripcion(p.descripcion || '');
@@ -158,65 +142,39 @@ export default function AdminProductos() {
   function cancelarEdicion() {
     setErrorGeneral('');
     setIdEnEdicion(null);
-    setCodigo(''); setCategoria(''); setNombre(''); setMarca('');
-    setModelo(''); setStock(''); setPrecio(''); setDescripcion(''); setImagen('');
+    setCategoria(''); setNombre(''); 
+    setStock(''); setPrecio(''); setDescripcion(''); setImagen('');
     setErrores({});
   }
 
-  function manejarCargaArchivoImagen(e) {
-    const archivo = e.target.files[0];
-    if (archivo) {
-      const lector = new FileReader();
-      lector.onloadend = () => {
-        setImagen(lector.result);
-        setErrores(prev => ({ ...prev, imagen: '' }));
-      };
-      lector.readAsDataURL(archivo);
-    }
-  }
-
-  function guardarProducto(e) {
+  async function guardarProducto(e) {
     e.preventDefault();
     setErrorGeneral('');
+    if (guardandoProducto) return;
+    const fallos = {};
+    if (!Number.isSafeInteger(Number(categoria)) || Number(categoria) < 1) fallos.categoria = 'Ingresa el ID de una categoría existente.';
+    if (nombre.trim().length < 2 || nombre.trim().length > 150) fallos.nombre = 'Ingresa de 2 a 150 caracteres.';
+    if (stock === '' || !Number.isInteger(Number(stock)) || Number(stock) < 0) fallos.stock = 'Ingresa un entero desde cero.';
+    if (!/^\d{1,8}(\.\d{1,2})?$/.test(precio) || Number(precio) <= 0) fallos.precio = 'Precio positivo, hasta 8 enteros y 2 decimales.';
+    if (descripcion.trim().length > 500) fallos.descripcion = 'Máximo 500 caracteres.';
+    if (imagen.trim().length > 255) fallos.imagen = 'Máximo 255 caracteres.';
+    setErrores(fallos);
+    if (Object.keys(fallos).length) return;
+    const datos = { idCategoria: Number(categoria), nombre: nombre.trim(), stock: Number(stock),
+      precio: Number(precio), descripcion: descripcion.trim(), imagen: imagen.trim() };
+    setGuardandoProducto(true);
+    try {
+      if (idEnEdicion === null) await crear(datos);
+      else await actualizar(idEnEdicion, datos);
+      cancelarEdicion();
+    } catch (error) { setErrorGeneral(obtenerMensajeError(error)); }
+    finally { setGuardandoProducto(false); }
+  }
 
-    const nuevosErrores = {
-      codigo: validarCodigo(codigo),
-      categoria: validarCategoria(categoria),
-      nombre: validarNombre(nombre),
-      marca: validarMarca(marca),
-      modelo: validarModelo(modelo),
-      stock: validarStock(stock),
-      precio: validarNumero(precio, 'El precio', 1),
-      descripcion: validarDescripcion(descripcion),
-      imagen: validarImagen(imagen)
-    };
-
-    setErrores(nuevosErrores);
-
-    if (Object.values(nuevosErrores).some(msg => msg !== '')) {
-      setErrorGeneral('Por favor, corrige los campos destacados en el formulario de productos.');
-      return;
-    }
-
-    const payload = {
-      codigo: codigo.trim().toUpperCase(),
-      categoria: categoria.trim(),
-      nombre: nombre.trim(),
-      marca: marca.trim(),
-      modelo: modelo.trim(),
-      stock: Number(stock),
-      precio: Number(precio),
-      descripcion: descripcion.trim(),
-      imagen: imagen.trim()
-    };
-
-    if (idEnEdicion !== null) {
-      actualizar(idEnEdicion, payload);
-    } else {
-      crear(payload);
-    }
-
-    cancelarEdicion();
+  async function eliminarDelCatalogo(id) {
+    setErrorGeneral('');
+    try { await eliminar(id); }
+    catch (error) { setErrorGeneral(obtenerMensajeError(error)); }
   }
 
   function activarEdicionUsuario(u) {
@@ -298,8 +256,9 @@ export default function AdminProductos() {
     <PlantillaAdmin>
       <div className="container py-4 text-white">
         
+        {errorCatalogo && <p role="alert">{errorCatalogo}</p>}
         <EncabezadoPanel 
-          titulo="Panel de Administración" 
+          titulo={titulo} 
           subtitulo="Gestión de Productos, Categorías, Usuarios, Ítems Críticos y Pedidos" 
         />  
 
@@ -311,19 +270,20 @@ export default function AdminProductos() {
           </div>
           <div className="col-md-5">
             <FormularioProducto
-              codigo={codigo} setCodigo={setCodigo} categoria={categoria} setCategoria={setCategoria} nombre={nombre} setNombre={setNombre} marca={marca} setMarca={setMarca} modelo={modelo} setModelo={setModelo} stock={stock} setStock={setStock} precio={precio} setPrecio={setPrecio} descripcion={descripcion} setDescripcion={setDescripcion} imagen={imagen} setImagen={setImagen} idEnEdicion={idEnEdicion} errores={errores} setErrores={setErrores} categoriasDisponibles={categorias} onGuardar={guardarProducto} onCancelar={cancelarEdicion} onCargarArchivo={manejarCargaArchivoImagen}
+              guardando={guardandoProducto} categoriasCatalogo={Array.from(new Map(productos.map(p => [p.idCategoria, p.categoria])))}
+              categoria={categoria} setCategoria={setCategoria} nombre={nombre} setNombre={setNombre} stock={stock} setStock={setStock} precio={precio} setPrecio={setPrecio} descripcion={descripcion} setDescripcion={setDescripcion} imagen={imagen} setImagen={setImagen} idEnEdicion={idEnEdicion} errores={errores} setErrores={setErrores} onGuardar={guardarProducto} onCancelar={cancelarEdicion}
             />
           </div>
           <div className="col-md-7">
             <div className="admin-tabla-contenedor">
-              <TablaProductos productos={productos} umbralStock={umbralStock} onActivarEdicion={activarEdicion} onEliminar={eliminar} />
+              <TablaProductos productos={productos} umbralStock={umbralStock} onActivarEdicion={activarEdicion} onEliminar={eliminarDelCatalogo} />
             </div>
           </div>
         </div>
 
         <div className="row g-4 text-dark mb-5">
           <div className="col-12">
-            <h4 className="text-white border-bottom border-secondary pb-2">Gestión de Categorías</h4>
+            <h4 className="text-white border-bottom border-secondary pb-2">Categorías locales de demostración</h4>
           </div>
           <div className="col-md-5">
             <FormularioCategoria
@@ -367,11 +327,11 @@ export default function AdminProductos() {
 
         <div className="row g-4 text-dark pt-2">
           <div className="col-12">
-            <h4 className="text-white border-bottom border-secondary pb-2">Control y Resumen de Solicitudes</h4>
+            <h4 className="text-white border-bottom border-secondary pb-2">Pedidos de esta cuenta</h4>
           </div>
           <div className="col-md-6">
             {compras.length === 0 ? (
-              <p className="text-white-50">No hay solicitudes registradas.</p>
+              <p className="text-white-50">{mensajePedidos}</p>
             ) : (
               compras.map((compra) => (
                 

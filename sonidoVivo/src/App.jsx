@@ -23,23 +23,25 @@ import NoEncontrada from './pages/NoEncontrada';
 const rolesAdmin = ['admin', 'administrador'];
 const rolesVentas = [...rolesAdmin, 'ventas', 'vendedor'];
 
-export default function App() {
+export default function App({ basename }) {
   return (
     <ProductosProvider>
       <ContenidoCarritoProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={basename}>
           <Routes>
             {/* Rutas públicas */}
-            <Route path="/" element={<Inicio />} />
-            <Route path="/catalogo" element={<Catalogo />} />
-            <Route path="/producto/:id" element={<DetalleProducto />} />
-            <Route path="/carrito" element={<Carrito />} />
-            <Route path="/confirmar-compra" element={<ConfirmarCompra />} />
-            <Route path="/seguimiento" element={<SeguimientoCompra />} />
+            <Route path="/" element={<Inicio titulo="Inicio" />} />
+            <Route path="/catalogo" element={<Catalogo titulo="Catálogo" />} />
+            <Route path="/producto/:id" element={<DetalleProducto rutaCatalogo="/catalogo" />} />
+            <Route path="/carrito" element={<Carrito titulo="Carrito" />} />
+            <Route element={<RutaProtegida />}>
+              <Route path="/confirmar-compra" element={<ConfirmarCompra titulo="Confirmar compra" />} />
+              <Route path="/seguimiento" element={<SeguimientoCompra titulo="Seguimiento de compra" />} />
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/blog" element={<DetalleBlog />} />
+            <Route path="/contacto" element={<Contacto titulo="Contacto" />} />
+            <Route path="/blog" element={<DetalleBlog titulo="Blog - Historia de Sonido Vivo" />} />
 
             {/* Solo administradores */}
             <Route element={<RutaProtegida roles={rolesAdmin} />}>
@@ -47,16 +49,16 @@ export default function App() {
                 path="/admin"
                 element={<Navigate to="/admin/productos" replace />}
               />
-              <Route path="/admin/productos" element={<AdminProductos />} />
+              <Route path="/admin/productos" element={<AdminProductos titulo="Panel de Administración" />} />
             </Route>
 
             {/* Administradores y vendedores */}
             <Route element={<RutaProtegida roles={rolesVentas} />}>
-              <Route path="/ventas" element={<PanelVentas />} />
-              <Route path="/admin/ventas" element={<PanelVentas />} />
+              <Route path="/ventas" element={<PanelVentas titulo="Panel de Ventas" />} />
+              <Route path="/admin/ventas" element={<PanelVentas titulo="Panel de Ventas" />} />
             </Route>
 
-            <Route path="*" element={<NoEncontrada />} />
+            <Route path="*" element={<NoEncontrada titulo="Página no encontrada" />} />
           </Routes>
         </BrowserRouter>
       </ContenidoCarritoProvider>

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ContenidoCarritoContext = createContext();
-const CLAVE_CARRITO = 'sv_carrito';
+const CLAVE_CARRITO = 'sv_carrito_api_v1';
 
 export function ContenidoCarritoProvider(props) {
   const [items, setItems] = useState(() => {

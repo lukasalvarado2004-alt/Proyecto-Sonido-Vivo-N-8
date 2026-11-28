@@ -1,13 +1,21 @@
 import axios from 'axios';
 
-// En Vite, VITE_API_URL es accesible desde el navegador; no colocar secretos aquí.
-export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://184.193.137.168:8081/api/v1',
-  timeout: 10000,
-});
+function cliente(baseURL) {
+  const clienteApi = axios.create({ baseURL, timeout: 10000 });
+  clienteApi.interceptors.request.use(config => {
+    const token = sessionStorage.getItem('sv_token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
+  return clienteApi;
+}
 
-api.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem('sv_token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+const usuariosURL = import.meta.env.VITE_API_URL || 'http://184.193.137.168:8081/api/v1';
+function mismoServidor(puerto) {
+  const url = new URL(usuariosURL, window.location.origin);
+  url.port = puerto;
+  return url.href;
+}
+export const api = cliente(usuariosURL);
+export const productosApi = cliente(import.meta.env.VITE_PRODUCTOS_API_URL || mismoServidor('8082'));
+export const pedidosApi = cliente(import.meta.env.VITE_PEDIDOS_API_URL || mismoServidor('8083'));

@@ -1,22 +1,10 @@
 import React from 'react';
-import Selector from '../atoms/Selector';
 
 export default function ControlSolicitudes(props) {
   const solicitudes = props.solicitudes || [];
-  const onCambiarEstado = props.onCambiarEstado;
-
-  
-  const opcionesEstado = [
-    'Pendiente',
-    'Preparando Pedido',
-    'En Camino',
-    'Entregado',
-    'Cancelado'
-  ];
-
   return (
     <div className="card bg-dark text-light border-secondary p-4">
-      <h3 className="h4 text-warning mb-4"> Control de Solicitudes de Despacho</h3>
+      <h3 className="h4 text-warning mb-4"> Pedidos de esta cuenta</h3>
 
       {solicitudes.length === 0 ? (
         <p className="text-secondary">No hay solicitudes pendientes.</p>
@@ -46,15 +34,7 @@ export default function ControlSolicitudes(props) {
                     </td>
                     <td>
                     
-                      <Selector
-                        opciones={opcionesEstado}
-                        valor={sol.estado}
-                        alCambiar={(nuevoEstado) => {
-                          if (typeof onCambiarEstado === 'function') {
-                            onCambiarEstado(sol.id, nuevoEstado);
-                          }
-                        }}
-                      />
+                      {sol.estado}
                     </td>
                   </tr>
                 );

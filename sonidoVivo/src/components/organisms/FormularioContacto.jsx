@@ -3,7 +3,7 @@ import CampoFormulario from '../molecules/CampoFormulario';
 import CampoMensaje from '../molecules/CampoMensaje'; 
 import Boton from '../atoms/Boton';
 
-export default function FormularioContacto() {
+export default function FormularioContacto({ titulo }) {
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [asunto, setAsunto] = useState('');
@@ -38,7 +38,7 @@ export default function FormularioContacto() {
 
   return (
     <div className="card p-4 shadow-lg border-secondary bg-dark text-white rounded-3">
-      <h2 className="h4 fw-bold mb-4 text-warning">Envíanos un mensaje</h2>
+      <h2 className="h4 fw-bold mb-4 text-warning">{titulo}</h2>
 
       {enviado && (
         <div className="alert alert-success py-2 px-3 small text-center mb-3 fw-bold" role="alert">

@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import PlantillaPublica from '../components/templates/PlantillaPublica';
 import { useTituloPagina } from '../hooks/useTituloPagina';
 
-export default function Blog() {
-  useTituloPagina('Blog - Historia de Sonido Vivo');
+export default function Blog({ titulo }) {
+  useTituloPagina(titulo);
 
   return (
     <PlantillaPublica>

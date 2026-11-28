@@ -8,7 +8,7 @@ import { useProductos } from '../context/ProductosContext';
 import { useTituloPagina } from '../hooks/useTituloPagina';
 import { filtrarProductos } from '../utils/filtrarProductos';
 
-export default function Inicio() {
+export default function Inicio({ titulo }) {
   const productosCtx = useProductos();
   const todosLosProductos = productosCtx.productos || [];
 
@@ -16,7 +16,7 @@ export default function Inicio() {
   const [busquedaAplicada, setBusquedaAplicada] = useState('');
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas');
 
-  useTituloPagina('Inicio');
+  useTituloPagina(titulo);
 
   const categoriasUnicas = Array.from(
     new Set(todosLosProductos.map((p) => p.categoria).filter(Boolean))
@@ -39,6 +39,12 @@ export default function Inicio() {
     categoria: categoriaSeleccionada,
   });
 
+  if (productosCtx.cargando || productosCtx.error) {
+    return <PlantillaPublica><div className="container py-4" role="status">
+      {productosCtx.error || 'Cargando productos…'}
+      {productosCtx.error && <button className="btn btn-outline-warning ms-2" onClick={productosCtx.recargarProductos}>Reintentar</button>}
+    </div></PlantillaPublica>;
+  }
   return (
     <PlantillaPublica>
       <Container className="py-4">

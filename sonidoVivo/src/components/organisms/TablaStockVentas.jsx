@@ -13,14 +13,14 @@ export default function TablaStockVentas(props) {
     }));
   };
 
-  const manejarGuardar = (prod, key) => {
+  const manejarGuardar = async (prod, key) => {
     const valorInput = stocksLocales[key];
     const nuevoStock = valorInput !== undefined ? parseInt(valorInput, 10) : parseInt(prod.stock, 10);
 
     if (!isNaN(nuevoStock) && nuevoStock >= 0) {
       const idParaGuardar = prod.id || prod.codigo;
       if (typeof onActualizarStock === 'function') {
-        onActualizarStock(idParaGuardar, nuevoStock);
+        if (!await onActualizarStock(idParaGuardar, nuevoStock)) return;
       }
 
       setStocksLocales((prev) => {

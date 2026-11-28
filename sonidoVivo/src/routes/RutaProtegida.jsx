@@ -1,10 +1,11 @@
 // src/routes/RutaProtegida.jsx
 import React, { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { api } from '../services/api';
 import AccesoDenegado from '../pages/AccesoDenegado';
 
 export default function RutaProtegida({ roles }) {
+  const location = useLocation();
   const [acceso, setAcceso] = useState({ estado: 'cargando' });
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function RutaProtegida({ roles }) {
   }
 
   if (acceso.estado === 'sinSesion') {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ origen: location.pathname }} replace />;
   }
 
   if (acceso.estado === 'error') {
@@ -64,8 +65,8 @@ export default function RutaProtegida({ roles }) {
     );
   }
 
-  if (acceso.estado === 'denegado' || !roles.includes(acceso.rol)) {
-    return <AccesoDenegado />;
+  if (acceso.estado === 'denegado' || (roles && !roles.includes(acceso.rol))) {
+    return <AccesoDenegado rutaCatalogo="/catalogo" />;
   }
 
   return <Outlet />;

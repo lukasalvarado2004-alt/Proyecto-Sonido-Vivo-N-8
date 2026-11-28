@@ -1,9 +1,8 @@
 import React from 'react';
 import Error from '../atoms/Error';
-import { useContenidoCarrito } from '../../context/ContenidoCarrito';
 
-export default function NotificacionStock() {
-  const { mensajeErrorStock } = useContenidoCarrito();
+export default function NotificacionStock({ mensajeErrorStock }) {
+
 
   if (!mensajeErrorStock) return null;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Footer = () => {
+const Footer = ({ correo }) => {
   return (
     <footer className="bg-black text-white pt-5 pb-4 mt-auto border-top border-purple">
       <div className="container text-center text-md-start">
@@ -47,7 +47,7 @@ const Footer = () => {
           <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
             <h6 className="text-uppercase mb-4 fw-bold text-light">Contacto</h6>
             <p className="text-secondary mb-2 small">Viña del Mar, Región de Valparaíso</p>
-            <p className="text-secondary mb-2 small">rgvalparaiso@sonidovivo.cl</p>
+            <p className="text-secondary mb-2 small">{correo}</p>
             <p className="text-secondary mb-2 small">+56 9 1234 5678</p>
           </div>
 

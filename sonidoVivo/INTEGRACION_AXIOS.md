@@ -33,3 +33,13 @@ El backend **no permite** cambiar el correo o contraseña por `PUT /usuarios/{id
 **Pruebas**: abrir herramientas F12 → Network → Fetch/XHR. Registrar: POST `/usuarios` 201. Login: POST `/auth/login` 200 y GET `/auth/me` 200. Panel administrador: GET `/usuarios` 200. Eliminar otra cuenta: DELETE 204. Si falta permiso, el backend debe responder 403.
 
 **Limitación de comprobación:** se revisó el código y se prepararon pruebas unitarias, pero no se pudo ejecutar la API con Oracle ni realizar `npm install` contra el registro desde este entorno. Instalar dependencias con `npm install` antes de ejecutar `npm run test:run` o `npm run build`.
+
+## Productos y pedidos
+
+En `sonidoVivo/.env`, las URL de usuarios, productos y pedidos se configuran con `VITE_API_URL`, `VITE_PRODUCTOS_API_URL` y `VITE_PEDIDOS_API_URL`. Cada una incluye `/api/v1`. Reinicia Vite si cambias una dirección. Para ejecutar en local usa los valores de `.env.example`.
+
+El catálogo consulta `GET /productos`. La administración crea, actualiza y elimina productos con su ID de base de datos. El campo de categoría requiere un ID existente. Las categorías de demostración del panel se guardan en el navegador.
+
+La confirmación envía `POST /pedidos` con dirección y pares de ID de producto y cantidad. El backend calcula el precio y descuenta stock. Seguimiento y paneles consultan `GET /pedidos` con el JWT de la sesión. El backend entrega los pedidos propios de la cuenta y carece de rutas para listar todas las ventas o cambiar el estado de despacho.
+
+El carrito de esta versión empieza vacío para evitar reutilizar los códigos de los productos de demostración.

@@ -3,8 +3,8 @@ import PlantillaPublica from '../components/templates/PlantillaPublica';
 import FormularioContacto from '../components/organisms/FormularioContacto';
 import { useTituloPagina } from '../hooks/useTituloPagina';
 
-export default function Contacto() {
-  useTituloPagina('Contacto');
+export default function Contacto({ titulo }) {
+  useTituloPagina(titulo);
 
   return (
     <PlantillaPublica>
@@ -18,7 +18,7 @@ export default function Contacto() {
               </p>
             </div>
             
-            <FormularioContacto />
+            <FormularioContacto titulo="Envíanos un mensaje" />
             
           </div>
         </div>

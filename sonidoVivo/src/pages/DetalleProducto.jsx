@@ -6,15 +6,21 @@ import PlantillaPublica from '../components/templates/PlantillaPublica';
 import Boton from '../components/atoms/Boton';
 import { useProductos } from '../context/ProductosContext';
 
-export default function DetalleProducto() {
+export default function DetalleProducto({ rutaCatalogo }) {
   const params = useParams();
   const navigate = useNavigate();
-  const { productos } = useProductos();
+  const { productos, cargando, error, recargarProductos } = useProductos();
 
   const productoEncontrado = productos.find(
     (item) => String(item.codigo) === String(params.id) || String(item.id) === String(params.id)
   );
 
+  if (cargando || error) {
+    return <PlantillaPublica><div className="container py-4" role="status">
+      {error || 'Cargando productos…'}
+      {error && <button className="btn btn-outline-warning ms-2" onClick={recargarProductos}>Reintentar</button>}
+    </div></PlantillaPublica>;
+  }
   return (
     <PlantillaPublica>
       <Container className="py-5">
@@ -26,7 +32,7 @@ export default function DetalleProducto() {
             <p className="text-white-50 mb-4">El producto que buscas no existe o fue removido del catálogo.</p>
             <Boton 
               textoBoton="Volver al Catálogo" 
-              alHacerClic={() => navigate('/catalogo')} 
+              alHacerClic={() => navigate(rutaCatalogo)} 
               variante="warning" 
             />
           </div>

@@ -4,9 +4,9 @@ import PlantillaPublica from "../components/templates/PlantillaPublica";
 import Boton from "../components/atoms/Boton";
 import { useTituloPagina } from "../hooks/useTituloPagina";
 
-export default function NoEncontrada() {
+export default function NoEncontrada({ titulo }) {
   const navigate = useNavigate();
-  useTituloPagina('Página no encontrada');
+  useTituloPagina(titulo);
 
   return (
     <PlantillaPublica>

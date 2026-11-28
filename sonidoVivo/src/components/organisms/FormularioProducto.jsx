@@ -6,21 +6,17 @@ import ImagenProducto from '../atoms/ImagenProducto';
 
 export default function FormularioProducto(props) {
   const {
-    codigo, setCodigo,
     categoria, setCategoria,
     nombre, setNombre,
-    marca, setMarca,
-    modelo, setModelo,
     stock, setStock,
     precio, setPrecio,
     descripcion, setDescripcion,
     imagen, setImagen,
     idEnEdicion,
     errores, setErrores,
-    categoriasDisponibles,
+    guardando, categoriasCatalogo,
     onGuardar,
-    onCancelar,
-    onCargarArchivo
+    onCancelar
   } = props;
 
   return (
@@ -30,24 +26,19 @@ export default function FormularioProducto(props) {
       </h5>
       
       <form onSubmit={onGuardar} noValidate>
-        <CampoFormulario 
-          id="prod-codigo" 
-          etiqueta="Código" 
-          valor={codigo} 
-          alCambiar={(v) => { setCodigo(v); setErrores(p => ({ ...p, codigo: '' })); }} 
-          error={errores.codigo} 
-          placeholder="GA001" 
-        />
 
         <CampoFormulario 
           id="prod-categoria" 
-          etiqueta="Categoría" 
-          tipo="select" 
+          etiqueta="ID de categoría existente en la base de datos" 
+          tipo="number" 
           valor={categoria} 
           alCambiar={(v) => { setCategoria(v); setErrores(p => ({ ...p, categoria: '' })); }} 
           error={errores.categoria} 
-          opciones={categoriasDisponibles} 
+ 
         />
+        {categoriasCatalogo.length > 0 && <p className="small text-secondary">
+          Categorías del catálogo: {categoriasCatalogo.map(([id, nombre]) => id + ' · ' + nombre).join(', ')}
+        </p>}
 
         <CampoFormulario 
           id="prod-nombre" 
@@ -58,23 +49,7 @@ export default function FormularioProducto(props) {
           placeholder="Guitarra Acústica Folk" 
         />
 
-        <CampoFormulario 
-          id="prod-marca" 
-          etiqueta="Marca" 
-          valor={marca} 
-          alCambiar={(v) => { setMarca(v); setErrores(p => ({ ...p, marca: '' })); }} 
-          error={errores.marca} 
-          placeholder="Yamaha" 
-        />
 
-        <CampoFormulario 
-          id="prod-modelo" 
-          etiqueta="Modelo" 
-          valor={modelo} 
-          alCambiar={(v) => { setModelo(v); setErrores(p => ({ ...p, modelo: '' })); }} 
-          error={errores.modelo} 
-          placeholder="F310" 
-        />
 
         <CampoFormulario 
           id="prod-stock" 
@@ -111,12 +86,7 @@ export default function FormularioProducto(props) {
       
         <div className="mb-3 text-start">
           <label className="form-label text-dark fw-bold small">Imagen del Producto</label>
-          <input 
-            type="file" 
-            accept="image/*" 
-            className={`form-control ${errores.imagen ? 'is-invalid' : ''}`} 
-            onChange={onCargarArchivo} 
-          />
+          <input type="text" maxLength={255} value={imagen} onChange={e => setImagen(e.target.value)} className="form-control" placeholder="URL o nombre de imagen" />
           {errores.imagen && (
             <div className="invalid-feedback d-block text-danger small mt-1">
               {errores.imagen}
@@ -137,7 +107,8 @@ export default function FormularioProducto(props) {
         
         <div className="d-grid gap-2 mt-4">
           <Boton 
-            tipo="submit" 
+            tipo="submit"
+            disabled={guardando} 
             variante={idEnEdicion !== null ? 'warning' : 'purple'} 
             textoBoton={idEnEdicion !== null ? 'Guardar Cambios' : 'Añadir Producto'} 
             esBloque={true} 

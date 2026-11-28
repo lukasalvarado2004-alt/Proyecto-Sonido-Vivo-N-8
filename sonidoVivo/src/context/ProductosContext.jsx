@@ -1,56 +1,54 @@
-
-import React, { createContext, useContext, useState } from 'react';
-import * as productoService from '../service/productoService';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import * as servicio from '../service/productoService';
+import { obtenerMensajeError } from '../services/obtenerMensajeError';
 
 const ProductosContext = createContext(null);
 
-export function ProductosProvider(props) {
-  const [productos, setProductos] = useState(() => productoService.listarProductos());
+export function ProductosProvider({ children }) {
+  const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
+  const lectura = useRef(null);
 
-  const recargarProductos = () => {
-    setProductos(productoService.listarProductos());
-  };
-
-  const crear = (datos) => {
-    productoService.crearProducto(datos);
+  const recargarProductos = useCallback(async () => {
+    lectura.current?.abort();
+    const controller = new AbortController();
+    lectura.current = controller;
+    setCargando(true);
+    setError('');
+    try {
+      const lista = await servicio.listarProductos(controller.signal);
+      if (!controller.signal.aborted) setProductos(lista);
+    } catch (e) {
+      if (!controller.signal.aborted) setError(obtenerMensajeError(e));
+    } finally {
+      if (!controller.signal.aborted) setCargando(false);
+    }
+  }, []);
+  useEffect(() => {
     recargarProductos();
-  };
+    return () => lectura.current?.abort();
+  }, [recargarProductos]);
 
-  const actualizar = (identificador, cambios) => {
-    productoService.actualizarProducto(identificador, cambios);
-    recargarProductos();
-  };
-
-  const actualizarStockProducto = (identificador, nuevoStock) => {
-    actualizar(identificador, { stock: Number(nuevoStock) });
-  };
-
- 
-  const eliminar = (identificador) => {
-    productoService.eliminarProducto(identificador);
-    recargarProductos();
-  };
-
-  return (
-    <ProductosContext.Provider
-      value={{
-        productos,
-        crear,
-        actualizar,
-        actualizarStockProducto,
-        eliminar,
-        recargarProductos
-      }}
-    >
-      {props.children}
-    </ProductosContext.Provider>
-  );
-}
-
-export function useProductos() {
-  const contexto = useContext(ProductosContext);
-  if (!contexto) {
-    throw new Error('useProductos debe usarse dentro de un ProductosProvider');
+  async function crear(datos) {
+    await servicio.crearProducto(datos);
+    await recargarProductos();
   }
-  return contexto;
+  async function actualizar(id, datos) {
+    await servicio.actualizarProducto(id, datos);
+    await recargarProductos();
+  }
+  async function eliminar(id) {
+    await servicio.eliminarProducto(id);
+    await recargarProductos();
+  }
+  function actualizarStockProducto(id, stock) {
+    const producto = productos.find(p => p.id === id);
+    return actualizar(id, { ...producto, stock });
+  }
+  return <ProductosContext.Provider value={{ productos, cargando, error, crear, actualizar,
+    eliminar, actualizarStockProducto, recargarProductos }}>{children}</ProductosContext.Provider>;
+}
+export function useProductos() {
+  return useContext(ProductosContext);
 }

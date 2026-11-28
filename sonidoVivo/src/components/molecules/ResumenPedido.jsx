@@ -15,7 +15,7 @@ export function ResumenPedido(props) {
         <p className="mb-1 small"><strong>Correo:</strong> {compra.correo}</p>
       )}
       
-      <p className="mb-2 small"><strong>Destino:</strong> {compra.direccion}, {compra.comuna}</p>
+      <p className="mb-2 small"><strong>Destino:</strong> {[compra.direccion, compra.comuna].filter(Boolean).join(', ')}</p>
       
       <div className="border-top border-secondary border-opacity-25 pt-2 mt-2">
         <strong className="small text-white-50">Productos:</strong>
@@ -33,7 +33,7 @@ export function ResumenPedido(props) {
       </div>
       
       <div className="d-flex justify-content-between align-items-center pt-2 mt-2 border-top border-secondary border-opacity-25">
-        <strong>Total Pagado:</strong>
+        <strong>Total del pedido:</strong>
         <strong className="text-warning">${compra.total ? compra.total.toLocaleString('es-CL') : 0}</strong>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useContenidoCarrito } from "../../context/ContenidoCarrito";
-import { obtenerImagenUrl } from "../../utils/obtenerImagen";
+import ImagenProducto from "../atoms/ImagenProducto";
 
 export function ItemCarrito(props) {
   const { actualizarCantidad, eliminarProducto } = useContenidoCarrito();
@@ -15,9 +15,9 @@ export function ItemCarrito(props) {
     <li className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3 bg-transparent border-0 text-white py-3">
    
       <div className="d-flex align-items-center gap-3 flex-grow-1">
-        <img 
-          src={obtenerImagenUrl(props.item.producto.imagen)} 
-          alt={props.item.producto.nombre} 
+        <ImagenProducto 
+          urlImagen={props.item.producto.imagen} 
+          altTexto={props.item.producto.nombre} 
           className="img-fluid rounded border border-secondary img-item-carrito"
         />
         
